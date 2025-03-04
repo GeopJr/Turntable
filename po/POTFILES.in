@@ -1,0 +1,8 @@
+# List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
+data/dev.geopjr.Turntable.desktop.in
+data/dev.geopjr.Turntable.metainfo.xml.in
+data/dev.geopjr.Turntable.gschema.xml
+src/main.vala
+src/window.vala
+src/window.ui

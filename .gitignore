@@ -1,0 +1,12 @@
+_ignore
+build
+build.sh
+subprojects/packagecache
+*~
+builddir
+*.snap
+.flatpak-builder
+*.exe
+/turntable_windows_portable/
+turntable_windows_portable.zip
+/nsis/

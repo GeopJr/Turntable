@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=turntable
+Exec=turntable
+Icon=dev.geopjr.Turntable
+Terminal=false
+Type=Application
+Categories=Utility;
+Keywords=GTK;
+StartupNotify=true
+DBusActivatable=true

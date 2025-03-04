@@ -1,0 +1,23 @@
+.circular-art {
+	border-radius: 9999px;
+}
+
+button.large {
+	min-width: 48px;
+	min-height: 48px;
+}
+
+.card-like {
+	margin-top: 16px;
+	margin-left: 16px;
+}
+
+.card-like.horizontal {
+	margin-right: 0px;
+	margin-bottom: 16px;
+}
+
+.card-like.vertical {
+	margin-right: 16px;
+	margin-bottom: 0px;
+}

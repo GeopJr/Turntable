@@ -1,0 +1,5 @@
+build
+*~
+builddir
+.flatpak-builder
+/turntable_windows_portable/

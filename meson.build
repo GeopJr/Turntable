@@ -1,0 +1,83 @@
+project('dev.geopjr.Turntable', ['c', 'vala'],
+          version: '0.1.0',
+    meson_version: '>= 1.0.0',
+  default_options: [ 'warning_level=2', 'werror=false', ],
+)
+
+# https://gitlab.gnome.org/GNOME/vala/-/issues/1413#note_1707480
+if meson.get_compiler ('c').get_id () == 'clang'
+  add_project_arguments('-Wno-incompatible-function-pointer-types', language: 'c')
+endif
+
+devel = get_option('devel')
+
+# Setup configuration file
+config = configuration_data()
+config.set('EXEC_NAME', meson.project_name())
+config.set('GETTEXT_PACKAGE', meson.project_name())
+config.set('LOCALEDIR', join_paths(get_option('prefix'), get_option('localedir')))
+config.set('DOMAIN', meson.project_name ())
+config.set('G_LOG_DOMAIN', 'Turntable')
+config.set('RESOURCES', '/' + '/'.join(meson.project_name().split('.')) + '/')
+config.set('VERSION', meson.project_version())
+config.set('PREFIX', get_option('prefix'))
+config.set('NAME', 'Turntable')
+config.set('WEBSITE', 'https://turntable.geopjr.dev')
+config.set('ISSUES_WEBSITE', 'https://github.com/GeopJr/Turntable/issues')
+config.set('DONATE_WEBSITE', 'https://geopjr.dev/donate')
+config.set('PROFILE', devel ? 'development' : 'production')
+
+if devel
+  git = find_program('git')
+  if git.found()
+    branch = run_command('git', 'branch', '--show-current', check: true).stdout().strip()
+    revision = run_command('git', 'rev-parse', '--short', 'HEAD', check: true).stdout().strip()
+    version = '@0@-@1@'.format(branch, revision)
+    config.set('VERSION', version)
+  endif
+endif
+
+if host_machine.system() == 'windows'
+  add_project_arguments(['--define=WINDOWS'], language: 'vala')
+elif host_machine.system() == 'darwin'
+  add_project_arguments(['--define=DARWIN'], language: 'vala')
+endif
+
+add_project_arguments (
+  '-DGETTEXT_PACKAGE="@0@"'.format(meson.project_name()),
+  '-DG_LOG_DOMAIN="Turntable"',
+  language: 'c'
+)
+
+i18n = import('i18n')
+gnome = import('gnome')
+
+asresources = gnome.compile_resources(
+    'as-resources',
+    'data/dev.geopjr.Turntable.gresource.xml',
+    source_dir: 'data',
+    c_name: 'as',
+)
+
+sources = files()
+subdir('src')
+
+final_deps = [
+  dependency('glib-2.0', version: '>=2.76.0'),
+  dependency('gtk4', version: '>=4.13.4', required: true),
+  dependency('libadwaita-1', version: '>=1.5', required: true),
+  dependency('gio-unix-2.0', required: true),
+  meson.get_compiler('c').find_library('m', required: false)
+]
+
+executable(
+    meson.project_name(),
+    asresources,
+    sources,
+    dependencies: final_deps,
+    install: true,
+    win_subsystem: 'windows'
+)
+
+subdir('data')
+subdir('po')
