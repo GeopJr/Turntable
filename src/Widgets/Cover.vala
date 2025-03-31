@@ -6,6 +6,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	};
 	public signal void style_changed (Style style, Gtk.Orientation orientation);
 
+	Gtk.IconPaintable fallback_icon;
 	Gdk.Texture? cover = null;
 	Adw.TimedAnimation animation;
 	Gsk.RoundedRect? record_center = null;
@@ -255,6 +256,15 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			easing = Adw.Easing.LINEAR,
 			repeat_count = 0
 		};
+
+		fallback_icon = (Gtk.IconTheme.get_for_display (Gdk.Display.get_default ())).lookup_icon (
+			"music-note-outline-symbolic",
+			null,
+			48,
+			this.scale_factor,
+			Gtk.TextDirection.NONE,
+			Gtk.IconLookupFlags.PRELOAD
+		);
 	}
 
 	public override Gtk.SizeRequestMode get_request_mode () {
@@ -276,14 +286,9 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	}
 
 	public override void snapshot (Gtk.Snapshot snapshot) {
-		if (cover == null) {
-			base.snapshot (snapshot);
-			return;
-		}
-
 		float width = this.get_width () * this.scale_factor;
 		float height = this.get_height () * this.scale_factor;
-		float ratio = (float) cover.get_intrinsic_aspect_ratio ();
+		float ratio = cover == null ? 1f : (float) cover.get_intrinsic_aspect_ratio ();
 		float w = 0;
 		float h = 0;
 
@@ -396,19 +401,28 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			}
 		}
 
-		snapshot.translate (Graphene.Point () {
-			x = x,
-			y = y
-		});
+		if (cover == null) {
+			snapshot.translate (Graphene.Point () {
+				x = width / 2 - 64 / 2,
+				y = height / 2 - 64 / 2
+			});
 
-		snapshot.append_scaled_texture (
-			cover,
-			this.scaling_filter,
-			Graphene.Rect () {
-				origin = Graphene.Point () { x=0, y=0 },
-				size = Graphene.Size () { width = w, height = h }
-			}
-		);
+			fallback_icon.snapshot_symbolic (snapshot, 64, 64, {});
+		} else {
+			snapshot.translate (Graphene.Point () {
+				x = x,
+				y = y
+			});
+
+			snapshot.append_scaled_texture (
+				cover,
+				this.scaling_filter,
+				Graphene.Rect () {
+					origin = Graphene.Point () { x=0, y=0 },
+					size = Graphene.Size () { width = w, height = h }
+				}
+			);
+		}
 
 		if (style == Style.SHADOW) {
 			snapshot.pop ();
@@ -423,9 +437,12 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				y = height / 2 - this.record_center_inner.size.height / 2
 			});
 			snapshot.push_rounded_clip (this.record_center);
-			var color = this.get_color ();
-			color.alpha = 1f;
-			snapshot.append_color (color, record_center_inner);
+
+			if (this.cover != null) {
+				var color = this.get_color ();
+				color.alpha = 1f;
+				snapshot.append_color (color, record_center_inner);
+			}
 			snapshot.pop ();
 		}
 
