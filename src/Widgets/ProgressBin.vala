@@ -1,16 +1,24 @@
 public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	Gdk.RGBA color;
 	Gdk.RGBA accent_color;
-	Gdk.RGBA? custom_color = null;
 	Adw.TimedAnimation animation;
+	uint update_timeout = 0;
 
 	private Widgets.Cover.ExtractedColors? _extracted_colors = null;
 	public Widgets.Cover.ExtractedColors? extracted_colors {
 		get { return _extracted_colors; }
 		set {
 			_extracted_colors = value;
-			update_color ();
+
+			if (update_timeout > 0) GLib.Source.remove (update_timeout);
+			update_timeout = GLib.Timeout.add (200, update_color_cb, Priority.LOW);
 		}
+	}
+
+	private bool update_color_cb () {
+		update_timeout = 0;
+		update_color ();
+		return GLib.Source.REMOVE;
 	}
 
 	private void update_color () {
