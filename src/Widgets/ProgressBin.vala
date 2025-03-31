@@ -100,7 +100,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 
 		var target = new Adw.CallbackAnimationTarget (animation_target_cb);
-		animation = new Adw.TimedAnimation (this, 0.0, 1.0, PROGRESS_UPDATE_TIME, target) {
+		animation = new Adw.TimedAnimation (this, 0.0, 1.0, PROGRESS_UPDATE_TIME / 2, target) {
 			easing = Adw.Easing.LINEAR
 		};
 	}
