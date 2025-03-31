@@ -93,19 +93,16 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 	}
 
-	public struct ExtractedColors {
-		public Gdk.RGBA? light;
-		public Gdk.RGBA? dark;
-	}
-	public ExtractedColors? extracted_colors { get; set; default = null; }
+
+	public Utils.Color.ExtractedColors? extracted_colors { get; set; default = null; }
 
 	private class CoverLoader : GLib.Object {
 		private string file_path;
 		private Cancellable cancellable;
 		private Gdk.Texture? texture = null;
-		private ExtractedColors? extracted_colors = null;
+		private Utils.Color.ExtractedColors? extracted_colors = null;
 		public signal void done (Gdk.Texture texture);
-		public signal void done_completely (ExtractedColors extracted_colors);
+		public signal void done_completely (Utils.Color.ExtractedColors? extracted_colors);
 
 		~CoverLoader () {
 			this.texture = null;
@@ -137,13 +134,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			var avg = Utils.Color.get_average_color (pixbuf);
 			if (cancellable.is_cancelled ()) return;
 
-			bool is_dark;
-			var contrast = Utils.Color.get_contrasting_color (avg, out is_dark);
-			if (cancellable.is_cancelled ()) return;
-
-			this.extracted_colors = is_dark
-				? ExtractedColors () { light = avg, dark = contrast }
-				: ExtractedColors () { light = contrast, dark = avg };
+			this.extracted_colors = Utils.Color.get_contrasting_colors (avg);
 			GLib.Idle.add_once (done_completely_idle);
 		}
 
@@ -199,7 +190,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		this.queue_draw ();
 	}
 
-	private void done_completely_cb (ExtractedColors extracted_colors) {
+	private void done_completely_cb (Utils.Color.ExtractedColors? extracted_colors) {
 		working_loader = null;
 		this.extracted_colors = extracted_colors;
 	}

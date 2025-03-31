@@ -1,4 +1,9 @@
 public class Turntable.Utils.Color {
+	public struct ExtractedColors {
+		public Gdk.RGBA? light;
+		public Gdk.RGBA? dark;
+	}
+
 	public static Gdk.RGBA get_average_color (Gdk.Pixbuf pixbuf) {
 		int width = pixbuf.get_width ();
 		int height = pixbuf.get_height ();
@@ -28,27 +33,44 @@ public class Turntable.Utils.Color {
 		return avg_color;
 	}
 
-	public static Gdk.RGBA get_contrasting_color (Gdk.RGBA color, out bool is_dark) {
-		is_dark = true;
+	public static ExtractedColors get_contrasting_colors (Gdk.RGBA color) {
+		ExtractedColors result = { color, color };
 		double luminance = 0.299 * color.red + 0.587 * color.green + 0.114 * color.blue;
 
 		if (luminance > 0.85) {
-			is_dark = false;
-			return new Gdk.RGBA () {
+			result.light = new Gdk.RGBA () {
 				red = color.red * 0.7f,
 				green = color.green * 0.7f,
 				blue = color.blue * 0.7f,
 				alpha = 1f
 			};
+
+			if (luminance > 0.9) {
+				result.dark = new Gdk.RGBA () {
+					red = color.red * 0.5f,
+					green = color.green * 0.5f,
+					blue = color.blue * 0.5f,
+					alpha = 1f
+				};
+			}
 		} else if (luminance < 0.25) {
-			return new Gdk.RGBA () {
+			result.dark = new Gdk.RGBA () {
 				red = color.red + (1.0f - color.red) * 0.7f,
 				green = color.green + (1.0f - color.green) * 0.7f,
 				blue = color.blue + (1.0f - color.blue) * 0.7f,
 				alpha = 1f
 			};
+
+			if (luminance < 0.15) {
+				result.light = new Gdk.RGBA () {
+					red = color.red + (1.0f - color.red) * 0.25f,
+					green = color.green + (1.0f - color.green) * 0.25f,
+					blue = color.blue + (1.0f - color.blue) * 0.25f,
+					alpha = 1f
+				};
+			}
 		}
 
-		return color;
+		return result;
 	}
 }

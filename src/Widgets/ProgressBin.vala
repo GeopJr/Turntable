@@ -4,8 +4,8 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	Adw.TimedAnimation animation;
 	uint update_timeout = 0;
 
-	private Widgets.Cover.ExtractedColors? _extracted_colors = null;
-	public Widgets.Cover.ExtractedColors? extracted_colors {
+	private Utils.Color.ExtractedColors? _extracted_colors = null;
+	public Utils.Color.ExtractedColors? extracted_colors {
 		get { return _extracted_colors; }
 		set {
 			_extracted_colors = value;
