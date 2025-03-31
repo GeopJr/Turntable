@@ -31,8 +31,13 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public int64 position {
 		get { return _position; }
 		set {
-			_position = value;
-			prog.progress = (double)value / (double)this.length;
+			if (this.length == 0) {
+				_position = 0;
+				prog.progress = 0;
+			} else if (this.playing || _position == 0) {
+				_position = value;
+				prog.progress = (double)value / (double)this.length;
+			}
 		}
 	}
 
@@ -40,14 +45,17 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public int64 length {
 		get { return _length; }
 		set {
-			// FIXME: length can be 0
 			_length = value;
-			prog.progress = (double)this.position / (double)value;
+
+			prog.progress = value == 0 ? 0 : (double)this.position / (double)value;
 		}
 	}
 
+	private bool _playing = false;
 	public bool playing {
+		get { return _playing; }
 		set {
+			_playing = value;
 			art_pic.turntable_playing = value;
 			button_play.icon_name = value ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
 		}
