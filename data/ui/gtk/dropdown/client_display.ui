@@ -1,0 +1,36 @@
+<interface>
+	<template class="GtkListItem">
+		<property name="activatable">0</property>
+		<property name="child">
+			<object class="GtkBox">
+				<property name="orientation">horizontal</property>
+				<property name="spacing">6</property>
+				<child>
+					<object class="GtkImage">
+						<property name="margin-start">6</property>
+						<property name="margin-end">6</property>
+						<property name="margin-top">6</property>
+						<property name="margin-bottom">6</property>
+						<binding name="icon-name">
+							<lookup name="client-info-icon" type="TurntableMprisEntry">
+								<lookup name="item">GtkListItem</lookup>
+							</lookup>
+						</binding>
+					</object>
+				</child>
+
+				<child>
+					<object class="GtkLabel">
+						<property name="xalign">0</property>
+						<property name="ellipsize">end</property>
+						<binding name="label">
+							<lookup name="client-info-name" type="TurntableMprisEntry">
+								<lookup name="item">GtkListItem</lookup>
+							</lookup>
+						</binding>
+					</object>
+				</child>
+			</object>
+		</property>
+	</template>
+</interface>

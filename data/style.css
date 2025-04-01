@@ -21,3 +21,7 @@ button.large {
 	margin-right: 16px;
 	margin-bottom: 0px;
 }
+
+.client-chooser > button {
+	border-radius: 9999px;
+}

@@ -119,6 +119,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		prog.extracted_colors = art_pic.extracted_colors;
 	}
 
+	Mpris.Entry? player = null;
 	Widgets.Marquee artist_label;
 	Widgets.Marquee title_label;
 	Widgets.Marquee album_label;
@@ -146,6 +147,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		art_pic.notify["extracted-colors"].connect (update_extracted_colors);
 		controls_overlay = new Widgets.ControlsOverlay (art_pic);
+		controls_overlay.player_changed.connect (update_player);
 		main_box.append (controls_overlay);
 
 		var box2 = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
@@ -207,35 +209,16 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		box3.append (button_next);
 
 		button_next.clicked.connect (() => {
-			foreach (var player in mpris_manager.players) {
-				player.next ();
-			}
+			player.next ();
 		});
 
 		button_play.clicked.connect (() => {
-			foreach (var player in mpris_manager.players) {
-				player.play_pause ();
-			}
+			player.play_pause ();
 		});
 
 		button_prev.clicked.connect (() => {
-			foreach (var player in mpris_manager.players) {
-				player.back ();
-			}
+			player.back ();
 		});
-
-		foreach (var player in mpris_manager.players) {
-			player.initialize_player ();
-			player.bind_property ("title", this, "song-title", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("artist", this, "artist", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("album", this, "album", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("art", this, "art", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("position", this, "position", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("length", this, "length", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("playing", this, "playing", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("can-go-next", button_next, "sensitive", GLib.BindingFlags.SYNC_CREATE);
-			player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
-		}
 
 		update_orientation ();
 
@@ -247,5 +230,24 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		//  	art_pic.turntable = true;
 		//  	return GLib.Source.REMOVE;
 		//  });
+
+		update_player (controls_overlay.last_player); // always ensure
+	}
+
+	private void update_player (Mpris.Entry? new_player) {
+		this.player = new_player;
+		if (new_player == null) return;
+
+		this.player.bind_property ("title", this, "song-title", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("artist", this, "artist", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("album", this, "album", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("art", this, "art", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("position", this, "position", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("length", this, "length", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("playing", this, "playing", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("can-go-next", button_next, "sensitive", GLib.BindingFlags.SYNC_CREATE);
+		this.player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
+
+		button_play.grab_focus ();
 	}
 }

@@ -11,6 +11,10 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	public DesktopBus.Mpris.MediaPlayer2Player? player { get; private set; default = null; }
 	private DesktopBus.Props? props { get; set; default = null; }
 
+	// for expressions
+	public string client_info_name { get { return this.client_info.identity; } }
+	public string client_info_icon { get { return this.client_info.icon; } }
+
 	public bool can_go_next { get; private set; default = false; }
 	public bool can_go_back { get; private set; default = false; }
 	public bool playing { get; private set; default = false; }
@@ -42,7 +46,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		}
 
 		var app_info = new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
-		string icon = "system-execute";
+		string icon = "application-x-executable-symbolic";
 		if (app_info != null) {
 			var app_icon = app_info.get_icon ();
 			if (app_icon != null) icon = app_icon.to_string ();
@@ -78,6 +82,13 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		update_controls ();
 
 		GLib.Timeout.add (PROGRESS_UPDATE_TIME, update_position);
+	}
+
+	public void terminate_player () {
+		if (player == null) return;
+
+		this.props = null;
+		this.player = null;
 	}
 
 	private void on_props_changed (string name, GLib.HashTable<string,Variant> changed, string[] invalid) {

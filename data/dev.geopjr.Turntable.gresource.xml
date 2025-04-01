@@ -2,6 +2,8 @@
 <gresources>
   <gresource prefix="/dev/geopjr/Turntable">
     <file preprocess="xml-stripblanks" alias="gtk/help-overlay.ui">ui/gtk/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks" alias="gtk/dropdown/client.ui">ui/gtk/dropdown/client.ui</file>
+    <file preprocess="xml-stripblanks" alias="gtk/dropdown/client_display.ui">ui/gtk/dropdown/client_display.ui</file>
     <file>style.css</file>
   </gresource>
 

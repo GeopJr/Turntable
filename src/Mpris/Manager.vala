@@ -1,5 +1,6 @@
 public class Turntable.Mpris.Manager : GLib.Object {
 	GLib.Array<Mpris.Entry> entries = new GLib.Array<Mpris.Entry> ();
+	public signal void players_changed ();
 
 	public Mpris.Entry[] players {
 		get {
@@ -28,16 +29,21 @@ public class Turntable.Mpris.Manager : GLib.Object {
 		);
 
 		entries.append_val (new Mpris.Entry (name, mpris));
+		players_changed ();
 	}
 
 	void remove_player (string name, bool whole_bus = false) {
+		bool removed = false;
 		for (int i = 0; i < entries.length ; i++) {
 			var entry = entries.index (i);
 			string name_for_removal = whole_bus ? entry.parent_bus_namespace : entry.bus_namespace;
 			if (name_for_removal != name) continue;
 
 			entries.remove_index_fast (i);
+			removed = true;
 		}
+
+		if (removed) players_changed ();
 	}
 
 	public void on_name_owner_changed (string name, string old_owner, string new_owner) {
