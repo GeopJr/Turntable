@@ -45,7 +45,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		mpris_manager.players_changed.connect (update_store);
 
 		client_dropdown = new Gtk.DropDown (players_store, new Gtk.PropertyExpression (typeof (Mpris.Entry), null, "client-info-name")) {
-			enable_search = true,
+			//  enable_search = false,
 			valign = Gtk.Align.CENTER,
 			halign = Gtk.Align.CENTER,
 			vexpand = true,

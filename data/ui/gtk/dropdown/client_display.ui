@@ -7,10 +7,10 @@
 				<property name="spacing">6</property>
 				<child>
 					<object class="GtkImage">
-						<property name="margin-start">6</property>
-						<property name="margin-end">6</property>
-						<property name="margin-top">6</property>
-						<property name="margin-bottom">6</property>
+						<property name="margin-start">3</property>
+						<property name="margin-end">3</property>
+						<property name="margin-top">3</property>
+						<property name="margin-bottom">3</property>
 						<binding name="icon-name">
 							<lookup name="client-info-icon" type="TurntableMprisEntry">
 								<lookup name="item">GtkListItem</lookup>
