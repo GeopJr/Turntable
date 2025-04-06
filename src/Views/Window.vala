@@ -14,8 +14,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public string? artist {
 		get { return _artist; }
 		set {
+			string old_val = _artist;
 			_artist = value == null ? _("Unknown Artist") : value;
-			update_album_artist_title ();
+
+			if (old_val != _artist)
+				update_album_artist_title ();
 		}
 	}
 
@@ -23,8 +26,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public string? album {
 		get { return _album; }
 		set {
+			string old_val = _album;
 			_album = value == null ? _("Unknown Album") : value;
-			update_album_artist_title ();
+
+			if (old_val != _album)
+				update_album_artist_title ();
 		}
 	}
 
