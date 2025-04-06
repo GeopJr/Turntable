@@ -6,19 +6,25 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	public string? song_title {
 		set {
-			title_label.content = value == null ? _("No Title") : value;
+			title_label.content = value == null ? _("Unknown Title") : value;
 		}
 	}
 
+	private string _artist = _("Unknown Artist");
 	public string? artist {
+		get { return _artist; }
 		set {
-			artist_label.content = value == null ? _("No Artist") : value;
+			_artist = value == null ? _("Unknown Artist") : value;
+			update_album_artist_title ();
 		}
 	}
 
+	private string _album = _("Unknown Album");
 	public string? album {
+		get { return _album; }
 		set {
-			album_label.content = value == null ? _("No Album") : value;
+			_album = value == null ? _("Unknown Album") : value;
+			update_album_artist_title ();
 		}
 	}
 
@@ -83,16 +89,32 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			case Gtk.Orientation.VERTICAL:
 				this.default_width = 0;
 				this.default_height = 300;
+				album_label.visible = false;
 				break;
 			default:
 				this.default_width = 534;
 				this.default_height = 0;
+				album_label.visible = true;
 				break;
 		}
 
 		art_pic.orientation =
 		main_box.orientation =
 		prog.orientation = this.orientation;
+
+		update_album_artist_title ();
+	}
+
+	private void update_album_artist_title () {
+		switch (this.orientation) {
+			case Gtk.Orientation.VERTICAL:
+				artist_label.content = @"$(this.artist) - $(this.album)";
+				break;
+			default:
+				artist_label.content = this.artist;
+				album_label.content = this.album;
+				break;
+		}
 	}
 
 	public Window (Adw.Application app) {
