@@ -34,7 +34,9 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	Gtk.DropDown client_dropdown;
 	construct {
 		this.overflow = Gtk.Overflow.HIDDEN;
-		overlay = new Gtk.Overlay ();
+		overlay = new Gtk.Overlay () {
+			focusable = true
+		};
 		revealer = new Gtk.Revealer () {
 			reveal_child = false,
 			transition_duration = 250,
@@ -45,7 +47,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		mpris_manager.players_changed.connect (update_store);
 
 		client_dropdown = new Gtk.DropDown (players_store, new Gtk.PropertyExpression (typeof (Mpris.Entry), null, "client-info-name")) {
-			//  enable_search = false,
+			//  enable_search = false, // maybe enable if there are more than 10 items
 			valign = Gtk.Align.CENTER,
 			halign = Gtk.Align.CENTER,
 			vexpand = true,
@@ -102,6 +104,10 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		players_store.sort ((GLib.CompareDataFunc<Mpris.Entry>) compare_players);
 
 		if (this.last_player == null) selection_changed (); // if always ensure player
+	}
+
+	public override bool contains (double x, double y) {
+		return this.child.contains (x, y);
 	}
 
 	private static int compare_players (Mpris.Entry a, Mpris.Entry b) {

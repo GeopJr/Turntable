@@ -232,6 +232,16 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		//  });
 
 		update_player (controls_overlay.last_player); // always ensure
+
+		Gtk.GestureClick click_gesture = new Gtk.GestureClick () {
+			button = Gdk.BUTTON_PRIMARY
+		};
+		click_gesture.pressed.connect (on_clicked);
+		prog.add_controller (click_gesture);
+	}
+
+	private void on_clicked (Gtk.GestureClick gesture, int n_press, double x, double y) {
+		if (controls_overlay.get_focus_child () != null && !controls_overlay.contains (x, y)) this.focus_widget = null;
 	}
 
 	private void update_player (Mpris.Entry? new_player) {
