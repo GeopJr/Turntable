@@ -222,6 +222,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 		update_orientation ();
 
+		this.cover_style = Widgets.Cover.Style.from_string (settings.cover_style);
+		this.orientation = settings.orientation_horizontal ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+
 		this.content = new Gtk.WindowHandle () {
 			child = prog
 		};

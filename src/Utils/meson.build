@@ -1,3 +1,4 @@
 sources += files(
-    'Color.vala'
+    'Color.vala',
+    'Settings.vala'
 )

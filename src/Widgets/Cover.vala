@@ -25,6 +25,22 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		CARD,
 		TURNTABLE,
 		SHADOW;
+
+		public string to_string () {
+			switch (this) {
+				case TURNTABLE: return "turntable";
+				case SHADOW: return "shadow";
+				default: return "card";
+			}
+		}
+
+		public static Style from_string (string string_style) {
+			switch (string_style) {
+				case "turntable": return TURNTABLE;
+				case "shadow": return SHADOW;
+				default: return CARD;
+			}
+		}
 	}
 
 	private Style _style = Style.CARD;

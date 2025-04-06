@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="turntable">
 	<schema id="dev.geopjr.Turntable" path="/dev/geopjr/Turntable/">
+		<key name="orientation-horizontal" type="b">
+			<default>true</default>
+		</key>
+		<key name="cover-style" type="s">
+			<default>'card'</default>
+		</key>
 	</schema>
 </schemalist>

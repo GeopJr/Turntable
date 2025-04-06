@@ -3,6 +3,7 @@ namespace Turntable {
 	public static Mpris.Manager mpris_manager;
 	public const int PROGRESS_UPDATE_TIME = 250;
 
+	public static Utils.Settings settings;
     public class Application : Adw.Application {
         private const GLib.ActionEntry[] APP_ENTRIES = {
             { "about", on_about_action },
@@ -40,6 +41,8 @@ namespace Turntable {
 				var msg = "Could not start application: %s".printf (e.message);
 				error (msg);
 			}
+
+			settings = new Utils.Settings ();
 
             this.add_action_entries (APP_ENTRIES, this);
             this.set_accels_for_action ("app.quit", {"<primary>q"});
