@@ -1,4 +1,9 @@
 public class Turntable.Views.Window : Adw.ApplicationWindow {
+	private const GLib.ActionEntry[] ACTION_ENTRIES = {
+		{ "toggle-orientation", on_toggle_orientation },
+		{ "change-style", null, "s", "'card'", on_change_style }
+	};
+
 	public string? song_title {
 		set {
 			title_label.content = value == null ? _("No Title") : value;
@@ -68,6 +73,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			if (value != _orientation) {
 				_orientation = value;
 				update_orientation ();
+				settings.orientation_horizontal = value == Gtk.Orientation.HORIZONTAL;
 			}
 		}
 	}
@@ -111,6 +117,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 						prog.offset = 0;
 						break;
 				}
+
+				settings.cover_style = value.to_string ();
 			}
 		}
 	}
@@ -131,6 +139,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Gtk.Button button_next;
 	Widgets.ControlsOverlay controls_overlay;
 	construct {
+		this.add_action_entries (ACTION_ENTRIES, this);
+
 		this.icon_name = Build.DOMAIN;
 		this.resizable = false;
 		this.title = Build.NAME;
@@ -221,9 +231,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		});
 
 		update_orientation ();
-
-		this.cover_style = Widgets.Cover.Style.from_string (settings.cover_style);
-		this.orientation = settings.orientation_horizontal ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+		update_from_settings ();
 
 		this.content = new Gtk.WindowHandle () {
 			child = prog
@@ -241,6 +249,17 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		click_gesture.pressed.connect (on_clicked);
 		prog.add_controller (click_gesture);
+
+		settings.notify["cover-style"].connect (update_from_settings);
+		settings.notify["orientation-horizontal"].connect (update_from_settings);
+	}
+
+	private void update_from_settings () {
+		this.cover_style = Widgets.Cover.Style.from_string (settings.cover_style);
+		this.orientation = settings.orientation_horizontal ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+
+		unowned var style_action = this.lookup_action ("change-style");
+	    ((GLib.SimpleAction) style_action).set_state (this.cover_style.to_string ());
 	}
 
 	private void on_clicked (Gtk.GestureClick gesture, int n_press, double x, double y) {
@@ -262,5 +281,15 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		this.player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
 
 		button_play.grab_focus ();
+	}
+
+	private void on_toggle_orientation () {
+		this.orientation = this.orientation == Gtk.Orientation.HORIZONTAL ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL;
+	}
+
+	private void on_change_style (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		this.cover_style = Widgets.Cover.Style.from_string (value.get_string ());
+		action.set_state (value);
 	}
 }
