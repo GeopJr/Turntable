@@ -80,8 +80,11 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 	public string content {
 		get { return _content; }
 		set {
-			label.label = value == null ? "" : value;
-			if (animation.state == Adw.AnimationState.PLAYING) animation.skip ();
+			if (_content != value) {
+				_content = value == null ? "" : value;
+				label.label = _content;
+				if (animation.state == Adw.AnimationState.PLAYING) animation.skip ();
+			}
 		}
 	}
 
