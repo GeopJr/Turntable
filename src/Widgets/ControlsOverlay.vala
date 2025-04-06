@@ -48,10 +48,6 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 		client_dropdown = new Gtk.DropDown (players_store, new Gtk.PropertyExpression (typeof (Mpris.Entry), null, "client-info-name")) {
 			//  enable_search = false, // maybe enable if there are more than 10 items
-			valign = Gtk.Align.CENTER,
-			halign = Gtk.Align.CENTER,
-			vexpand = true,
-			hexpand = true,
 			factory = new Gtk.BuilderListItemFactory.from_resource (null, @"$(Build.RESOURCES)gtk/dropdown/client_display.ui"),
 			list_factory = new Gtk.BuilderListItemFactory.from_resource (null, @"$(Build.RESOURCES)gtk/dropdown/client.ui"),
 			tooltip_text = _("Select Player"),
@@ -61,13 +57,59 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		};
 		client_dropdown.notify["selected"].connect (selection_changed);
 
-		var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 12) {
-			css_classes = {"osd"},
+		{
+			var toggle_btn = client_dropdown.get_first_child () as Gtk.ToggleButton;
+			if (toggle_btn != null) toggle_btn.add_css_class ("osd");
+		}
+
+		var main_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 6) {
 			vexpand = true,
-			hexpand = true
+			hexpand = true,
+			valign = Gtk.Align.CENTER,
+			halign = Gtk.Align.CENTER
 		};
 		main_box.append (client_dropdown);
-		revealer.child = main_box;
+
+		var sub_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 6) {
+			halign = Gtk.Align.CENTER
+		};
+		var menu_model = new GLib.Menu ();
+		var main_section_model = new GLib.Menu ();
+		main_section_model.append (_("Clients"), "app.refresh");
+		main_section_model.append (_("Scrobbling"), "app.refresh");
+		menu_model.append_section (null, main_section_model);
+
+		var style_section_model = new GLib.Menu ();
+		style_section_model.append (_("Components"), "app.open-current-account-profile");
+
+		var style_submenu_model = new GLib.Menu ();
+		style_submenu_model.append (_("Card"), "win.change-style('card')");
+		style_submenu_model.append (_("Turntable"), "win.change-style('turntable')");
+		style_submenu_model.append (_("Shadow"), "win.change-style('shadow')");
+
+		style_section_model.append_submenu (_("Style"), style_submenu_model);
+
+		style_section_model.append (_("Toggle Orientation"), "win.toggle-orientation");
+		menu_model.append_section (null, style_section_model);
+
+		var misc_section_model = new GLib.Menu ();
+		misc_section_model = new GLib.Menu ();
+		misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
+		misc_section_model.append (_("About %s").printf (Build.NAME), "app.about");
+		misc_section_model.append (_("Quit"), "app.quit");
+		menu_model.append_section (null, misc_section_model);
+
+		sub_box.append (new Gtk.MenuButton () {
+			icon_name = "open-menu-symbolic",
+			primary = true,
+			menu_model = menu_model,
+			css_classes = {"circular", "osd"}
+		});
+		main_box.append (sub_box);
+		revealer.child = new Adw.Bin () {
+			css_classes = {"osd"},
+			child = main_box
+		};
 
 		overlay.add_overlay (revealer);
 		this.child = overlay;

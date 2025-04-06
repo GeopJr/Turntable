@@ -25,3 +25,8 @@ button.large {
 .client-chooser > button {
 	border-radius: 9999px;
 }
+
+.osd {
+	min-height: unset;
+	min-width: unset;
+}
