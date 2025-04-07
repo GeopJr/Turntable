@@ -92,7 +92,16 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		cover_style_submenu_model.append (_("Shadow"), "win.cover-style('shadow')");
 		style_section_model.append_submenu (_("Cover Style"), cover_style_submenu_model);
 
-		style_section_model.append (_("Toggle Orientation"), "win.toggle-orientation");
+		var orientation_submenu_model = new GLib.Menu ();
+		orientation_submenu_model.append (_("Horizontal"), "win.toggle-orientation(true)");
+		orientation_submenu_model.append (_("Vertical"), "win.toggle-orientation(false)");
+		style_section_model.append_submenu (_("Orientation"), orientation_submenu_model);
+
+		var window_style_submenu_model = new GLib.Menu ();
+		window_style_submenu_model.append (_("Window"), "win.window-style('window')");
+		window_style_submenu_model.append (_("OSD"), "win.window-style('osd')");
+		window_style_submenu_model.append (_("Transparent"), "win.window-style('transparent')");
+		style_section_model.append_submenu (_("Window Style"), window_style_submenu_model);
 		menu_model.append_section (null, style_section_model);
 
 		var misc_section_model = new GLib.Menu ();

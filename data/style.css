@@ -30,3 +30,7 @@ button.large {
 	min-height: unset;
 	min-width: unset;
 }
+
+.transparent {
+	background: transparent;
+}

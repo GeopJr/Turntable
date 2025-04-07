@@ -3,18 +3,20 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public string cover_style { get; set; }
 	public bool component_progressbin { get; set; }
 	public bool component_extract_colors { get; set; }
+	public string window_style { get; set; }
 
-	private static string[] keys_to_init = {
+	private const string[] KEYS_TO_INIT = {
 		"orientation-horizontal",
 		"cover-style",
 		"component-progressbin",
-		"component-extract-colors"
+		"component-extract-colors",
+		"window-style"
 	};
 
 	public Settings () {
 		Object (schema_id: Build.DOMAIN);
 
-		foreach (var key in keys_to_init) {
+		foreach (var key in KEYS_TO_INIT) {
 			init (key);
 		}
 	}

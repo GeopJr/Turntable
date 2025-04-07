@@ -1,11 +1,64 @@
 public class Turntable.Views.Window : Adw.ApplicationWindow {
+	GLib.SimpleAction toggle_orientation_action;
 	GLib.SimpleAction cover_style_action;
 	GLib.SimpleAction component_progressbin_action;
 	GLib.SimpleAction component_extract_colors_action;
+	GLib.SimpleAction window_style_action;
 
-	private const GLib.ActionEntry[] ACTION_ENTRIES = {
-		{ "toggle-orientation", on_toggle_orientation }
-	};
+	public enum Style {
+		WINDOW,
+		OSD,
+		TRANSPARENT;
+
+		public string to_string () {
+			switch (this) {
+				case OSD: return "osd";
+				case TRANSPARENT: return "transparent";
+				default: return "window";
+			}
+		}
+
+		public static Style from_string (string string_style) {
+			switch (string_style) {
+				case "osd": return OSD;
+				case "transparent": return TRANSPARENT;
+				default: return WINDOW;
+			}
+		}
+	}
+
+	private Style _window_style = Style.WINDOW;
+	public Style window_style {
+		get { return _window_style; }
+		set {
+			if (value != _window_style) {
+				switch (_window_style) {
+					case Style.WINDOW: break;
+					case Style.TRANSPARENT:
+						this.add_css_class ("csd");
+						this.remove_css_class (Style.TRANSPARENT.to_string ());
+						break;
+					default:
+						string old_css_class = _window_style.to_string ();
+						if (this.has_css_class (old_css_class)) this.remove_css_class (old_css_class);
+						break;
+				}
+
+				_window_style = value;
+				string window_style_string = value.to_string ();
+				settings.window_style = window_style_string;
+
+				switch (_window_style) {
+					case Style.WINDOW: return;
+					case Style.TRANSPARENT:
+						this.remove_css_class ("csd");
+						break;
+				}
+
+				this.add_css_class (window_style_string);
+			}
+		}
+	}
 
 	public string? song_title {
 		set {
@@ -170,8 +223,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Gtk.Button button_next;
 	Widgets.ControlsOverlay controls_overlay;
 	construct {
-		this.add_action_entries (ACTION_ENTRIES, this);
-
 		this.icon_name = Build.DOMAIN;
 		this.resizable = false;
 		this.title = Build.NAME;
@@ -260,6 +311,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			player.back ();
 		});
 
+		toggle_orientation_action = new GLib.SimpleAction.stateful ("toggle-orientation", GLib.VariantType.BOOLEAN, settings.orientation_horizontal);
+		toggle_orientation_action.change_state.connect (on_toggle_orientation);
+		this.add_action (toggle_orientation_action);
+
 		cover_style_action = new GLib.SimpleAction.stateful ("cover-style", GLib.VariantType.STRING, this.cover_style.to_string ());
 		cover_style_action.change_state.connect (on_change_cover_style);
 		this.add_action (cover_style_action);
@@ -271,6 +326,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_progressbin_action = new GLib.SimpleAction.stateful ("component-progressbin", null, settings.component_progressbin);
 		component_progressbin_action.change_state.connect (on_change_component_progressbin);
 		this.add_action (component_progressbin_action);
+
+		window_style_action = new GLib.SimpleAction.stateful ("window-style", GLib.VariantType.STRING, this.window_style.to_string ());
+		window_style_action.change_state.connect (on_change_window_style);
+		this.add_action (window_style_action);
 
 		update_orientation ();
 		update_from_settings ();
@@ -297,6 +356,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["orientation-horizontal"].connect (update_orientation_from_settings);
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
 		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
+		settings.notify["window-style"].connect (update_cover_from_settings);
 
 		this.show.connect (on_realize);
 	}
@@ -310,11 +370,17 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_cover_from_settings ();
 		update_progressbin_from_settings ();
 		update_extract_colors_from_settings ();
+		update_window_from_settings ();
 	}
 
 	private void update_cover_from_settings () {
 		this.cover_style = Widgets.Cover.Style.from_string (settings.cover_style);
 		cover_style_action.set_state (this.cover_style.to_string ());
+	}
+
+	private void update_window_from_settings () {
+		this.window_style = Style.from_string (settings.cover_style);
+		window_style_action.set_state (this.window_style.to_string ());
 	}
 
 	private void update_progressbin_from_settings () {
@@ -329,6 +395,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	private void update_orientation_from_settings () {
 		this.orientation = settings.orientation_horizontal ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+		toggle_orientation_action.set_state (settings.orientation_horizontal);
 	}
 
 	private void on_clicked (Gtk.GestureClick gesture, int n_press, double x, double y) {
@@ -352,8 +419,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		button_play.grab_focus ();
 	}
 
-	private void on_toggle_orientation () {
-		this.orientation = this.orientation == Gtk.Orientation.HORIZONTAL ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL;
+	private void on_toggle_orientation (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		this.orientation = value.get_boolean () ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+		action.set_state (value);
 	}
 
 	private void on_change_cover_style (GLib.SimpleAction action, GLib.Variant? value) {
@@ -373,6 +442,12 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		if (value == null) return;
 		this.prog.extract_colors_enabled = value.get_boolean ();
 		settings.component_extract_colors = value.get_boolean ();
+		action.set_state (value);
+	}
+
+	private void on_change_window_style (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		this.window_style = Style.from_string (value.get_string ());
 		action.set_state (value);
 	}
 }

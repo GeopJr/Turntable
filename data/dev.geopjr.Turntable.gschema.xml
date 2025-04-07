@@ -13,5 +13,8 @@
     <key name="component-extract-colors" type="b">
 			<default>true</default>
 		</key>
+    <key name="window-style" type="s">
+			<default>''</default>
+		</key>
 	</schema>
 </schemalist>
