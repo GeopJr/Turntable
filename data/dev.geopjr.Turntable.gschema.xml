@@ -16,5 +16,8 @@
     <key name="window-style" type="s">
 			<default>''</default>
 		</key>
+    <key name="client-icon-style" type="s">
+			<default>'symbolic'</default>
+		</key>
 	</schema>
 </schemalist>

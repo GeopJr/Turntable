@@ -86,22 +86,31 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
 		style_section_model.append_submenu (_("Components"), component_submenu_model);
 
-		var cover_style_submenu_model = new GLib.Menu ();
-		cover_style_submenu_model.append (_("Card"), "win.cover-style('card')");
-		cover_style_submenu_model.append (_("Turntable"), "win.cover-style('turntable')");
-		cover_style_submenu_model.append (_("Shadow"), "win.cover-style('shadow')");
-		style_section_model.append_submenu (_("Cover Style"), cover_style_submenu_model);
-
 		var orientation_submenu_model = new GLib.Menu ();
 		orientation_submenu_model.append (_("Horizontal"), "win.toggle-orientation(true)");
 		orientation_submenu_model.append (_("Vertical"), "win.toggle-orientation(false)");
 		style_section_model.append_submenu (_("Orientation"), orientation_submenu_model);
 
+		var style_submenu_model = new GLib.Menu ();
+		var client_style_submenu_model = new GLib.Menu ();
+		client_style_submenu_model.append (_("Symbolic"), "win.client-icon-style('symbolic')");
+		client_style_submenu_model.append (_("Full Color"), "win.client-icon-style('full-color')");
+		client_style_submenu_model.append (_("Disabled"), "win.client-icon-style('disabled')");
+		style_submenu_model.append_submenu (_("Client Icon"), client_style_submenu_model);
+
+		var cover_style_submenu_model = new GLib.Menu ();
+		cover_style_submenu_model.append (_("Card"), "win.cover-style('card')");
+		cover_style_submenu_model.append (_("Turntable"), "win.cover-style('turntable')");
+		cover_style_submenu_model.append (_("Shadow"), "win.cover-style('shadow')");
+		style_submenu_model.append_submenu (_("Cover"), cover_style_submenu_model);
+
 		var window_style_submenu_model = new GLib.Menu ();
 		window_style_submenu_model.append (_("Window"), "win.window-style('window')");
 		window_style_submenu_model.append (_("OSD"), "win.window-style('osd')");
 		window_style_submenu_model.append (_("Transparent"), "win.window-style('transparent')");
-		style_section_model.append_submenu (_("Window Style"), window_style_submenu_model);
+		style_submenu_model.append_submenu (_("Window"), window_style_submenu_model);
+
+		style_section_model.append_submenu (_("Style"), style_submenu_model);
 		menu_model.append_section (null, style_section_model);
 
 		var misc_section_model = new GLib.Menu ();

@@ -4,6 +4,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction component_progressbin_action;
 	GLib.SimpleAction component_extract_colors_action;
 	GLib.SimpleAction window_style_action;
+	GLib.SimpleAction client_icon_style_action;
 
 	public enum Style {
 		WINDOW,
@@ -267,7 +268,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		box2.append (album_label);
 
 		prog = new Widgets.ProgressBin () {
-			child = main_box
+			content = main_box
 		};
 
 		var box3 = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8) {
@@ -331,6 +332,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		window_style_action.change_state.connect (on_change_window_style);
 		this.add_action (window_style_action);
 
+		client_icon_style_action = new GLib.SimpleAction.stateful ("client-icon-style", GLib.VariantType.STRING, settings.client_icon_style.to_string ());
+		client_icon_style_action.change_state.connect (on_change_client_icon_style);
+		this.add_action (client_icon_style_action);
+
 		update_orientation ();
 		update_from_settings ();
 
@@ -357,6 +362,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
 		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
 		settings.notify["window-style"].connect (update_cover_from_settings);
+		settings.notify["client-icon-style"].connect (update_client_icon_from_settings);
 
 		this.show.connect (on_realize);
 	}
@@ -371,6 +377,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_progressbin_from_settings ();
 		update_extract_colors_from_settings ();
 		update_window_from_settings ();
+		update_client_icon_from_settings ();
 	}
 
 	private void update_cover_from_settings () {
@@ -381,6 +388,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_window_from_settings () {
 		this.window_style = Style.from_string (settings.cover_style);
 		window_style_action.set_state (this.window_style.to_string ());
+	}
+
+	private void update_client_icon_from_settings () {
+		this.prog.client_icon_style = Widgets.ProgressBin.ClientIconStyle.from_string (settings.client_icon_style);
+		window_style_action.set_state (this.prog.client_icon_style.to_string ());
 	}
 
 	private void update_progressbin_from_settings () {
@@ -404,7 +416,24 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	private void update_player (Mpris.Entry? new_player) {
 		this.player = new_player;
-		if (new_player == null) return;
+		if (new_player == null) {
+			this.song_title =
+			this.artist =
+			this.album =
+			this.art =
+			prog.client_icon =
+			prog.client_name = null;
+
+			this.position =
+			this.length = 0;
+
+			this.playing =
+			button_next.sensitive =
+			button_prev.sensitive =
+				false;
+
+			return;
+		}
 
 		this.player.bind_property ("title", this, "song-title", GLib.BindingFlags.SYNC_CREATE);
 		this.player.bind_property ("artist", this, "artist", GLib.BindingFlags.SYNC_CREATE);
@@ -415,6 +444,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		this.player.bind_property ("playing", this, "playing", GLib.BindingFlags.SYNC_CREATE);
 		this.player.bind_property ("can-go-next", button_next, "sensitive", GLib.BindingFlags.SYNC_CREATE);
 		this.player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
+
+		prog.client_icon = this.player.client_info_icon;
+		prog.client_name = this.player.client_info_name;
 
 		button_play.grab_focus ();
 	}
@@ -448,6 +480,12 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_window_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		this.window_style = Style.from_string (value.get_string ());
+		action.set_state (value);
+	}
+
+	private void on_change_client_icon_style (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		this.prog.client_icon_style = Widgets.ProgressBin.ClientIconStyle.from_string (value.get_string ());
 		action.set_state (value);
 	}
 }

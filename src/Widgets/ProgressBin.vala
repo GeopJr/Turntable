@@ -3,6 +3,88 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	Gdk.RGBA accent_color;
 	Adw.TimedAnimation animation;
 	uint update_timeout = 0;
+	Gtk.Overlay overlay;
+	Gtk.Image client_icon_widget;
+
+	public enum ClientIconStyle {
+		SYMBOLIC,
+		FULL_COLOR,
+		DISABLED;
+
+		public string to_string () {
+			switch (this) {
+				case DISABLED: return "disabled";
+				case FULL_COLOR: return "full-color";
+				default: return "symbolic";
+			}
+		}
+
+		public static ClientIconStyle from_string (string string_style) {
+			switch (string_style) {
+				case "disabled": return DISABLED;
+				case "full-color": return FULL_COLOR;
+				default: return SYMBOLIC;
+			}
+		}
+	}
+
+	private void update_client_icon () {
+		bool visibility = true;
+		string name = this.client_icon;
+
+		switch (this.client_icon_style) {
+			case DISABLED:
+				visibility = false;
+				break;
+			case FULL_COLOR:
+				if (name.down ().has_suffix ("-symbolic")) {
+					name = name.substring (0, name.length - 9);
+				}
+				break;
+			case SYMBOLIC:
+				if (!name.down ().has_suffix ("-symbolic")) {
+					name = @"$name-symbolic";
+				}
+				break;
+		}
+
+		_client_icon = client_icon_widget.icon_name = name;
+		client_icon_widget.visible = visibility;
+	}
+
+	public Gtk.Widget content {
+		set {
+			overlay.child = value;
+		}
+	}
+
+	private ClientIconStyle _client_icon_style = ClientIconStyle.SYMBOLIC;
+	public ClientIconStyle client_icon_style {
+		get { return _client_icon_style; }
+		set {
+			if (value != _client_icon_style) {
+				_client_icon_style = value;
+				update_client_icon ();
+			}
+		}
+	}
+
+	private string _client_icon = "application-x-executable-symbolic";
+	public string client_icon {
+		get { return _client_icon; }
+		set {
+			if (_client_icon != value) {
+				_client_icon = value;
+				update_client_icon ();
+			}
+		}
+	}
+
+	public string? client_name {
+		set {
+			client_icon_widget.tooltip_text = value == null || value == "" ? _("Unknown Client") : value;
+		}
+	}
 
 	private Utils.Color.ExtractedColors? _extracted_colors = null;
 	public Utils.Color.ExtractedColors? extracted_colors {
@@ -125,6 +207,18 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		animation = new Adw.TimedAnimation (this, 0.0, 1.0, PROGRESS_UPDATE_TIME / 2, target) {
 			easing = Adw.Easing.LINEAR
 		};
+
+		overlay = new Gtk.Overlay ();
+		client_icon_widget = new Gtk.Image.from_icon_name ("application-x-executable-symbolic") {
+			tooltip_text = _("Unknown Client"),
+			valign = Gtk.Align.END,
+			halign = Gtk.Align.END,
+			margin_end = 6,
+			margin_bottom = 6
+		};
+
+		overlay.add_overlay (client_icon_widget);
+		this.child = overlay;
 	}
 
 	public override void snapshot (Gtk.Snapshot snapshot) {
