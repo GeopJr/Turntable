@@ -4,8 +4,35 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		{ 0f, { 0, 0, 0, 1f } },
 		{ 1f, { 0, 0, 0, 0f } },
 	};
+	const Gsk.ColorStop[] GRADIENT_SHINE = {
+		{ 0f, { 1, 1, 1, 0f } },
+		{ 0.11f, { 1, 1, 1, 0.18f } },
+		{ 0.13f, { 1, 1, 1, 0.18f } },
+		{ 0.16f, { 1, 1, 1, 0f } },
+		{ 0.5f, { 1, 1, 1, 0f } },
+		{ 0.61f, { 1, 1, 1, 0.1f } },
+		{ 0.63f, { 1, 1, 1, 0.1f } },
+		{ 0.69f, { 1, 1, 1, 0f } },
+		{ 1f, { 1, 1, 1, 0f } },
+	};
 	public signal void style_changed (Style style, Gtk.Orientation orientation);
 
+
+	Gdk.RGBA vinyl_color;
+	private void update_vinyl_color () {
+		Gdk.RGBA new_color = { 0f, 0f, 0f, 1f };
+
+		if (this.extracted_colors != null && settings.component_extract_colors) {
+			new_color = Adw.StyleManager.get_default ().dark
+				? extracted_colors.light
+				: extracted_colors.dark;
+		}
+
+		if (new_color != vinyl_color) {
+			vinyl_color = new_color;
+			this.queue_draw ();
+		}
+	}
 	Gtk.IconPaintable fallback_icon;
 	Gdk.Texture? cover = null;
 	Adw.TimedAnimation animation;
@@ -16,8 +43,8 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			y = 0
 		},
 		size = Graphene.Size () {
-			width = 64,
-			height = 64
+			width = 128,
+			height = 128
 		}
 	};
 
@@ -210,6 +237,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	private void done_completely_cb (Utils.Color.ExtractedColors? extracted_colors) {
 		working_loader = null;
 		this.extracted_colors = extracted_colors;
+		update_vinyl_color ();
 	}
 
 	private int32 _size = 192;
@@ -281,6 +309,10 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			Gtk.TextDirection.NONE,
 			Gtk.IconLookupFlags.PRELOAD
 		);
+
+		Adw.StyleManager.get_default ().notify["dark"].connect (update_vinyl_color);
+		settings.notify["component-extract-colors"].connect (update_vinyl_color);
+		update_vinyl_color ();
 	}
 
 	public override Gtk.SizeRequestMode get_request_mode () {
@@ -330,18 +362,71 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		float y = Math.floorf ((height - h)) / 2f;
 
 		snapshot.save ();
-		snapshot.scale (1.0f / this.scale_factor, 1.0f / this.scale_factor);
 		if (this.turntable) {
-			snapshot.translate (Graphene.Point () {
+			var snapshot_vinyl_color_groove = vinyl_color;
+			snapshot_vinyl_color_groove.alpha = 0.8f;
+
+			snapshot.append_repeating_radial_gradient (
+				Graphene.Rect () {
+					origin = Graphene.Point () {
+						x = 0,
+						y = 0
+					},
+					size = Graphene.Size () {
+						width = width,
+						height = height
+					}
+				},
+				Graphene.Point () {
+					x = width / 2,
+					y = height / 2
+				},
+				2f,
+				2f,
+				0f,
+				2f,
+				{
+					{ 0f, vinyl_color },
+					{ 0.95f, vinyl_color },
+					{ 1f, snapshot_vinyl_color_groove },
+				}
+			);
+
+			snapshot.append_conic_gradient (
+				Graphene.Rect () {
+					origin = Graphene.Point () {
+						x = 0,
+						y = 0
+					},
+					size = Graphene.Size () {
+						width = width,
+						height = height
+					}
+				},
+				Graphene.Point () {
+					x = width / 2,
+					y = height / 2
+				},
+				0,
+				GRADIENT_SHINE
+			);
+
+			var translation_point = Graphene.Point () {
 				x = width / 2,
 				y = height / 2
-			});
+			};
+			snapshot.translate (translation_point);
+			snapshot.scale (0.65f / this.scale_factor, 0.65f / this.scale_factor);
 			snapshot.rotate ((float) (360 * animation.value));
 			snapshot.translate (Graphene.Point () {
-				x = - (width / 2),
-				y = - (height / 2)
+				x = - translation_point.x,
+				y = - translation_point.y
 			});
-		} else if (this.style == Style.SHADOW) {
+		} else {
+			snapshot.scale (1.0f / this.scale_factor, 1.0f / this.scale_factor);
+		}
+
+		if (this.style == Style.SHADOW) {
 			snapshot.push_mask (Gsk.MaskMode.INVERTED_ALPHA);
 
 			if (this.orientation == Gtk.Orientation.HORIZONTAL) {
@@ -418,17 +503,63 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 
 		if (cover == null) {
+			Gdk.RGBA note_color = this.get_color ();
+			if (this.turntable && this.record_center != null) {
+				var translation_point = Graphene.Point () {
+					x = width / 2 - this.record_center_inner.size.width / 2,
+					y = height / 2 - this.record_center_inner.size.height / 2
+				};
+				snapshot.translate (translation_point);
+
+				snapshot.push_rounded_clip (this.record_center);
+				snapshot.append_color (
+					{
+						1f - vinyl_color.red,
+						1f - vinyl_color.green,
+						1f - vinyl_color.blue,
+						1f
+					},
+					record_center_inner
+				);
+				snapshot.pop ();
+
+				snapshot.translate (Graphene.Point () {
+					x = -translation_point.x,
+					y = -translation_point.y
+				});
+
+				note_color = {0, 0, 0, 0.5f};
+			}
+
 			snapshot.translate (Graphene.Point () {
 				x = width / 2 - 64 / 2,
 				y = height / 2 - 64 / 2
 			});
 
-			fallback_icon.snapshot_symbolic (snapshot, 64, 64, {});
+			fallback_icon.snapshot_symbolic (snapshot, 64, 64, {note_color});
 		} else {
 			snapshot.translate (Graphene.Point () {
 				x = x,
 				y = y
 			});
+
+			if (this.turntable) {
+				snapshot.push_rounded_clip (
+					Gsk.RoundedRect ().init_from_rect (
+						Graphene.Rect () {
+							origin = Graphene.Point () {
+								x = 0,
+								y = 0
+							},
+							size = Graphene.Size () {
+								width = w,
+								height = h
+							}
+						},
+						9999f
+					)
+				);
+			}
 
 			snapshot.append_scaled_texture (
 				cover,
@@ -438,6 +569,10 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 					size = Graphene.Size () { width = w, height = h }
 				}
 			);
+
+			if (this.turntable) {
+				snapshot.pop ();
+			}
 		}
 
 		if (style == Style.SHADOW) {
@@ -446,21 +581,6 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 
 		snapshot.restore ();
-
-		if (this.turntable && this.record_center != null) {
-			snapshot.translate (Graphene.Point () {
-				x = width / 2 - this.record_center_inner.size.width / 2,
-				y = height / 2 - this.record_center_inner.size.height / 2
-			});
-			snapshot.push_rounded_clip (this.record_center);
-
-			if (this.cover != null) {
-				var color = this.get_color ();
-				color.alpha = 1f;
-				snapshot.append_color (color, record_center_inner);
-			}
-			snapshot.pop ();
-		}
 
 		base.snapshot (snapshot);
 	}
