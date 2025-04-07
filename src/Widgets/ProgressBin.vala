@@ -8,12 +8,10 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 
 	public enum ClientIconStyle {
 		SYMBOLIC,
-		FULL_COLOR,
-		DISABLED;
+		FULL_COLOR;
 
 		public string to_string () {
 			switch (this) {
-				case DISABLED: return "disabled";
 				case FULL_COLOR: return "full-color";
 				default: return "symbolic";
 			}
@@ -21,21 +19,22 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 
 		public static ClientIconStyle from_string (string string_style) {
 			switch (string_style) {
-				case "disabled": return DISABLED;
 				case "full-color": return FULL_COLOR;
 				default: return SYMBOLIC;
 			}
 		}
 	}
 
+	public bool client_icon_enabled {
+		set {
+			client_icon_widget.visible = value;
+		}
+	}
+
 	private void update_client_icon () {
-		bool visibility = true;
 		string name = this.client_icon;
 
 		switch (this.client_icon_style) {
-			case DISABLED:
-				visibility = false;
-				break;
 			case FULL_COLOR:
 				if (name.down ().has_suffix ("-symbolic")) {
 					name = name.substring (0, name.length - 9);
@@ -49,7 +48,6 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 
 		_client_icon = client_icon_widget.icon_name = name;
-		client_icon_widget.visible = visibility;
 	}
 
 	public Gtk.Widget content {

@@ -46,6 +46,7 @@ namespace Turntable {
 
 			this.add_action_entries (APP_ENTRIES, this);
 			this.set_accels_for_action ("app.quit", {"<primary>q"});
+			this.set_accels_for_action ("app.new-window", {"<primary>n"});
 		}
 
 		public static int main (string[] args) {

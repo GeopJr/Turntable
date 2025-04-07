@@ -76,13 +76,13 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		var menu_model = new GLib.Menu ();
 		var main_section_model = new GLib.Menu ();
 		main_section_model.append (_("New Window"), "app.new-window");
-		main_section_model.append (_("Clients"), "app.refresh");
 		main_section_model.append (_("Scrobbling"), "app.refresh");
 		menu_model.append_section (null, main_section_model);
 
 		var style_section_model = new GLib.Menu ();
 		var component_submenu_model = new GLib.Menu ();
 		component_submenu_model.append (_("Background Progress"), "win.component-progressbin");
+		component_submenu_model.append (_("Client Icon"), "win.component-client-icon");
 		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
 		style_section_model.append_submenu (_("Components"), component_submenu_model);
 
@@ -93,9 +93,8 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 		var style_submenu_model = new GLib.Menu ();
 		var client_style_submenu_model = new GLib.Menu ();
-		client_style_submenu_model.append (_("Symbolic"), "win.client-icon-style('symbolic')");
-		client_style_submenu_model.append (_("Full Color"), "win.client-icon-style('full-color')");
-		client_style_submenu_model.append (_("Disabled"), "win.client-icon-style('disabled')");
+		client_style_submenu_model.append (_("Symbolic"), "win.client-icon-style-symbolic(true)");
+		client_style_submenu_model.append (_("Full Color"), "win.client-icon-style-symbolic(false)");
 		style_submenu_model.append_submenu (_("Client Icon"), client_style_submenu_model);
 
 		var cover_style_submenu_model = new GLib.Menu ();
@@ -115,7 +114,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 		var misc_section_model = new GLib.Menu ();
 		misc_section_model = new GLib.Menu ();
-		misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
+		//  misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
 		misc_section_model.append (_("About %s").printf (Build.NAME), "app.about");
 		misc_section_model.append (_("Quit"), "app.quit");
 		menu_model.append_section (null, misc_section_model);

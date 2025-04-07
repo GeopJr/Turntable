@@ -4,7 +4,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction component_progressbin_action;
 	GLib.SimpleAction component_extract_colors_action;
 	GLib.SimpleAction window_style_action;
-	GLib.SimpleAction client_icon_style_action;
+	GLib.SimpleAction client_icon_style_symbolic_action;
+	GLib.SimpleAction component_client_icon_action;
 
 	public enum Style {
 		WINDOW,
@@ -47,7 +48,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 				_window_style = value;
 				string window_style_string = value.to_string ();
-				settings.window_style = window_style_string;
 
 				switch (_window_style) {
 					case Style.WINDOW: return;
@@ -142,7 +142,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			if (value != _orientation) {
 				_orientation = value;
 				update_orientation ();
-				settings.orientation_horizontal = value == Gtk.Orientation.HORIZONTAL;
 			}
 		}
 	}
@@ -202,8 +201,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 						prog.offset = 0;
 						break;
 				}
-
-				settings.cover_style = value.to_string ();
 			}
 		}
 	}
@@ -332,9 +329,13 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		window_style_action.change_state.connect (on_change_window_style);
 		this.add_action (window_style_action);
 
-		client_icon_style_action = new GLib.SimpleAction.stateful ("client-icon-style", GLib.VariantType.STRING, settings.client_icon_style.to_string ());
-		client_icon_style_action.change_state.connect (on_change_client_icon_style);
-		this.add_action (client_icon_style_action);
+		client_icon_style_symbolic_action = new GLib.SimpleAction.stateful ("client-icon-style-symbolic", GLib.VariantType.BOOLEAN, settings.client_icon_style_symbolic);
+		client_icon_style_symbolic_action.change_state.connect (on_change_client_icon_style);
+		this.add_action (client_icon_style_symbolic_action);
+
+		component_client_icon_action = new GLib.SimpleAction.stateful ("component-client-icon", null, settings.component_client_icon);
+		component_client_icon_action.change_state.connect (on_change_component_client_icon);
+		this.add_action (component_client_icon_action);
 
 		update_orientation ();
 		update_from_settings ();
@@ -362,7 +363,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
 		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
 		settings.notify["window-style"].connect (update_cover_from_settings);
-		settings.notify["client-icon-style"].connect (update_client_icon_from_settings);
+		settings.notify["client-icon-style-symbolic"].connect (update_client_icon_from_settings);
+		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
 
 		this.show.connect (on_realize);
 	}
@@ -378,6 +380,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_extract_colors_from_settings ();
 		update_window_from_settings ();
 		update_client_icon_from_settings ();
+		update_component_client_icon_from_settings ();
 	}
 
 	private void update_cover_from_settings () {
@@ -391,8 +394,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	}
 
 	private void update_client_icon_from_settings () {
-		this.prog.client_icon_style = Widgets.ProgressBin.ClientIconStyle.from_string (settings.client_icon_style);
-		window_style_action.set_state (this.prog.client_icon_style.to_string ());
+		this.prog.client_icon_style = settings.client_icon_style_symbolic ? Widgets.ProgressBin.ClientIconStyle.SYMBOLIC : Widgets.ProgressBin.ClientIconStyle.FULL_COLOR;
+		client_icon_style_symbolic_action.set_state (settings.client_icon_style_symbolic);
 	}
 
 	private void update_progressbin_from_settings () {
@@ -408,6 +411,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_orientation_from_settings () {
 		this.orientation = settings.orientation_horizontal ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
 		toggle_orientation_action.set_state (settings.orientation_horizontal);
+	}
+
+	private void update_component_client_icon_from_settings () {
+		this.prog.client_icon_enabled = settings.component_client_icon;
+		component_client_icon_action.set_state (settings.component_client_icon);
 	}
 
 	private void on_clicked (Gtk.GestureClick gesture, int n_press, double x, double y) {
@@ -453,39 +461,37 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	private void on_toggle_orientation (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
-		this.orientation = value.get_boolean () ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
-		action.set_state (value);
+		settings.orientation_horizontal = value.get_boolean ();
 	}
 
 	private void on_change_cover_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
-		this.cover_style = Widgets.Cover.Style.from_string (value.get_string ());
-		action.set_state (value);
+		settings.cover_style = value.get_string ();
 	}
 
 	private void on_change_component_progressbin (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
-		this.prog.enabled = value.get_boolean ();
 		settings.component_progressbin = value.get_boolean ();
-		action.set_state (value);
 	}
 
 	private void on_change_component_extract_colors (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
-		this.prog.extract_colors_enabled = value.get_boolean ();
 		settings.component_extract_colors = value.get_boolean ();
-		action.set_state (value);
 	}
 
 	private void on_change_window_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
-		this.window_style = Style.from_string (value.get_string ());
-		action.set_state (value);
+		settings.window_style = value.get_string ();
 	}
 
 	private void on_change_client_icon_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
-		this.prog.client_icon_style = Widgets.ProgressBin.ClientIconStyle.from_string (value.get_string ());
-		action.set_state (value);
+		settings.client_icon_style_symbolic = value.get_boolean ();
+		settings.component_client_icon = true;
+	}
+
+	private void on_change_component_client_icon (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.component_client_icon = value.get_boolean ();
 	}
 }

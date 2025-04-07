@@ -4,7 +4,8 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public bool component_progressbin { get; set; }
 	public bool component_extract_colors { get; set; }
 	public string window_style { get; set; }
-	public string client_icon_style { get; set; }
+	public bool client_icon_style_symbolic { get; set; }
+	public bool component_client_icon { get; set; }
 
 	private const string[] KEYS_TO_INIT = {
 		"orientation-horizontal",
@@ -12,7 +13,8 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"component-progressbin",
 		"component-extract-colors",
 		"window-style",
-		"client-icon-style"
+		"client-icon-style-symbolic",
+		"component-client-icon"
 	};
 
 	public Settings () {
