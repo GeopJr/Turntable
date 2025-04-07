@@ -75,19 +75,22 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		};
 		var menu_model = new GLib.Menu ();
 		var main_section_model = new GLib.Menu ();
+		main_section_model.append (_("New Window"), "app.new-window");
 		main_section_model.append (_("Clients"), "app.refresh");
 		main_section_model.append (_("Scrobbling"), "app.refresh");
 		menu_model.append_section (null, main_section_model);
 
 		var style_section_model = new GLib.Menu ();
-		style_section_model.append (_("Components"), "app.open-current-account-profile");
+		var component_submenu_model = new GLib.Menu ();
+		component_submenu_model.append (_("Background Progress"), "win.component-progressbin");
+		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
+		style_section_model.append_submenu (_("Components"), component_submenu_model);
 
-		var style_submenu_model = new GLib.Menu ();
-		style_submenu_model.append (_("Card"), "win.change-style('card')");
-		style_submenu_model.append (_("Turntable"), "win.change-style('turntable')");
-		style_submenu_model.append (_("Shadow"), "win.change-style('shadow')");
-
-		style_section_model.append_submenu (_("Style"), style_submenu_model);
+		var cover_style_submenu_model = new GLib.Menu ();
+		cover_style_submenu_model.append (_("Card"), "win.cover-style('card')");
+		cover_style_submenu_model.append (_("Turntable"), "win.cover-style('turntable')");
+		cover_style_submenu_model.append (_("Shadow"), "win.cover-style('shadow')");
+		style_section_model.append_submenu (_("Cover Style"), cover_style_submenu_model);
 
 		style_section_model.append (_("Toggle Orientation"), "win.toggle-orientation");
 		menu_model.append_section (null, style_section_model);

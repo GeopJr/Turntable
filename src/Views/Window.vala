@@ -1,7 +1,10 @@
 public class Turntable.Views.Window : Adw.ApplicationWindow {
+	GLib.SimpleAction cover_style_action;
+	GLib.SimpleAction component_progressbin_action;
+	GLib.SimpleAction component_extract_colors_action;
+
 	private const GLib.ActionEntry[] ACTION_ENTRIES = {
-		{ "toggle-orientation", on_toggle_orientation },
-		{ "change-style", null, "s", "'card'", on_change_style }
+		{ "toggle-orientation", on_toggle_orientation }
 	};
 
 	public string? song_title {
@@ -185,7 +188,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		art_pic.notify["extracted-colors"].connect (update_extracted_colors);
 		controls_overlay = new Widgets.ControlsOverlay (art_pic);
-		controls_overlay.player_changed.connect (update_player);
 		main_box.append (controls_overlay);
 
 		var box2 = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
@@ -258,6 +260,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			player.back ();
 		});
 
+		cover_style_action = new GLib.SimpleAction.stateful ("cover-style", GLib.VariantType.STRING, this.cover_style.to_string ());
+		cover_style_action.change_state.connect (on_change_cover_style);
+		this.add_action (cover_style_action);
+
+		component_extract_colors_action = new GLib.SimpleAction.stateful ("component-extract-colors", null, settings.component_extract_colors);
+		component_extract_colors_action.change_state.connect (on_change_component_extract_colors);
+		this.add_action (component_extract_colors_action);
+
+		component_progressbin_action = new GLib.SimpleAction.stateful ("component-progressbin", null, settings.component_progressbin);
+		component_progressbin_action.change_state.connect (on_change_component_progressbin);
+		this.add_action (component_progressbin_action);
+
 		update_orientation ();
 		update_from_settings ();
 
@@ -270,6 +284,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		//  	return GLib.Source.REMOVE;
 		//  });
 
+		controls_overlay.player_changed.connect (update_player);
 		update_player (controls_overlay.last_player); // always ensure
 
 		Gtk.GestureClick click_gesture = new Gtk.GestureClick () {
@@ -278,20 +293,46 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		click_gesture.pressed.connect (on_clicked);
 		prog.add_controller (click_gesture);
 
-		settings.notify["cover-style"].connect (update_from_settings);
-		settings.notify["orientation-horizontal"].connect (update_from_settings);
+		settings.notify["cover-style"].connect (update_cover_from_settings);
+		settings.notify["orientation-horizontal"].connect (update_orientation_from_settings);
+		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
+		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
+
+		this.show.connect (on_realize);
+	}
+
+	private void on_realize () {
+		art_pic.turntable_playing = this.playing;
 	}
 
 	private void update_from_settings () {
-		this.cover_style = Widgets.Cover.Style.from_string (settings.cover_style);
-		this.orientation = settings.orientation_horizontal ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
+		update_orientation_from_settings ();
+		update_cover_from_settings ();
+		update_progressbin_from_settings ();
+		update_extract_colors_from_settings ();
+	}
 
-		unowned var style_action = this.lookup_action ("change-style");
-	    ((GLib.SimpleAction) style_action).set_state (this.cover_style.to_string ());
+	private void update_cover_from_settings () {
+		this.cover_style = Widgets.Cover.Style.from_string (settings.cover_style);
+		cover_style_action.set_state (this.cover_style.to_string ());
+	}
+
+	private void update_progressbin_from_settings () {
+		this.prog.enabled = settings.component_progressbin;
+		component_progressbin_action.set_state (this.prog.enabled);
+	}
+
+	private void update_extract_colors_from_settings () {
+		this.prog.extract_colors_enabled = settings.component_extract_colors;
+		component_extract_colors_action.set_state (this.prog.extract_colors_enabled);
+	}
+
+	private void update_orientation_from_settings () {
+		this.orientation = settings.orientation_horizontal ? Gtk.Orientation.HORIZONTAL : Gtk.Orientation.VERTICAL;
 	}
 
 	private void on_clicked (Gtk.GestureClick gesture, int n_press, double x, double y) {
-		if (controls_overlay.get_focus_child () != null && !controls_overlay.contains (x, y)) this.focus_widget = null;
+		if (!controls_overlay.contains (x, y) && controls_overlay.get_focus_child () != null) this.focus_widget = null;
 	}
 
 	private void update_player (Mpris.Entry? new_player) {
@@ -315,9 +356,23 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		this.orientation = this.orientation == Gtk.Orientation.HORIZONTAL ? Gtk.Orientation.VERTICAL : Gtk.Orientation.HORIZONTAL;
 	}
 
-	private void on_change_style (GLib.SimpleAction action, GLib.Variant? value) {
+	private void on_change_cover_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		this.cover_style = Widgets.Cover.Style.from_string (value.get_string ());
+		action.set_state (value);
+	}
+
+	private void on_change_component_progressbin (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		this.prog.enabled = value.get_boolean ();
+		settings.component_progressbin = value.get_boolean ();
+		action.set_state (value);
+	}
+
+	private void on_change_component_extract_colors (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		this.prog.extract_colors_enabled = value.get_boolean ();
+		settings.component_extract_colors = value.get_boolean ();
 		action.set_state (value);
 	}
 }

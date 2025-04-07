@@ -15,6 +15,28 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 	}
 
+	private bool _enabled = true;
+	public bool enabled {
+		get { return _enabled; }
+		set {
+			if (_enabled != value) {
+				_enabled = value;
+				this.queue_draw ();
+			}
+		}
+	}
+
+	private bool _extract_colors_enabled = true;
+	public bool extract_colors_enabled {
+		get { return _extract_colors_enabled; }
+		set {
+			if (_extract_colors_enabled != value) {
+				_extract_colors_enabled = value;
+				update_color ();
+			}
+		}
+	}
+
 	private bool update_color_cb () {
 		update_timeout = 0;
 		update_color ();
@@ -24,7 +46,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	private void update_color () {
 		Gdk.RGBA new_color = accent_color;
 
-		if (this.extracted_colors != null) {
+		if (this.extracted_colors != null && this.extract_colors_enabled) {
 			new_color = Adw.StyleManager.get_default ().dark
 				? extracted_colors.dark
 				: extracted_colors.light;
@@ -47,7 +69,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 				animation.value_to = new_val;
 
 				_progress = new_val;
-				animation.play ();
+				if (this.enabled) animation.play ();
 			}
 		}
 	}
@@ -106,7 +128,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	}
 
 	public override void snapshot (Gtk.Snapshot snapshot) {
-		if (this.animation.value > 0) {
+		if (this.enabled && this.animation.value > 0) {
 			switch (this.orientation) {
 				case Gtk.Orientation.VERTICAL:
 					snapshot.append_color (

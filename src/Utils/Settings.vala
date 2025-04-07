@@ -1,10 +1,14 @@
 public class Turntable.Utils.Settings : GLib.Settings {
 	public bool orientation_horizontal { get; set; }
 	public string cover_style { get; set; }
+	public bool component_progressbin { get; set; }
+	public bool component_extract_colors { get; set; }
 
 	private static string[] keys_to_init = {
 		"orientation-horizontal",
-		"cover-style"
+		"cover-style",
+		"component-progressbin",
+		"component-extract-colors"
 	};
 
 	public Settings () {

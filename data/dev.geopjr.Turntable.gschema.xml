@@ -7,5 +7,11 @@
 		<key name="cover-style" type="s">
 			<default>'card'</default>
 		</key>
+    <key name="component-progressbin" type="b">
+			<default>true</default>
+		</key>
+    <key name="component-extract-colors" type="b">
+			<default>true</default>
+		</key>
 	</schema>
 </schemalist>
