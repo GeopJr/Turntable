@@ -148,7 +148,14 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		public signal void done (Gdk.Texture texture);
 		public signal void done_completely (Utils.Color.ExtractedColors? extracted_colors);
 
+		private uint done_idle_id = -1;
+		private uint done_completely_idle_id = -1;
+
 		~CoverLoader () {
+			if (done_idle_id != -1) GLib.Source.remove (done_idle_id);
+			if (done_completely_idle_id != -1) GLib.Source.remove (done_completely_idle_id);
+			done_idle_id = done_completely_idle_id = -1;
+
 			this.texture = null;
 		}
 
@@ -173,27 +180,32 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			if (cancellable.is_cancelled ()) return;
 
 			this.texture = t_texture;
-			GLib.Idle.add_once (done_idle);
+			done_idle_id = GLib.Idle.add_once (done_idle);
 
 			var avg = Utils.Color.get_average_color (pixbuf);
 			if (cancellable.is_cancelled ()) return;
 
 			this.extracted_colors = Utils.Color.get_contrasting_colors (avg);
-			GLib.Idle.add_once (done_completely_idle);
+			done_completely_idle_id = GLib.Idle.add_once (done_completely_idle);
 		}
 
 		private void done_idle () {
 			done (this.texture);
+			done_idle_id = -1;
 		}
 
 		private void done_completely_idle () {
 			this.texture = null;
 			done_completely (this.extracted_colors);
 			this.extracted_colors = null;
+			done_completely_idle_id = -1;
 		}
 
 		public void cancel () {
 			cancellable.cancel ();
+			if (done_idle_id != -1) GLib.Source.remove (done_idle_id);
+			if (done_completely_idle_id != -1) GLib.Source.remove (done_completely_idle_id);
+			done_idle_id = done_completely_idle_id = -1;
 		}
 	}
 
