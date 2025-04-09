@@ -6,6 +6,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public string window_style { get; set; }
 	public bool client_icon_style_symbolic { get; set; }
 	public bool component_client_icon { get; set; }
+	public bool component_cover_fit { get; set; }
 
 	private const string[] KEYS_TO_INIT = {
 		"orientation-horizontal",
@@ -14,7 +15,8 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"component-extract-colors",
 		"window-style",
 		"client-icon-style-symbolic",
-		"component-client-icon"
+		"component-client-icon",
+		"component-cover-fit"
 	};
 
 	public Settings () {

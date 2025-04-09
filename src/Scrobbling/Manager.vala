@@ -1,6 +1,5 @@
 public class Turntable.Scrobbling.Manager : GLib.Object {
 	Soup.Session session;
-	GLib.Array<Pushable> queue = new GLib.Array<Pushable> ();
 	GLib.HashTable<string, Pushable> queue_squared = new GLib.HashTable<string, Pushable> (str_hash, str_equal);
 
 	public struct Payload {
@@ -73,6 +72,8 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		int add_in_seconds = int.min (4 * 60, (int) (length / 1000000 / 2));
 
 		clear_queue (win_id);
+		if (add_in_seconds < 25) return;
+
 		var pushable = new Pushable (payload, add_in_seconds);
 		pushable.scrobbled.connect (scrobble_all);
 		queue_squared.set (win_id, pushable);
@@ -94,7 +95,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 
 		//  (new Scrobbling.ListenBrainz ()).scrobble (payload, new GLib.DateTime.now ());
 		//  (new Scrobbling.LastFM ()).scrobble (payload, new GLib.DateTime.now ());
-		(new Scrobbling.LibreFM ()).scrobble (payload, new GLib.DateTime.now ());
+		//  (new Scrobbling.LibreFM ()).scrobble (payload, new GLib.DateTime.now ());
 	}
 
 	public void send_scrobble (owned Soup.Message msg, string scrobbler_name) {

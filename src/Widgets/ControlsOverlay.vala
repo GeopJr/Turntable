@@ -85,6 +85,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		var component_submenu_model = new GLib.Menu ();
 		component_submenu_model.append (_("Background Progress"), "win.component-progressbin");
 		component_submenu_model.append (_("Client Icon"), "win.component-client-icon");
+		component_submenu_model.append (_("Fit Art on Cover"), "win.component-cover-fit");
 		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
 		style_section_model.append_submenu (_("Components"), component_submenu_model);
 

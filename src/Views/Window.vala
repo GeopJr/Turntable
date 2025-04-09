@@ -6,6 +6,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction window_style_action;
 	GLib.SimpleAction client_icon_style_symbolic_action;
 	GLib.SimpleAction component_client_icon_action;
+	GLib.SimpleAction component_cover_fit_action;
 	string uuid = GLib.Uuid.string_random ();
 
 	public enum Style {
@@ -344,6 +345,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_client_icon_action.change_state.connect (on_change_component_client_icon);
 		this.add_action (component_client_icon_action);
 
+		component_cover_fit_action = new GLib.SimpleAction.stateful ("component-cover-fit", null, settings.component_cover_fit);
+		component_cover_fit_action.change_state.connect (on_change_component_cover_fit);
+		this.add_action (component_cover_fit_action);
+
 		update_orientation ();
 		update_from_settings ();
 
@@ -372,6 +377,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["window-style"].connect (update_cover_from_settings);
 		settings.notify["client-icon-style-symbolic"].connect (update_client_icon_from_settings);
 		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
+		settings.notify["component-cover-fit"].connect (update_component_cover_fit_from_settings);
 
 		this.show.connect (on_realize);
 	}
@@ -388,6 +394,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_window_from_settings ();
 		update_client_icon_from_settings ();
 		update_component_client_icon_from_settings ();
+		update_component_cover_fit_from_settings ();
 	}
 
 	private void update_cover_from_settings () {
@@ -423,6 +430,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_component_client_icon_from_settings () {
 		this.prog.client_icon_enabled = settings.component_client_icon;
 		component_client_icon_action.set_state (settings.component_client_icon);
+	}
+
+	private void update_component_cover_fit_from_settings () {
+		this.art_pic.fit_cover = settings.component_cover_fit;
+		component_cover_fit_action.set_state (settings.component_cover_fit);
 	}
 
 	private void on_clicked (Gtk.GestureClick gesture, int n_press, double x, double y) {
@@ -521,5 +533,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_component_client_icon (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.component_client_icon = value.get_boolean ();
+	}
+
+	private void on_change_component_cover_fit (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.component_cover_fit = value.get_boolean ();
 	}
 }

@@ -22,5 +22,8 @@
     <key name="component-client-icon" type="b">
 			<default>true</default>
 		</key>
+    <key name="component-cover-fit" type="b">
+			<default>true</default>
+		</key>
 	</schema>
 </schemalist>

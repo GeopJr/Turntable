@@ -254,7 +254,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 	}
 
-	private bool _fit_cover = false;
+	private bool _fit_cover = true;
 	public bool fit_cover {
 		get {
 			return _fit_cover;
@@ -416,7 +416,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				y = height / 2
 			};
 			snapshot.translate (translation_point);
-			snapshot.scale (0.65f / this.scale_factor, 0.65f / this.scale_factor);
+			//  snapshot.scale (0.65f / this.scale_factor, 0.65f / this.scale_factor);
 			snapshot.rotate ((float) (360 * animation.value));
 			snapshot.translate (Graphene.Point () {
 				x = - translation_point.x,
@@ -538,12 +538,22 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 			fallback_icon.snapshot_symbolic (snapshot, 64, 64, {note_color});
 		} else {
-			snapshot.translate (Graphene.Point () {
-				x = x,
-				y = y
-			});
-
+			float texture_w = w;
+			float texture_h = h;
 			if (this.turntable) {
+				if (this.fit_cover) {
+					texture_w = width * 0.65f;
+					texture_h = height * 0.65f;
+				} else {
+					texture_w = texture_w * 0.65f;
+					texture_h = texture_h * 0.65f;
+				}
+
+				snapshot.translate (Graphene.Point () {
+					x = (width - Math.ceilf (texture_w)) / 2f,
+					y = Math.floorf ((height - texture_h)) / 2f
+				});
+
 				snapshot.push_rounded_clip (
 					Gsk.RoundedRect ().init_from_rect (
 						Graphene.Rect () {
@@ -552,21 +562,26 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 								y = 0
 							},
 							size = Graphene.Size () {
-								width = w,
-								height = h
+								width = texture_w,
+								height = texture_h
 							}
 						},
 						9999f
 					)
 				);
+			} else {
+				snapshot.translate (Graphene.Point () {
+					x = x,
+					y = y
+				});
 			}
 
 			snapshot.append_scaled_texture (
 				cover,
 				this.scaling_filter,
 				Graphene.Rect () {
-					origin = Graphene.Point () { x=0, y=0 },
-					size = Graphene.Size () { width = w, height = h }
+					origin = Graphene.Point () { x = 0, y = 0 },
+					size = Graphene.Size () { width = texture_w, height = texture_h }
 				}
 			);
 
