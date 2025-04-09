@@ -4,6 +4,9 @@ namespace Turntable {
 	public const int PROGRESS_UPDATE_TIME = 250;
 
 	public static Utils.Settings settings;
+	#if SCROBBLING
+		public static Scrobbling.Manager scrobbling_manager;
+	#endif
 	public class Application : Adw.Application {
 		private const GLib.ActionEntry[] APP_ENTRIES = {
 			{ "about", on_about_action },
@@ -43,6 +46,9 @@ namespace Turntable {
 			}
 
 			settings = new Utils.Settings ();
+			#if SCROBBLING
+				scrobbling_manager = new Scrobbling.Manager ();
+			#endif
 
 			this.add_action_entries (APP_ENTRIES, this);
 			this.set_accels_for_action ("app.quit", {"<primary>q"});

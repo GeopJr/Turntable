@@ -76,7 +76,9 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		var menu_model = new GLib.Menu ();
 		var main_section_model = new GLib.Menu ();
 		main_section_model.append (_("New Window"), "app.new-window");
-		main_section_model.append (_("Scrobbling"), "app.refresh");
+		#if SCROBBLING
+			main_section_model.append (_("Scrobbling"), "app.refresh");
+		#endif
 		menu_model.append_section (null, main_section_model);
 
 		var style_section_model = new GLib.Menu ();

@@ -6,6 +6,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction window_style_action;
 	GLib.SimpleAction client_icon_style_symbolic_action;
 	GLib.SimpleAction component_client_icon_action;
+	string uuid = GLib.Uuid.string_random ();
 
 	public enum Style {
 		WINDOW,
@@ -108,7 +109,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			if (this.length == 0) {
 				_position = 0;
 				prog.progress = 0;
-			} else if (this.playing || _position == 0) {
+			} else {
 				_position = value;
 				prog.progress = (double)value / (double)this.length;
 			}
@@ -122,6 +123,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			_length = value;
 
 			prog.progress = value == 0 ? 0 : (double)this.position / (double)value;
+			#if SCROBBLING
+				add_to_scrobbler ();
+			#endif
 		}
 	}
 
@@ -132,6 +136,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			_playing = value;
 			art_pic.turntable_playing = value;
 			button_play.icon_name = value ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
+			#if SCROBBLING
+				update_scrobbler_playing ();
+			#endif
 		}
 	}
 
@@ -458,6 +465,27 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 		button_play.grab_focus ();
 	}
+
+	#if SCROBBLING
+		private void add_to_scrobbler () {
+			if (this.player == null || this.player.length == 0) return;
+
+			scrobbling_manager.queue_payload (
+				uuid,
+				{ this.player.title, this.player.artist, this.player.album },
+				this.player.length
+			);
+		}
+
+		private void update_scrobbler_playing () {
+			if (this.player == null || this.player.length == 0) return;
+
+			scrobbling_manager.set_playing_for_id (
+				uuid,
+				this.playing
+			);
+		}
+	#endif
 
 	private void on_toggle_orientation (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;

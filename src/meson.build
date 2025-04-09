@@ -9,6 +9,9 @@ sources += files(
 )
 
 subdir('Mpris')
+if scrobbling
+  subdir('Scrobbling')
+endif
 subdir('Utils')
 subdir('Views')
 subdir('Widgets')

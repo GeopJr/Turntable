@@ -59,6 +59,16 @@ asresources = gnome.compile_resources(
     c_name: 'as',
 )
 
+scrobbling = false
+libsoup_dep = dependency('libsoup-3.0', required: false)
+json_glib_dep = dependency('json-glib-1.0', version: '>=1.4.4', required: false)
+libsecret_dep = dependency('libsecret-1', required: false)
+
+if  get_option('scrobbling') and libsoup_dep.found () and json_glib_dep.found () and libsecret_dep.found ()
+  scrobbling = true
+  add_project_arguments(['--define=SCROBBLING'], language: 'vala')
+endif
+
 sources = files()
 subdir('src')
 
@@ -67,6 +77,9 @@ final_deps = [
   dependency('gtk4', version: '>=4.13.4', required: true),
   dependency('libadwaita-1', version: '>=1.5', required: true),
   dependency('gio-unix-2.0', required: true),
+  libsoup_dep,
+  json_glib_dep,
+  libsecret_dep,
   meson.get_compiler('c').find_library('m', required: false)
 ]
 
