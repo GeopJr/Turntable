@@ -1,4 +1,5 @@
 sources += files(
+    'Accounts.vala',
     'LastFM.vala',
     'LibreFM.vala',
     'ListenBrainz.vala',

@@ -28,10 +28,39 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		}
 	}
 
+	#if SCROBBLING
+		public class ScrobbleButton : Gtk.Button {
+			private bool _enabled = false;
+			public bool enabled {
+				get { return _enabled; }
+				set {
+					if (_enabled != value) {
+						_enabled = value;
+						if (value) {
+							this.tooltip_text = _("Disable Scrobbling");
+							this.icon_name = "fingerprint2-symbolic";
+						} else {
+							this.tooltip_text = _("Enable Scrobbling");
+							this.icon_name = "auth-fingerprint-symbolic";
+						}
+					}
+				}
+			}
+
+			construct {
+				this.icon_name = "auth-fingerprint-symbolic";
+				this.tooltip_text = _("Enable Scrobbling");
+			}
+		}
+	#endif
+
 	Gtk.Overlay overlay;
 	Gtk.Revealer revealer;
 	GLib.ListStore players_store;
 	Gtk.DropDown client_dropdown;
+	#if SCROBBLING
+		ScrobbleButton scrobble_button;
+	#endif
 	construct {
 		this.overflow = Gtk.Overflow.HIDDEN;
 		overlay = new Gtk.Overlay () {
@@ -77,7 +106,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		var main_section_model = new GLib.Menu ();
 		main_section_model.append (_("New Window"), "app.new-window");
 		#if SCROBBLING
-			main_section_model.append (_("Scrobbling"), "app.refresh");
+			main_section_model.append (_("Scrobbling"), "win.open-scrobbling-setup");
 		#endif
 		menu_model.append_section (null, main_section_model);
 
@@ -122,8 +151,19 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		misc_section_model.append (_("Quit"), "app.quit");
 		menu_model.append_section (null, misc_section_model);
 
+		#if SCROBBLING
+			scrobble_button = new ScrobbleButton () {
+				css_classes = {"circular", "osd", "min34px"}
+			};
+			scrobble_button.clicked.connect (on_scrobble_client_toggle);
+			sub_box.append (scrobble_button);
+
+			account_manager.accounts_changed.connect (on_accounts_changed);
+			on_accounts_changed ();
+		#endif
+
 		sub_box.append (new Gtk.MenuButton () {
-			icon_name = "open-menu-symbolic",
+			icon_name = "menu-large-symbolic",
 			primary = true,
 			menu_model = menu_model,
 			css_classes = {"circular", "osd"}
@@ -184,17 +224,50 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 		if (!was_null) this.last_player.terminate_player ();
 		if (client_dropdown.selected == Gtk.INVALID_LIST_POSITION) {
-			if (!was_null) player_changed (null);
+			if (!was_null) trigger_player_changed (null);
 			return;
 		}
 
 		this.last_player = (Mpris.Entry?) players_store.get_item (client_dropdown.selected);
 		if (this.last_player == null) {
-			if (!was_null) player_changed (null);
+			if (!was_null) trigger_player_changed (null);
 			return;
 		}
 
 		this.last_player.initialize_player ();
-		player_changed (this.last_player);
+		trigger_player_changed (this.last_player);
 	}
+
+	private inline void trigger_player_changed (Mpris.Entry? new_entry) {
+		player_changed (new_entry);
+		update_scrobble_button ();
+	}
+
+	#if SCROBBLING
+		private void update_scrobble_button () {
+			if (this.last_player == null) {
+				scrobble_button.sensitive = false;
+				scrobble_button.enabled = false;
+				return;
+			}
+
+			scrobble_button.sensitive = true;
+			scrobble_button.enabled = this.last_player.parent_bus_namespace in settings.scrobbler_allowlist;
+		}
+
+		private void on_accounts_changed () {
+			scrobble_button.visible = account_manager.accounts.length > 0;
+		}
+
+		private void on_scrobble_client_toggle () {
+			update_scrobble_button ();
+
+			if (scrobble_button.enabled) {
+				settings.remove_from_allowlist (this.last_player.parent_bus_namespace);
+			} else {
+				settings.add_to_allowlist (this.last_player.parent_bus_namespace);
+			}
+			scrobble_button.enabled = !scrobble_button.enabled;
+		}
+	#endif
 }

@@ -34,3 +34,8 @@ button.large {
 .transparent {
 	background: transparent;
 }
+
+.min34px {
+	min-height: 34px;
+	min-width: 34px;
+}

@@ -1,2 +1,8 @@
 option('devel', type: 'boolean', value: false)
 option('scrobbling', type: 'boolean', value: true)
+
+option('lastfm_key', type: 'string', value: '')
+option('lastfm_secret', type: 'string', value: '')
+# can be anything
+option('librefm_key', type: 'string', value: '')
+option('librefm_secret', type: 'string', value: '')

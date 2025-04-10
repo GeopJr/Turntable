@@ -28,6 +28,18 @@ config.set('DONATE_WEBSITE', 'https://geopjr.dev/donate')
 config.set('PROFILE', devel ? 'development' : 'production')
 
 if devel
+  config.set('LASTFM_KEY', '7c7320be36b02ba3b8639ab6867c9471')
+  config.set('LASTFM_SECRET', 'bc183481df70a23d23f7f145af61a3a6')
+  config.set('LIBREFM_KEY', '7c7320be36b02ba3b8639ab6867c9471')
+  config.set('LIBREFM_SECRET', 'bc183481df70a23d23f7f145af61a3a6')
+else
+  config.set('LASTFM_KEY', get_option('lastfm_key'))
+  config.set('LASTFM_SECRET', get_option('lastfm_secret'))
+  config.set('LIBREFM_KEY', get_option('librefm_key'))
+  config.set('LIBREFM_SECRET', get_option('librefm_secret'))
+endif
+
+if devel
   git = find_program('git')
   if git.found()
     branch = run_command('git', 'branch', '--show-current', check: true).stdout().strip()

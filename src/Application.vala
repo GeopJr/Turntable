@@ -2,19 +2,26 @@ namespace Turntable {
 	public static bool is_flatpak = false;
 	public static Mpris.Manager mpris_manager;
 	public const int PROGRESS_UPDATE_TIME = 250;
+	public static Application application;
 
 	public static Utils.Settings settings;
 	#if SCROBBLING
 		public static Scrobbling.Manager scrobbling_manager;
+		public static Scrobbling.AccountManager account_manager;
 	#endif
 	public class Application : Adw.Application {
+		#if SCROBBLING
+			[Signal (detailed = true)]
+			public signal void token_received (Scrobbling.Manager.Provider provider, string token);
+		#endif
+
 		private const GLib.ActionEntry[] APP_ENTRIES = {
 			{ "about", on_about_action },
 			{ "new-window", on_new_window },
 			{ "quit", quit }
 		};
 
-		string troubleshooting = "os: %s %s\nprefix: %s\nflatpak: %s\nversion: %s (%s)\ngtk: %u.%u.%u (%d.%d.%d)\nlibadwaita: %u.%u.%u (%d.%d.%d)".printf ( // vala-lint=line-length
+		string troubleshooting = "os: %s %s\nprefix: %s\nflatpak: %s\nversion: %s (%s)\ngtk: %u.%u.%u (%d.%d.%d)\nlibadwaita: %u.%u.%u (%d.%d.%d)%s".printf (
 			GLib.Environment.get_os_info ("NAME"), GLib.Environment.get_os_info ("VERSION"),
 			Build.PREFIX,
 			Turntable.is_flatpak.to_string (),
@@ -22,12 +29,22 @@ namespace Turntable {
 			Gtk.get_major_version (), Gtk.get_minor_version (), Gtk.get_micro_version (),
 			Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION,
 			Adw.get_major_version (), Adw.get_minor_version (), Adw.get_micro_version (),
-			Adw.MAJOR_VERSION, Adw.MINOR_VERSION, Adw.MICRO_VERSION
+			Adw.MAJOR_VERSION, Adw.MINOR_VERSION, Adw.MICRO_VERSION,
+			#if SCROBBLING
+				"\nlibsoup: %u.%u.%u (%d.%d.%d)\njson-glib: %d.%d.%d\nlibsecret: %d.%d.%d".printf (
+					Soup.get_major_version (), Soup.get_minor_version (), Soup.get_micro_version (),
+					Soup.MAJOR_VERSION, Soup.MINOR_VERSION, Soup.MICRO_VERSION,
+					Json.MAJOR_VERSION, Json.MINOR_VERSION, Json.MICRO_VERSION,
+					Secret.MAJOR_VERSION, Secret.MINOR_VERSION, Secret.MICRO_VERSION
+				)
+			#else
+				""
+			#endif
 		);
 
 		construct {
 			application_id = Build.DOMAIN;
-			flags = ApplicationFlags.DEFAULT_FLAGS;
+			flags = ApplicationFlags.HANDLES_OPEN;
 		}
 
 		protected override void startup () {
@@ -47,6 +64,7 @@ namespace Turntable {
 
 			settings = new Utils.Settings ();
 			#if SCROBBLING
+				account_manager = new Scrobbling.AccountManager ();
 				scrobbling_manager = new Scrobbling.Manager ();
 			#endif
 
@@ -64,14 +82,19 @@ namespace Turntable {
 			is_flatpak = GLib.Environment.get_variable ("FLATPAK_ID") != null || GLib.File.new_for_path ("/.flatpak-info").query_exists ();
 			GLib.Environment.unset_variable ("GTK_THEME");
 			mpris_manager = new Mpris.Manager ();
+			application = new Application ();
 
-			return (new Application ()).run (args);
+			return application.run (args);
 		}
 
+		bool activated = false;
 		public override void activate () {
 			base.activate ();
 			var win = this.active_window ?? new Turntable.Views.Window (this);
 			win.present ();
+
+			if (!activated) account_manager.load ();
+			activated = true;
 		}
 
 		private void on_about_action () {
@@ -91,6 +114,63 @@ namespace Turntable {
 
 		private void on_new_window () {
 			(new Turntable.Views.Window (this)).present ();
+		}
+
+		public override void open (File[] files, string hint) {
+			if (!activated) activate ();
+
+			foreach (File file in files) {
+				string unparsed_uri = file.get_uri ();
+
+				try {
+					Uri uri = Uri.parse (unparsed_uri, UriFlags.ENCODED);
+					string scheme = uri.get_scheme ();
+
+					switch (scheme) {
+						case "turntable":
+							string? host = uri.get_host ();
+							if (host == null) host = "";
+
+							string down_host = host.down ();
+							switch (down_host) {
+								#if SCROBBLING
+									case "lastfm":
+									case "librefm":
+										string? path = uri.get_path ();
+										if (path == null || path == "") throw new Error.literal (-1, 3, @"$unparsed_uri doesn't have win id");
+										if (!path.has_prefix ("/")) path = @"/$path";
+
+										string[] path_parts = path.split ("/");
+										if (path_parts.length < 2 || path_parts[1].length < 4) throw new Error.literal (-1, 3, @"$unparsed_uri doesn't have win id");
+										string win_id = path_parts[1];
+
+										string? query = uri.get_query ();
+										if (query == null || query == "") throw new Error.literal (-1, 3, @"$unparsed_uri doesn't have query params");
+
+										var uri_params = Uri.parse_params (query);
+										if (!uri_params.contains ("token")) throw new Error.literal (-1, 3, @"$unparsed_uri doesn't have a 'token' query param");
+
+										token_received[win_id] (
+											down_host == "librefm"
+												? Scrobbling.Manager.Provider.LIBREFM
+												: Scrobbling.Manager.Provider.LASTFM,
+											uri_params.get ("token")
+										);
+										break;
+								#endif
+								default:
+									throw new Error.literal (-1, 3, @"$(Build.NAME) does not handle '$host'");
+							}
+
+							break;
+						default:
+							throw new Error.literal (-1, 3, @"$(Build.NAME) does not accept '$scheme://'");
+					}
+				} catch (GLib.Error e) {
+					string msg = @"Couldn't open $unparsed_uri: $(e.message)";
+					critical (msg);
+				}
+			}
 		}
 	}
 }

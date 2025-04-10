@@ -1,10 +1,13 @@
 [Desktop Entry]
-Name=turntable
-Exec=turntable
+Type=Application
+Name=Turntable
+Exec=dev.geopjr.Turntable %u
 Icon=dev.geopjr.Turntable
 Terminal=false
-Type=Application
-Categories=Utility;
-Keywords=GTK;
+Categories=AudioVideo;Audio;
+Keywords=music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;song;audio;
+X-GNOME-Gettext-Domain=dev.geopjr.Turntable
+MimeType=x-scheme-handler/turntable;
+# Translators: Do NOT translate or transliterate this text (these are enum types)!
+X-Purism-FormFactor=Workstation;Mobile;
 StartupNotify=true
-DBusActivatable=true

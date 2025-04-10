@@ -9,5 +9,19 @@
 
   <gresource prefix="/dev/geopjr/Turntable/icons/scalable/actions">
     <file preprocess="xml-stripblanks" alias="music-note-outline-symbolic.svg">icons/hicolor/symbolic/actions/music-note-outline-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="auth-fingerprint-symbolic.svg">icons/hicolor/symbolic/actions/auth-fingerprint-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="fingerprint2-symbolic.svg">icons/hicolor/symbolic/actions/fingerprint2-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="menu-large-symbolic.svg">icons/hicolor/symbolic/actions/menu-large-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="pause-large-symbolic.svg">icons/hicolor/symbolic/actions/pause-large-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="play-large-symbolic.svg">icons/hicolor/symbolic/actions/play-large-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="skip-backward-large-symbolic.svg">icons/hicolor/symbolic/actions/skip-backward-large-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="skip-forward-large-symbolic.svg">icons/hicolor/symbolic/actions/skip-forward-large-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="application-x-executable-symbolic.svg">icons/hicolor/symbolic/actions/application-x-executable-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="left-large-symbolic.svg">icons/hicolor/symbolic/actions/left-large-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="right-large-symbolic.svg">icons/hicolor/symbolic/actions/right-large-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="user-trash-symbolic.svg">icons/hicolor/symbolic/actions/user-trash-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="listenbrainz.svg">icons/hicolor/scalable/actions/listenbrainz.svg</file>
+    <file preprocess="xml-stripblanks" alias="librefm.svg">icons/hicolor/scalable/actions/librefm.svg</file>
+    <file preprocess="xml-stripblanks" alias="lastfm-symbolic.svg">icons/hicolor/symbolic/actions/lastfm-symbolic.svg</file>
   </gresource>
 </gresources>

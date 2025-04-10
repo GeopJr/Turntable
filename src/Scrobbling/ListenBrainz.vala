@@ -1,5 +1,5 @@
 public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
-	public string SERVICE_NAME { get { return "ListenBrainz"; } }
+	public Manager.Provider SERVICE { get { return Manager.Provider.LISTENBRAINZ; } }
 	public string token { get; set; default = ""; }
 
 	private string _url = "https://api.listenbrainz.org";
@@ -27,6 +27,8 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 	}
 
 	public void scrobble (Scrobbling.Manager.Payload payload, GLib.DateTime datetime) {
+		if (this.token == "") return;
+
 		var builder = new Json.Builder ();
 		builder.begin_object ();
 			builder.set_member_name ("listen_type");
@@ -59,6 +61,6 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		msg.set_request_body_from_bytes ("application/json", new Bytes.take (awo.data));
 		msg.request_headers.append ("Authorization", @"Bearer $(this.token)");
 
-		scrobbling_manager.send_scrobble (msg, SERVICE_NAME);
+		scrobbling_manager.send_scrobble (msg, SERVICE);
 	}
 }

@@ -14,4 +14,10 @@ namespace Build {
 	public const string DONATE_WEBSITE = "@DONATE_WEBSITE@";
 	//  public const string TRANSLATE_WEBSITE = "@TRANSLATE_WEBSITE@";
 	public const string PREFIX = "@PREFIX@";
+
+	public const string LASTFM_KEY = "@LASTFM_KEY@";
+	public const string LASTFM_SECRET = "@LASTFM_SECRET@";
+
+	public const string LIBREFM_KEY = "@LIBREFM_KEY@";
+	public const string LIBREFM_SECRET = "@LIBREFM_SECRET@";
 }

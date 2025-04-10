@@ -1,12 +1,14 @@
 public class Turntable.Scrobbling.LastFM : GLib.Object, Scrobbler {
-	public virtual string SERVICE_NAME { get { return "last.fm"; } }
-	public virtual string api_key { get; set; default = ""; }
-	public virtual string api_secret { get; set; default = ""; }
+	public virtual Manager.Provider SERVICE { get { return Manager.Provider.LASTFM; } }
+	public virtual string api_key { get { return Build.LASTFM_KEY; } }
+	public virtual string api_secret { get { return Build.LASTFM_SECRET; } }
 	public virtual string token { get; set; default = ""; }
 
 	public virtual string url { get { return "http://ws.audioscrobbler.com/2.0/"; } set {} }
 
 	public void scrobble (Scrobbling.Manager.Payload payload, GLib.DateTime datetime) {
+		if (token == "") return;
+
 		var scrobble_params = new GLib.HashTable<string, string> (str_hash, str_equal);
 		if (payload.album != null) scrobble_params.set ("album", payload.album);
 		scrobble_params.set ("api_key", api_key);
@@ -21,6 +23,6 @@ public class Turntable.Scrobbling.LastFM : GLib.Object, Scrobbler {
 		scrobble_params.set ("format", "json");
 
 		var msg = new Soup.Message.from_encoded_form ("POST", this.url, Soup.Form.encode_hash (scrobble_params));
-		scrobbling_manager.send_scrobble (msg, SERVICE_NAME);
+		scrobbling_manager.send_scrobble (msg, SERVICE);
 	}
 }

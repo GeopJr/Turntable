@@ -7,7 +7,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction client_icon_style_symbolic_action;
 	GLib.SimpleAction component_client_icon_action;
 	GLib.SimpleAction component_cover_fit_action;
-	string uuid = GLib.Uuid.string_random ();
+	public string uuid { get; private set; }
 
 	public enum Style {
 		WINDOW,
@@ -136,7 +136,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		set {
 			_playing = value;
 			art_pic.turntable_playing = value;
-			button_play.icon_name = value ? "media-playback-pause-symbolic" : "media-playback-start-symbolic";
+			button_play.icon_name = value ? "pause-large-symbolic" : "play-large-symbolic";
 			#if SCROBBLING
 				update_scrobbler_playing ();
 			#endif
@@ -229,6 +229,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Gtk.Button button_next;
 	Widgets.ControlsOverlay controls_overlay;
 	construct {
+		this.uuid = GLib.Uuid.string_random ();
 		this.icon_name = Build.DOMAIN;
 		this.resizable = false;
 		this.title = Build.NAME;
@@ -284,21 +285,21 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		box2.append (box3);
 
-		button_prev = new Gtk.Button.from_icon_name ("media-skip-backward-symbolic") {
+		button_prev = new Gtk.Button.from_icon_name ("skip-backward-large-symbolic") {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
 		};
 		box3.append (button_prev);
 
-		button_play = new Gtk.Button.from_icon_name ("media-playback-start-symbolic") {
+		button_play = new Gtk.Button.from_icon_name ("play-large-symbolic") {
 			css_classes = {"circular", "large"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER
 		};
 		box3.append (button_play);
 
-		button_next = new Gtk.Button.from_icon_name ("media-skip-forward-symbolic") {
+		button_next = new Gtk.Button.from_icon_name ("skip-forward-large-symbolic") {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
@@ -316,6 +317,12 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		button_prev.clicked.connect (() => {
 			player.back ();
 		});
+
+		#if SCROBBLING
+			var scrobbling_action = new GLib.SimpleAction ("open-scrobbling-setup", null);
+			scrobbling_action.activate.connect (open_scrobbling_setup);
+			this.add_action (scrobbling_action);
+		#endif
 
 		toggle_orientation_action = new GLib.SimpleAction.stateful ("toggle-orientation", GLib.VariantType.BOOLEAN, settings.orientation_horizontal);
 		toggle_orientation_action.change_state.connect (on_toggle_orientation);
@@ -356,11 +363,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			child = prog
 		};
 
-		//  GLib.Timeout.add (250, () => {
-		//  	art_pic.turntable = true;
-		//  	return GLib.Source.REMOVE;
-		//  });
-
 		controls_overlay.player_changed.connect (update_player);
 		update_player (controls_overlay.last_player); // always ensure
 
@@ -379,12 +381,33 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
 		settings.notify["component-cover-fit"].connect (update_component_cover_fit_from_settings);
 
+		#if SCROBBLING
+			settings.notify["scrobbler-allowlist"].connect (update_scrobble_status);
+			account_manager.accounts_changed.connect (update_scrobble_status);
+			update_scrobble_status ();
+		#endif
+
 		this.show.connect (on_realize);
 	}
 
 	private void on_realize () {
 		art_pic.turntable_playing = this.playing;
 	}
+
+	#if SCROBBLING
+		bool scrobble_enabled = false;
+		private void update_scrobble_status () {
+			bool new_val = account_manager.accounts.length > 0
+				&& this.player != null
+				&& this.player.parent_bus_namespace in settings.scrobbler_allowlist;
+
+			if (scrobble_enabled != new_val) {
+				scrobble_enabled = new_val;
+				add_to_scrobbler ();
+				update_scrobbler_playing ();
+			}
+		}
+	#endif
 
 	private void update_from_settings () {
 		update_orientation_from_settings ();
@@ -441,8 +464,20 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		if (!controls_overlay.contains (x, y) && controls_overlay.get_focus_child () != null) this.focus_widget = null;
 	}
 
+	#if SCROBBLING
+		private void open_scrobbling_setup () {
+			(new Views.ScrobblerSetup ()).present (this);
+		}
+	#endif
+
+	GLib.Binding[] player_bindings = {};
 	private void update_player (Mpris.Entry? new_player) {
 		this.player = new_player;
+		foreach (var binding in player_bindings) {
+			binding.unbind ();
+		}
+		player_bindings = {};
+
 		if (new_player == null) {
 			this.song_title =
 			this.artist =
@@ -462,15 +497,15 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			return;
 		}
 
-		this.player.bind_property ("title", this, "song-title", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("artist", this, "artist", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("album", this, "album", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("art", this, "art", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("position", this, "position", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("length", this, "length", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("playing", this, "playing", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("can-go-next", button_next, "sensitive", GLib.BindingFlags.SYNC_CREATE);
-		this.player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("title", this, "song-title", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("artist", this, "artist", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("album", this, "album", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("art", this, "art", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("position", this, "position", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("length", this, "length", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("playing", this, "playing", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("can-go-next", button_next, "sensitive", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
 
 		prog.client_icon = this.player.client_info_icon;
 		prog.client_name = this.player.client_info_name;
@@ -480,17 +515,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	#if SCROBBLING
 		private void add_to_scrobbler () {
-			if (this.player == null || this.player.length == 0) return;
+			if (this.player == null || this.player.length == 0 || !scrobble_enabled) return;
 
 			scrobbling_manager.queue_payload (
 				uuid,
+				this.player.parent_bus_namespace,
 				{ this.player.title, this.player.artist, this.player.album },
 				this.player.length
 			);
 		}
 
 		private void update_scrobbler_playing () {
-			if (this.player == null || this.player.length == 0) return;
+			if (this.player == null || this.player.length == 0 || !scrobble_enabled) return;
 
 			scrobbling_manager.set_playing_for_id (
 				uuid,

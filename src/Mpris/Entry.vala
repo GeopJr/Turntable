@@ -41,8 +41,8 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		this.bus_namespace = name;
 		parent_bus_namespace = name;
 		string[] namespace_parts = name.split (".");
-		if (namespace_parts.length > 4) {
-			parent_bus_namespace = @"$(namespace_parts[0]).$(namespace_parts[1]).$(namespace_parts[2]).$(namespace_parts[3])";
+		if (namespace_parts.length > 6) {
+			parent_bus_namespace = @"org.mpris.MediaPlayer2.$(namespace_parts[0]).$(namespace_parts[1]).$(namespace_parts[2])";
 		}
 
 		var app_info = new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
@@ -59,7 +59,9 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		};
 	}
 
+	int users = 0;
 	public void initialize_player () {
+		users += 1;
 		if (player != null) return;
 
 		this.player = Bus.get_proxy_sync (
@@ -86,6 +88,8 @@ public class Turntable.Mpris.Entry : GLib.Object {
 
 	public void terminate_player () {
 		if (player == null) return;
+		users -= 1;
+		if (users > 0) return;
 
 		this.props = null;
 		this.player = null;
