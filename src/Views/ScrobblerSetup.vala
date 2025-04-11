@@ -442,7 +442,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 				bool exists = account_manager.accounts.contains (provider);
 
 				row.state = exists ? ScrobblerRow.State.EXISTS : ScrobblerRow.State.NEW;
-				if (exists) row.subtitle = account_manager.accounts.get (provider).username;
+				row.subtitle = exists ? account_manager.accounts.get (provider).username : "";
 			}
 		});
 	}
