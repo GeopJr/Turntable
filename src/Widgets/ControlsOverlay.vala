@@ -3,6 +3,11 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	public Mpris.Entry? last_player { get; set; default = null; }
 
 	private void update_style (Widgets.Cover.Style style, Gtk.Orientation orientation) {
+		this.overlay.child.valign =
+		this.overlay.child.halign =
+		this.valign =
+		this.halign = Gtk.Align.CENTER;
+
 		switch (style) {
 			case CARD:
 				this.css_classes = { "card", "card-like" };
@@ -12,6 +17,10 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 				break;
 			case SHADOW:
 				this.css_classes = {};
+				this.overlay.child.valign =
+				this.overlay.child.halign =
+				this.valign =
+				this.halign = Gtk.Align.FILL;
 				break;
 			default:
 				assert_not_reached ();

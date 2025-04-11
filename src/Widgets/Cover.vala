@@ -612,6 +612,26 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 						9999f
 					)
 				);
+			} else if (this.style == Style.SHADOW) {
+				snapshot.translate (Graphene.Point () {
+					x = 0,
+					y = 0
+				});
+
+				snapshot.push_blur (15);
+				snapshot.append_texture (
+					cover,
+					Graphene.Rect () {
+						origin = Graphene.Point () { x = 0, y = 0 },
+						size = Graphene.Size () { width = width, height = height }
+					}
+				);
+				snapshot.pop ();
+
+				snapshot.translate (Graphene.Point () {
+					x = x,
+					y = y
+				});
 			} else {
 				snapshot.translate (Graphene.Point () {
 					x = x,
