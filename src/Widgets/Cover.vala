@@ -340,7 +340,8 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		var target = new Adw.CallbackAnimationTarget (animation_target_cb);
 		animation = new Adw.TimedAnimation (this, 0.0, 1.0, 5000, target) {
 			easing = Adw.Easing.LINEAR,
-			repeat_count = 0
+			repeat_count = 0,
+			follow_enable_animations_setting = false // it's slow and opt-in
 		};
 
 		fallback_icon = (Gtk.IconTheme.get_for_display (Gdk.Display.get_default ())).lookup_icon (
