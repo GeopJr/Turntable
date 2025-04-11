@@ -7,6 +7,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction client_icon_style_symbolic_action;
 	GLib.SimpleAction component_client_icon_action;
 	GLib.SimpleAction component_cover_fit_action;
+	GLib.SimpleAction meta_dim_action;
+	GLib.SimpleAction text_size_action;
+	GLib.SimpleAction cover_size_action;
+	GLib.SimpleAction cover_scaling_action;
 	public string uuid { get; private set; }
 
 	public enum Style {
@@ -23,10 +27,101 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		}
 
 		public static Style from_string (string string_style) {
-			switch (string_style) {
+			switch (string_style.down ()) {
 				case "osd": return OSD;
 				case "transparent": return TRANSPARENT;
 				default: return WINDOW;
+			}
+		}
+	}
+
+	public enum Size {
+		SMALL,
+		REGULAR,
+		BIG;
+
+		public string to_string () {
+			switch (this) {
+				case SMALL: return "small";
+				case BIG: return "big";
+				default: return "regular";
+			}
+		}
+
+		public static Size from_string (string string_size) {
+			switch (string_size.down ()) {
+				case "small": return SMALL;
+				case "big": return BIG;
+				default: return REGULAR;
+			}
+		}
+	}
+
+	private Size _cover_size = Size.REGULAR;
+	public Size cover_size {
+		get { return _cover_size; }
+		set {
+			if (value != _cover_size) {
+				_cover_size = value;
+				switch (_cover_size) {
+					case SMALL:
+						art_pic.size = 124;
+						prog.client_icon_large = false;
+						break;
+					case BIG:
+						art_pic.size = 256;
+						prog.client_icon_large = true;
+						break;
+					default:
+						art_pic.size = 192;
+						prog.client_icon_large = true;
+						break;
+				}
+
+				update_album_artist_title ();
+				update_offset ();
+			}
+		}
+	}
+
+	private Size _text_size = Size.REGULAR;
+	public Size text_size {
+		get { return _text_size; }
+		set {
+			if (value != _text_size) {
+				switch (_text_size) {
+					case SMALL:
+						title_label.remove_css_class ("title-3");
+						album_label.remove_css_class ("smaller-label");
+						artist_label.remove_css_class ("smaller-label");
+						break;
+					case BIG:
+						title_label.remove_css_class ("title-1");
+						album_label.remove_css_class ("bigger-label");
+						artist_label.remove_css_class ("bigger-label");
+						break;
+					default:
+						title_label.remove_css_class ("title-2");
+						break;
+				}
+
+				_text_size = value;
+
+				switch (_text_size) {
+					case SMALL:
+						title_label.add_css_class ("title-3");
+						album_label.add_css_class ("smaller-label");
+						artist_label.add_css_class ("smaller-label");
+						break;
+					case BIG:
+						title_label.add_css_class ("title-1");
+						album_label.add_css_class ("bigger-label");
+						artist_label.add_css_class ("bigger-label");
+						break;
+					default:
+						title_label.add_css_class ("title-2");
+						break;
+				}
 			}
 		}
 	}
@@ -159,12 +254,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			case Gtk.Orientation.VERTICAL:
 				this.default_width = 0;
 				this.default_height = 300;
-				album_label.visible = false;
 				break;
 			default:
 				this.default_width = 534;
 				this.default_height = 0;
-				album_label.visible = true;
 				break;
 		}
 
@@ -176,14 +269,13 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	}
 
 	private void update_album_artist_title () {
-		switch (this.orientation) {
-			case Gtk.Orientation.VERTICAL:
-				artist_label.content = @"$(this.artist) - $(this.album)";
-				break;
-			default:
-				artist_label.content = this.artist;
-				album_label.content = this.album;
-				break;
+		if (this.orientation == Gtk.Orientation.VERTICAL || this.cover_size == Size.SMALL) {
+			album_label.visible = false;
+			artist_label.content = @"$(this.artist) - $(this.album)";
+		} else {
+			artist_label.content = this.artist;
+			album_label.content = this.album;
+			album_label.visible = true;
 		}
 	}
 
@@ -196,20 +288,19 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		set {
 			if (value != art_pic.style ) {
 				art_pic.style = value;
-
-				switch (value) {
-					case Widgets.Cover.Style.SHADOW:
-						prog.offset = (
-							this.orientation == Gtk.Orientation.HORIZONTAL
-							? controls_overlay.get_width ()
-							: controls_overlay.get_height ()
-						) - (int32) (Widgets.Cover.FADE_WIDTH / 2);
-						break;
-					default:
-						prog.offset = 0;
-						break;
-				}
+				update_offset ();
 			}
+		}
+	}
+
+	private void update_offset () {
+		switch (this.cover_style) {
+			case Widgets.Cover.Style.SHADOW:
+				prog.offset = art_pic.size - (int32) (Widgets.Cover.FADE_WIDTH / 2);
+				break;
+			default:
+				prog.offset = 0;
+				break;
 		}
 	}
 
@@ -324,6 +415,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			this.add_action (scrobbling_action);
 		#endif
 
+		text_size_action = new GLib.SimpleAction.stateful ("text-size", GLib.VariantType.STRING, this.text_size.to_string ());
+		text_size_action.change_state.connect (on_change_text_size);
+		this.add_action (text_size_action);
+
+		cover_size_action = new GLib.SimpleAction.stateful ("cover-size", GLib.VariantType.STRING, this.cover_size.to_string ());
+		cover_size_action.change_state.connect (on_change_cover_size);
+		this.add_action (cover_size_action);
+
+		cover_scaling_action = new GLib.SimpleAction.stateful ("cover-scaling", GLib.VariantType.STRING, settings.cover_scaling.to_string ());
+		cover_scaling_action.change_state.connect (on_change_cover_scaling);
+		this.add_action (cover_scaling_action);
+
 		toggle_orientation_action = new GLib.SimpleAction.stateful ("toggle-orientation", GLib.VariantType.BOOLEAN, settings.orientation_horizontal);
 		toggle_orientation_action.change_state.connect (on_toggle_orientation);
 		this.add_action (toggle_orientation_action);
@@ -335,6 +438,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_extract_colors_action = new GLib.SimpleAction.stateful ("component-extract-colors", null, settings.component_extract_colors);
 		component_extract_colors_action.change_state.connect (on_change_component_extract_colors);
 		this.add_action (component_extract_colors_action);
+
+		meta_dim_action = new GLib.SimpleAction.stateful ("meta-dim", null, settings.meta_dim);
+		meta_dim_action.change_state.connect (on_change_meta_dim);
+		this.add_action (meta_dim_action);
 
 		component_progressbin_action = new GLib.SimpleAction.stateful ("component-progressbin", null, settings.component_progressbin);
 		component_progressbin_action.change_state.connect (on_change_component_progressbin);
@@ -376,10 +483,14 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["orientation-horizontal"].connect (update_orientation_from_settings);
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
 		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
-		settings.notify["window-style"].connect (update_cover_from_settings);
+		settings.notify["window-style"].connect (update_window_from_settings);
 		settings.notify["client-icon-style-symbolic"].connect (update_client_icon_from_settings);
 		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
 		settings.notify["component-cover-fit"].connect (update_component_cover_fit_from_settings);
+		settings.notify["meta-dim"].connect (update_meta_dim_from_settings);
+		settings.notify["text-size"].connect (update_text_size_from_settings);
+		settings.notify["cover-size"].connect (update_cover_size_from_settings);
+		settings.notify["cover-scaling"].connect (update_cover_scaling_from_settings);
 
 		#if SCROBBLING
 			settings.notify["scrobbler-allowlist"].connect (update_scrobble_status);
@@ -387,10 +498,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			update_scrobble_status ();
 		#endif
 
-		this.show.connect (on_realize);
+		art_pic.map.connect (on_mapped);
 	}
 
-	private void on_realize () {
+	private void on_mapped () {
+		update_offset ();
 		art_pic.turntable_playing = this.playing;
 	}
 
@@ -418,6 +530,26 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_client_icon_from_settings ();
 		update_component_client_icon_from_settings ();
 		update_component_cover_fit_from_settings ();
+		update_meta_dim_from_settings ();
+		update_text_size_from_settings ();
+		update_cover_size_from_settings ();
+		update_cover_scaling_from_settings ();
+	}
+
+	private void update_cover_scaling_from_settings () {
+		Widgets.Cover.Scaling new_size = Widgets.Cover.Scaling.from_string (settings.cover_scaling);
+		art_pic.scaling_filter = new_size.to_filter ();
+		cover_scaling_action.set_state (new_size.to_string ());
+	}
+
+	private void update_cover_size_from_settings () {
+		this.cover_size = Size.from_string (settings.cover_size);
+		cover_size_action.set_state (this.cover_size.to_string ());
+	}
+
+	private void update_text_size_from_settings () {
+		this.text_size = Size.from_string (settings.text_size);
+		text_size_action.set_state (this.text_size.to_string ());
 	}
 
 	private void update_cover_from_settings () {
@@ -433,6 +565,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_client_icon_from_settings () {
 		this.prog.client_icon_style = settings.client_icon_style_symbolic ? Widgets.ProgressBin.ClientIconStyle.SYMBOLIC : Widgets.ProgressBin.ClientIconStyle.FULL_COLOR;
 		client_icon_style_symbolic_action.set_state (settings.client_icon_style_symbolic);
+	}
+
+	private void update_meta_dim_from_settings () {
+		if (settings.meta_dim) {
+			if (!artist_label.has_css_class ("dim-label")) artist_label.add_css_class ("dim-label");
+			if (!album_label.has_css_class ("dim-label")) album_label.add_css_class ("dim-label");
+		} else {
+			if (artist_label.has_css_class ("dim-label")) artist_label.remove_css_class ("dim-label");
+			if (album_label.has_css_class ("dim-label")) album_label.remove_css_class ("dim-label");
+		}
+
+		meta_dim_action.set_state (settings.meta_dim);
 	}
 
 	private void update_progressbin_from_settings () {
@@ -540,9 +684,29 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.orientation_horizontal = value.get_boolean ();
 	}
 
+	private void on_change_text_size (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.text_size = value.get_string ();
+	}
+
+	private void on_change_cover_size (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.cover_size = value.get_string ();
+	}
+
+	private void on_change_cover_scaling (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.cover_scaling = value.get_string ();
+	}
+
 	private void on_change_cover_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.cover_style = value.get_string ();
+	}
+
+	private void on_change_meta_dim (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.meta_dim = value.get_boolean ();
 	}
 
 	private void on_change_component_progressbin (GLib.SimpleAction action, GLib.Variant? value) {

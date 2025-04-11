@@ -63,6 +63,9 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	#endif
 	construct {
 		this.overflow = Gtk.Overflow.HIDDEN;
+		this.valign = Gtk.Align.CENTER;
+		this.halign = Gtk.Align.CENTER;
+
 		overlay = new Gtk.Overlay () {
 			focusable = true
 		};
@@ -114,14 +117,35 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		var component_submenu_model = new GLib.Menu ();
 		component_submenu_model.append (_("Background Progress"), "win.component-progressbin");
 		component_submenu_model.append (_("Client Icon"), "win.component-client-icon");
+		component_submenu_model.append (_("Dim Metadata Labels"), "win.meta-dim");
 		component_submenu_model.append (_("Fit Art on Cover"), "win.component-cover-fit");
 		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
 		style_section_model.append_submenu (_("Components"), component_submenu_model);
+
+		var cover_scaling_submenu_model = new GLib.Menu ();
+		cover_scaling_submenu_model.append (_("Linear"), "win.cover-scaling('linear')");
+		cover_scaling_submenu_model.append (_("Nearest"), "win.cover-scaling('nearest')");
+		cover_scaling_submenu_model.append (_("Trilinear"), "win.cover-scaling('trilinear')");
+		style_section_model.append_submenu (_("Cover Scaling"), cover_scaling_submenu_model);
 
 		var orientation_submenu_model = new GLib.Menu ();
 		orientation_submenu_model.append (_("Horizontal"), "win.toggle-orientation(true)");
 		orientation_submenu_model.append (_("Vertical"), "win.toggle-orientation(false)");
 		style_section_model.append_submenu (_("Orientation"), orientation_submenu_model);
+
+		var size_submenu_model = new GLib.Menu ();
+		var cover_size_submenu_model = new GLib.Menu ();
+		cover_size_submenu_model.append (_("Small"), "win.cover-size('small')");
+		cover_size_submenu_model.append (_("Regular"), "win.cover-size('regular')");
+		cover_size_submenu_model.append (_("Big"), "win.cover-size('big')");
+		size_submenu_model.append_submenu ("%s ".printf (_("Cover")), cover_size_submenu_model); // https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
+		style_section_model.append_submenu (_("Size"), size_submenu_model);
+
+		var text_size_submenu_model = new GLib.Menu ();
+		text_size_submenu_model.append (_("Small"), "win.text-size('small')");
+		text_size_submenu_model.append (_("Regular"), "win.text-size('regular')");
+		text_size_submenu_model.append (_("Big"), "win.text-size('big')");
+		size_submenu_model.append_submenu (_("Text"), text_size_submenu_model);
 
 		var style_submenu_model = new GLib.Menu ();
 		var client_style_submenu_model = new GLib.Menu ();

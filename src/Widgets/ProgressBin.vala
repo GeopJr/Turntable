@@ -67,6 +67,13 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 	}
 
+	public bool client_icon_large {
+		get { return client_icon_widget.icon_size == Gtk.IconSize.LARGE; }
+		set {
+			client_icon_widget.icon_size = value ? Gtk.IconSize.LARGE : Gtk.IconSize.NORMAL;
+		}
+	}
+
 	private string _client_icon = "application-x-executable-symbolic";
 	public string client_icon {
 		get { return _client_icon; }
@@ -212,7 +219,8 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 			valign = Gtk.Align.END,
 			halign = Gtk.Align.END,
 			margin_end = 6,
-			margin_bottom = 6
+			margin_bottom = 6,
+			icon_size = Gtk.IconSize.LARGE
 		};
 
 		overlay.add_overlay (client_icon_widget);

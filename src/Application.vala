@@ -110,6 +110,12 @@ namespace Turntable {
 			};
 
 			about.present (this.active_window);
+
+			GLib.Idle.add (() => {
+				var style = Utils.Celebrate.get_celebration_css_class (new GLib.DateTime.now ());
+				if (style != "") about.add_css_class (style);
+				return GLib.Source.REMOVE;
+			});
 		}
 
 		private void on_new_window () {

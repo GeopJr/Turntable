@@ -7,6 +7,10 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public bool client_icon_style_symbolic { get; set; }
 	public bool component_client_icon { get; set; }
 	public bool component_cover_fit { get; set; }
+	public bool meta_dim { get; set; }
+	public string cover_size { get; set; }
+	public string text_size { get; set; }
+	public string cover_scaling { get; set; }
 	public string[] scrobbler_allowlist { get; set; default = {}; }
 
 	private const string[] KEYS_TO_INIT = {
@@ -18,7 +22,11 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"client-icon-style-symbolic",
 		"component-client-icon",
 		"component-cover-fit",
-		"scrobbler-allowlist"
+		"scrobbler-allowlist",
+		"meta-dim",
+		"cover-size",
+		"text-size",
+		"cover-scaling"
 	};
 
 	public Settings () {

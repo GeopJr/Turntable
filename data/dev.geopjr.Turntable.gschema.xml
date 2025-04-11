@@ -4,8 +4,17 @@
 		<key name="orientation-horizontal" type="b">
 			<default>true</default>
 		</key>
+		<key name="meta-dim" type="b">
+			<default>true</default>
+		</key>
 		<key name="cover-style" type="s">
 			<default>'card'</default>
+		</key>
+		<key name="cover-size" type="s">
+			<default>'regular'</default>
+		</key>
+		<key name="text-size" type="s">
+			<default>'regular'</default>
 		</key>
 		<key name="component-progressbin" type="b">
 			<default>true</default>
@@ -15,6 +24,9 @@
 		</key>
 		<key name="window-style" type="s">
 			<default>''</default>
+		</key>
+    <key name="cover-scaling" type="s">
+			<default>'linear'</default>
 		</key>
 		<key name="client-icon-style-symbolic" type="b">
 			<default>true</default>

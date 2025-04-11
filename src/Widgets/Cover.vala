@@ -70,6 +70,36 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 	}
 
+	public enum Scaling {
+		LINEAR,
+		NEAREST,
+		TRILINEAR;
+
+		public string to_string () {
+			switch (this) {
+				case NEAREST: return "nearest";
+				case TRILINEAR: return "trilinear";
+				default: return "linear";
+			}
+		}
+
+		public Gsk.ScalingFilter to_filter () {
+			switch (this) {
+				case NEAREST: return Gsk.ScalingFilter.NEAREST;
+				case TRILINEAR: return Gsk.ScalingFilter.TRILINEAR;
+				default: return Gsk.ScalingFilter.LINEAR;
+			}
+		}
+
+		public static Scaling from_string (string string_scaling) {
+			switch (string_scaling) {
+				case "nearest": return NEAREST;
+				case "trilinear": return TRILINEAR;
+				default: return LINEAR;
+			}
+		}
+	}
+
 	private Style _style = Style.CARD;
 	public Style style {
 		get { return _style; }
