@@ -80,7 +80,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		mpris_manager.players_changed.connect (update_store);
 
 		client_dropdown = new Gtk.DropDown (players_store, new Gtk.PropertyExpression (typeof (Mpris.Entry), null, "client-info-name")) {
-			//  enable_search = false, // maybe enable if there are more than 10 items
+			enable_search = false,
 			factory = new Gtk.BuilderListItemFactory.from_resource (null, @"$(Build.RESOURCES)gtk/dropdown/client_display.ui"),
 			list_factory = new Gtk.BuilderListItemFactory.from_resource (null, @"$(Build.RESOURCES)gtk/dropdown/client.ui"),
 			tooltip_text = _("Select Player"),
@@ -187,12 +187,13 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			on_accounts_changed ();
 		#endif
 
-		sub_box.append (new Gtk.MenuButton () {
+		menu_button = new Gtk.MenuButton () {
 			icon_name = "menu-large-symbolic",
 			primary = true,
 			menu_model = menu_model,
 			css_classes = {"circular", "osd"}
-		});
+		};
+		sub_box.append (menu_button);
 		main_box.append (sub_box);
 		revealer.child = new Adw.Bin () {
 			css_classes = {"osd"},
@@ -239,6 +240,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		players_store.splice (0, players_store.n_items, mpris_manager.players);
 		players_store.sort ((GLib.CompareDataFunc<Mpris.Entry>) compare_players);
 
+		client_dropdown.enable_search = players_store.n_items > 10;
 		if (this.last_player == null) selection_changed (); // if always ensure player
 	}
 
