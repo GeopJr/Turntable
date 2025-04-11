@@ -1,7 +1,7 @@
 namespace Turntable {
 	public static bool is_flatpak = false;
 	public static Mpris.Manager mpris_manager;
-	public const int PROGRESS_UPDATE_TIME = 250;
+	public const int PROGRESS_UPDATE_TIME = 1000; // it was 250ms, turns out it updates every second?
 	public static Application application;
 
 	public static Utils.Settings settings;

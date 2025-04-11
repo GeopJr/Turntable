@@ -152,7 +152,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		set {
 			double new_val = value.clamp (0.0, 1.0);
 			if (_progress != new_val) {
-				animation.value_from = _progress;
+				animation.value_from = animation.state == Adw.AnimationState.PLAYING ? animation.value : _progress;
 				animation.value_to = new_val;
 
 				_progress = new_val;
@@ -209,7 +209,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 
 		var target = new Adw.CallbackAnimationTarget (animation_target_cb);
-		animation = new Adw.TimedAnimation (this, 0.0, 1.0, PROGRESS_UPDATE_TIME / 2, target) {
+		animation = new Adw.TimedAnimation (this, 0.0, 1.0, PROGRESS_UPDATE_TIME, target) {
 			easing = Adw.Easing.LINEAR
 		};
 
