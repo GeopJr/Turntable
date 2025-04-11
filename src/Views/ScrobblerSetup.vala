@@ -415,7 +415,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		this.title = _("Scrobblers");
 
 		var main_page = new Adw.PreferencesPage () {
-			description = _("Track your music by scrobbling your MPRIS clients. By connecting your account, MPRIS information will be sent to that service when you reach the minimum listening time. Those services have their own privacy policies. To protect your privacy, %s requires you to opt-in scrobbling per MPRIS client. Avoid allowlisting non-music players like browsers or video players.").printf (Build.NAME)
+			description = _("Track your music by scrobbling your MPRIS clients. By connecting your account, MPRIS information will be sent to that service when you reach the minimum listening time. These services have their own privacy policies. To protect your privacy, %s requires you to opt-in scrobbling per MPRIS client. Avoid allowlisting non-music players like browsers or video players.").printf (Build.NAME)
 		};
 		var main_group = new Adw.PreferencesGroup ();
 
