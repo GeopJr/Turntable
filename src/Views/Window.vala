@@ -636,7 +636,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			this.playing =
 			button_next.sensitive =
 			button_prev.sensitive =
-				false;
+			button_play.sensitive = false;
 
 			return;
 		}
@@ -650,6 +650,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		player_bindings += this.player.bind_property ("playing", this, "playing", GLib.BindingFlags.SYNC_CREATE);
 		player_bindings += this.player.bind_property ("can-go-next", button_next, "sensitive", GLib.BindingFlags.SYNC_CREATE);
 		player_bindings += this.player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("can-play-pause", button_play, "sensitive", GLib.BindingFlags.SYNC_CREATE);
 
 		prog.client_icon = this.player.client_info_icon;
 		prog.client_name = this.player.client_info_name;
