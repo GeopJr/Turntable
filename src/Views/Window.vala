@@ -474,12 +474,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		controls_overlay.player_changed.connect (update_player);
 		update_player (controls_overlay.last_player); // always ensure
 
-		Gtk.GestureClick click_gesture = new Gtk.GestureClick () {
-			button = Gdk.BUTTON_PRIMARY
-		};
-		click_gesture.pressed.connect (on_clicked);
-		prog.add_controller (click_gesture);
-
 		settings.notify["cover-style"].connect (update_cover_from_settings);
 		settings.notify["orientation-horizontal"].connect (update_orientation_from_settings);
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
@@ -499,6 +493,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			update_scrobble_status ();
 		#endif
 
+		box2.state_flags_changed.connect (on_state_flags_changed);
 		art_pic.map.connect (on_mapped);
 	}
 
@@ -559,7 +554,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	}
 
 	private void update_window_from_settings () {
-		this.window_style = Style.from_string (settings.cover_style);
+		this.window_style = Style.from_string (settings.window_style);
 		window_style_action.set_state (this.window_style.to_string ());
 	}
 
@@ -605,8 +600,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_cover_fit_action.set_state (settings.component_cover_fit);
 	}
 
-	private void on_clicked (Gtk.GestureClick gesture, int n_press, double x, double y) {
-		if (!controls_overlay.contains (x, y) && controls_overlay.get_focus_child () != null) this.focus_widget = null;
+	private void on_state_flags_changed (Gtk.Widget box, Gtk.StateFlags old_flags) {
+		if (!(Gtk.StateFlags.PRELIGHT in old_flags) && (Gtk.StateFlags.PRELIGHT in box.get_state_flags ())) {
+			if (controls_overlay.hide_overlay ()) this.focus_widget = null;
+		}
 	}
 
 	#if SCROBBLING

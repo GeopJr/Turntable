@@ -58,6 +58,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	Gtk.Revealer revealer;
 	GLib.ListStore players_store;
 	Gtk.DropDown client_dropdown;
+	Gtk.MenuButton menu_button;
 	#if SCROBBLING
 		ScrobbleButton scrobble_button;
 	#endif
@@ -228,15 +229,17 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			revealer.reveal_child = should_reveal_child;
 	}
 
+	public bool hide_overlay () {
+		if (!revealer.reveal_child || menu_button.active || ((Gtk.ToggleButton) client_dropdown.get_first_child ()).active) return false;
+		revealer.reveal_child = false;
+		return true;
+	}
+
 	private void update_store () {
 		players_store.splice (0, players_store.n_items, mpris_manager.players);
 		players_store.sort ((GLib.CompareDataFunc<Mpris.Entry>) compare_players);
 
 		if (this.last_player == null) selection_changed (); // if always ensure player
-	}
-
-	public override bool contains (double x, double y) {
-		return this.child.contains (x, y);
 	}
 
 	private static int compare_players (Mpris.Entry a, Mpris.Entry b) {
