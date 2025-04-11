@@ -52,7 +52,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			});
 
 			spinner = new Adw.Spinner ();
-			next_icon = new Gtk.Image.from_icon_name ("right-large-symbolic"); // left-large-symbolic
+			next_icon = new Gtk.Image.from_icon_name (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL ? "left-large-symbolic" : "right-large-symbolic");
 			trash_button = new Gtk.Button.from_icon_name ("user-trash-symbolic") {
 				valign = Gtk.Align.CENTER,
 				halign = Gtk.Align.CENTER,

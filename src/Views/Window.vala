@@ -376,7 +376,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		box2.append (box3);
 
-		button_prev = new Gtk.Button.from_icon_name ("skip-backward-large-symbolic") {
+		bool is_rtl = Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL;
+		button_prev = new Gtk.Button.from_icon_name (is_rtl ? "skip-forward-large-symbolic" : "skip-backward-large-symbolic") {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
@@ -390,7 +391,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		box3.append (button_play);
 
-		button_next = new Gtk.Button.from_icon_name ("skip-forward-large-symbolic") {
+		button_next = new Gtk.Button.from_icon_name (is_rtl ? "skip-backward-large-symbolic" : "skip-forward-large-symbolic") {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
