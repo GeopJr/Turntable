@@ -1,12 +1,15 @@
 public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
-	public Manager.Provider SERVICE { get { return Manager.Provider.LISTENBRAINZ; } }
-	public string token { get; set; default = ""; }
+	public virtual Manager.Provider SERVICE { get { return Manager.Provider.LISTENBRAINZ; } }
+	public virtual string token { get; set; default = ""; }
 
 	private string _url = "https://api.listenbrainz.org";
-	public string url {
+	public virtual string url {
 		get { return _url; }
 		set {
-			if (_url != value) {
+			if (value == null) value = "https://api.listenbrainz.org";
+			if (value == "") {
+				_url = value;
+			} else if (_url != value) {
 				try {
 					var uri = GLib.Uri.parse (value, GLib.UriFlags.NONE);
 					_url = GLib.Uri.build (
@@ -26,9 +29,7 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		}
 	}
 
-	public void scrobble (Scrobbling.Manager.Payload payload, GLib.DateTime datetime) {
-		if (this.token == "") return;
-
+	protected void scrobble_actual (Scrobbling.Manager.Payload payload, GLib.DateTime datetime) {
 		var builder = new Json.Builder ();
 		builder.begin_object ();
 			builder.set_member_name ("listen_type");

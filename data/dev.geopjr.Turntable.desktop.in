@@ -5,7 +5,7 @@ Exec=dev.geopjr.Turntable %u
 Icon=dev.geopjr.Turntable
 Terminal=false
 Categories=AudioVideo;Audio;
-Keywords=music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;song;audio;
+Keywords=music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;
 X-GNOME-Gettext-Domain=dev.geopjr.Turntable
 MimeType=x-scheme-handler/turntable;
 # Translators: Do NOT translate or transliterate this text (these are enum types)!

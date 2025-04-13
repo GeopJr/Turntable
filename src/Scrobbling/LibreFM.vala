@@ -4,5 +4,31 @@ public class Turntable.Scrobbling.LibreFM : LastFM, Scrobbler {
 	public override string api_secret { get { return Build.LIBREFM_SECRET; } }
 	public override string token { get; set; default = ""; }
 
-	public override string url { get { return "https://libre.fm/2.0/"; } set {} }
+	private string _url = "https://libre.fm/2.0/";
+	public override string url {
+		get { return _url; }
+		set {
+			if (value == null) value = "https://libre.fm/2.0/";
+
+			if (value == "") {
+				_url = value;
+			} else if (_url != value) {
+				try {
+					var uri = GLib.Uri.parse (value, GLib.UriFlags.NONE);
+					_url = GLib.Uri.build (
+						GLib.UriFlags.NONE,
+						"https",
+						uri.get_userinfo (),
+						uri.get_host (),
+						uri.get_port (),
+						"/2.0/",
+						null,
+						null
+					).to_string ();
+				} catch (Error e) {
+					critical (@"Can't parse $value: $(e.message)");
+				}
+			}
+		}
+	}
 }

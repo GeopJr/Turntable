@@ -3,6 +3,7 @@ sources += files(
     'LastFM.vala',
     'LibreFM.vala',
     'ListenBrainz.vala',
+    'Maloja.vala',
     'Manager.vala',
     'Scrobbler.vala'
 )

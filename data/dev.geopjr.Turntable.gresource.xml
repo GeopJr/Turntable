@@ -21,6 +21,7 @@
     <file preprocess="xml-stripblanks" alias="right-large-symbolic.svg">icons/hicolor/symbolic/actions/right-large-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="user-trash-symbolic.svg">icons/hicolor/symbolic/actions/user-trash-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="listenbrainz.svg">icons/hicolor/scalable/actions/listenbrainz.svg</file>
+    <file preprocess="xml-stripblanks" alias="maloja.svg">icons/hicolor/scalable/actions/maloja.svg</file>
     <file preprocess="xml-stripblanks" alias="librefm.svg">icons/hicolor/scalable/actions/librefm.svg</file>
     <file preprocess="xml-stripblanks" alias="lastfm-symbolic.svg">icons/hicolor/symbolic/actions/lastfm-symbolic.svg</file>
   </gresource>

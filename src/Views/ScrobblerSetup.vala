@@ -110,13 +110,13 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 	}
 
 	public class ListenBrainzPage : ProviderPage {
-		Adw.EntryRow url_row;
+		protected Adw.EntryRow url_row;
 		Adw.EntryRow token_row;
-		private string token { get; set; default = ""; }
+		protected string token { get; set; default = ""; }
 		public signal void done ();
 
 		private bool _url_entry_valid = true;
-		private bool url_entry_valid {
+		protected bool url_entry_valid {
 			get { return _url_entry_valid; }
 			set {
 				_url_entry_valid = value;
@@ -132,7 +132,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		}
 
 		private bool _token_row_valid = false;
-		private bool token_row_valid {
+		protected bool token_row_valid {
 			get { return _token_row_valid; }
 			set {
 				_token_row_valid = value;
@@ -152,7 +152,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		}
 
 		private string _url = "";
-		public string url {
+		public virtual string url {
 			get { return _url; }
 			set {
 				bool error = false;
@@ -230,14 +230,14 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			page.add (main_group);
 		}
 
-		private void on_url_row_changed (Gtk.Editable url_row_editable) {
+		protected virtual void on_url_row_changed (Gtk.Editable url_row_editable) {
 			string clean_uri = url_row_editable.text.strip ();
 			if (clean_uri == "") clean_uri = "https://api.listenbrainz.org";
 
 			this.url = clean_uri;
 		}
 
-		private void on_token_changed (Gtk.Editable token_row_editable) {
+		protected virtual void on_token_changed (Gtk.Editable token_row_editable) {
 			this.token = token_row_editable.text.strip ();
 			token_row_valid = GLib.Uuid.string_is_valid (this.token);
 		}
@@ -298,6 +298,62 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			}
 
 			return null;
+		}
+	}
+
+	public class MalojaPage : ListenBrainzPage {
+		protected override Scrobbling.Manager.Provider scrobbler_provider { get { return MALOJA; }}
+
+		private string _url = "";
+		public override string url {
+			get { return _url; }
+			set {
+				bool error = false;
+				string normalized_value = value.contains ("://") ? value : @"https://$value";
+
+				if (!normalized_value.contains (".")) {
+					error = true;
+				} else if (_url != normalized_value) {
+					try {
+						if (GLib.Uri.is_valid (normalized_value, GLib.UriFlags.NONE)) {
+							var uri = GLib.Uri.parse (normalized_value, GLib.UriFlags.NONE);
+
+							_url = GLib.Uri.build (
+								GLib.UriFlags.NONE,
+								"https",
+								uri.get_userinfo (),
+								uri.get_host (),
+								uri.get_port (),
+								"/apis/listenbrainz",
+								null,
+								null
+							).to_string ();
+						} else {
+							error = true;
+						}
+					} catch {
+						error = true;
+					}
+				}
+
+				url_entry_valid = !error;
+			}
+		}
+
+		protected override void on_url_row_changed (Gtk.Editable url_row_editable) {
+			this.url = url_row_editable.text.strip ();
+		}
+
+		protected override void on_token_changed (Gtk.Editable token_row_editable) {
+			this.token = token_row_editable.text.strip ();
+			token_row_valid = this.token != "";
+		}
+
+		construct {
+			this.title = Scrobbling.Manager.Provider.MALOJA.to_string ();
+			url_row.title = _("Host");
+			url_row.text =
+			this.url = "";
 		}
 	}
 
@@ -490,6 +546,14 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		switch (provider) {
 			case LISTENBRAINZ:
 				var page = new ListenBrainzPage () {
+					session = session
+				};
+				page.done.connect (on_page_done);
+				page.errored.connect (on_error);
+				this.push_subpage (page);
+				break;
+			case MALOJA:
+				var page = new MalojaPage () {
 					session = session
 				};
 				page.done.connect (on_page_done);

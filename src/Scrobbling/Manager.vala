@@ -6,13 +6,15 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	public enum Provider {
 		LISTENBRAINZ,
 		LIBREFM,
-		LASTFM;
+		LASTFM,
+		MALOJA;
 
 		public string to_string () {
 			switch (this) {
 				case LISTENBRAINZ: return "ListenBrainz";
 				case LIBREFM: return "Libre.fm";
 				case LASTFM: return "last.fm";
+				case MALOJA: return "Maloja";
 				default: assert_not_reached ();
 			}
 		}
@@ -22,11 +24,12 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 				case LISTENBRAINZ: return "listenbrainz";
 				case LIBREFM: return "librefm";
 				case LASTFM: return "lastfm-symbolic";
+				case MALOJA: return "maloja";
 				default: assert_not_reached ();
 			}
 		}
 	}
-	public const Provider[] ALL_PROVIDERS = { LISTENBRAINZ, LIBREFM, LASTFM };
+	public const Provider[] ALL_PROVIDERS = { LISTENBRAINZ, LIBREFM, LASTFM, MALOJA };
 
 	Scrobbler[] services = {
 		new Scrobbling.ListenBrainz (),

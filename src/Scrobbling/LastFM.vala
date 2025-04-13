@@ -6,9 +6,7 @@ public class Turntable.Scrobbling.LastFM : GLib.Object, Scrobbler {
 
 	public virtual string url { get { return "http://ws.audioscrobbler.com/2.0/"; } set {} }
 
-	public void scrobble (Scrobbling.Manager.Payload payload, GLib.DateTime datetime) {
-		if (token == "") return;
-
+	protected void scrobble_actual (Scrobbling.Manager.Payload payload, GLib.DateTime datetime) {
 		var scrobble_params = new GLib.HashTable<string, string> (str_hash, str_equal);
 		if (payload.album != null) scrobble_params.set ("album", payload.album);
 		scrobble_params.set ("api_key", api_key);
