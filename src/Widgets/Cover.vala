@@ -553,7 +553,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			snapshot.push_mask (Gsk.MaskMode.INVERTED_ALPHA);
 
 			if (this.orientation == Gtk.Orientation.HORIZONTAL) {
-				var new_fade = width - FADE_WIDTH;
+				var new_fade = is_rtl ? 0 : width - FADE_WIDTH;
 				snapshot.append_linear_gradient (
 					Graphene.Rect () {
 						origin = Graphene.Point () {
@@ -566,11 +566,11 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 						}
 					},
 					Graphene.Point () {
-						x = width,
+						x = is_rtl ? new_fade : width,
 						y = 0
 					},
 					Graphene.Point () {
-						x = new_fade,
+						x = is_rtl ? FADE_WIDTH : new_fade,
 						y = 0
 					},
 					GRADIENT

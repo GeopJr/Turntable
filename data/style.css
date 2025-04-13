@@ -17,6 +17,14 @@ button.large {
 	margin-bottom: 16px;
 }
 
+.card-like:dir(rtl) {
+	margin-right: 16px;
+}
+
+.card-like.horizontal:dir(rtl) {
+	margin-left: 0px;
+}
+
 .card-like.vertical {
 	margin-right: 16px;
 	margin-bottom: 0px;

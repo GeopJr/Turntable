@@ -4,6 +4,7 @@ namespace Turntable {
 	public const int PROGRESS_UPDATE_TIME = 1000; // it was 250ms, turns out it updates every second?
 	public static Application application;
 	public static bool debug_enabled = false;
+	public static bool is_rtl = false;
 
 	public static Utils.Settings settings;
 	#if SCROBBLING
@@ -62,6 +63,7 @@ namespace Turntable {
 				error (msg);
 			}
 
+			is_rtl = Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL;
 			settings = new Utils.Settings ();
 			#if SCROBBLING
 				account_manager = new Scrobbling.AccountManager ();

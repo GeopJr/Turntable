@@ -376,7 +376,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		box2.append (box3);
 
-		bool is_rtl = Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL;
 		button_prev = new Gtk.Button.from_icon_name (is_rtl ? "skip-forward-large-symbolic" : "skip-backward-large-symbolic") {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
