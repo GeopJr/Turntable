@@ -208,6 +208,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			}
 		}
 
+		protected virtual Scrobbling.Manager.Provider scrobbler_provider { get { return LISTENBRAINZ; }}
 		construct {
 			this.title = Scrobbling.Manager.Provider.LISTENBRAINZ.to_string ();
 
@@ -282,7 +283,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 						if (!obj.has_member ("user_name")) return _("Invalid Token");
 
 						var user_name = obj.get_string_member ("user_name");
-						account_manager.add (LISTENBRAINZ, user_name, user_token);
+						account_manager.add (this.scrobbler_provider, user_name, user_token, this.url);
 
 						break;
 					default:
@@ -415,10 +416,10 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		this.title = _("Scrobblers");
 
 		var main_page = new Adw.PreferencesPage () {
-			description = _("Track your music by scrobbling your MPRIS clients. By connecting your account, MPRIS information will be sent to that service when you reach the minimum listening time. These services have their own privacy policies. To protect your privacy, %s requires you to opt-in scrobbling per MPRIS client. Avoid allowlisting non-music players like browsers or video players.").printf (Build.NAME)
+			description = _("Track your music by scrobbling your MPRIS clients. By connecting your account, MPRIS information will be sent to that service when you reach the minimum listening time. To protect your privacy, %s requires you to opt-in scrobbling per MPRIS client.").printf (Build.NAME)
 		};
-		var main_group = new Adw.PreferencesGroup ();
 
+		var main_group = new Adw.PreferencesGroup ();
 		foreach (var provider in Scrobbling.Manager.ALL_PROVIDERS) {
 			var row = new ScrobblerRow (provider, false);
 			row.added.connect (on_add);
@@ -544,7 +545,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			var sk = session_obj.get_string_member ("key");
 
 			provider_rows.get (provider.to_string ()).state = EXISTS;
-			account_manager.add (provider, name, sk);
+			account_manager.add (provider, name, sk, libre ? librefm_url : null);
 			return null;
 		} catch (Error e) {
 			provider_rows.get (provider.to_string ()).state = NEW;

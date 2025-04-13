@@ -8,9 +8,12 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 	public class ScrobblerAccount : GLib.Object {
 		public string username { get; set; }
 		public string token { get; set; }
-		public ScrobblerAccount (string username, string token) {
+		public string? custom_url { get; set; }
+
+		public ScrobblerAccount (string username, string token, string? custom_url = null) {
 			this.username = username;
 			this.token = token;
+			this.custom_url = custom_url;
 		}
 	}
 
@@ -25,8 +28,8 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 		);
 	}
 
-	public void add (Scrobbling.Manager.Provider provider, string username, string token) {
-		accounts.set (provider.to_string (), new ScrobblerAccount (username, token));
+	public void add (Scrobbling.Manager.Provider provider, string username, string token, string? custom_url = null) {
+		accounts.set (provider.to_string (), new ScrobblerAccount (username, token, custom_url));
 		accounts_changed ();
 	}
 
@@ -114,6 +117,8 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 				builder.add_string_value (v.username);
 				builder.set_member_name ("token");
 				builder.add_string_value (v.token);
+				builder.set_member_name ("custom_url");
+				builder.add_string_value (v.custom_url);
 			builder.end_object ();
 		});
 
@@ -139,36 +144,45 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 	}
 
 	private void load_to_store (Secret.Retrievable item) {
-		item.retrieve_secret (null, (obj, res) => {
+		item.retrieve_secret.begin (null, (obj, res) => {
 			try {
 				var secret = item.retrieve_secret.end (res);
-				var contents = secret.get_text ();
-				var parser = new Json.Parser ();
-				parser.load_from_data (contents, -1);
-
-				var root = parser.get_root ();
-				if (root == null) throw new Error.literal (-1, 3, "Malformed json");
-
-				var root_arr = root.get_array ();
-				if (root_arr == null) throw new Error.literal (-1, 3, "Malformed json");
-
-				accounts.remove_all ();
-				root_arr.foreach_element ((arr, i, node) => {
-					var arr_obj = node.get_object ();
-					string provider = arr_obj.get_string_member ("provider");
-					accounts.set (
-						provider,
-						new ScrobblerAccount (
-							arr_obj.get_string_member ("username"),
-							arr_obj.get_string_member ("token")
-						)
-					);
-				});
-
-				accounts_changed ();
+				load_to_store_actual (secret);
 			} catch (Error e) {
 				critical (@"Couldn't load accounts to store: $(e.message)");
 			}
 		});
+	}
+
+	private void load_to_store_sync (Secret.Retrievable item) throws Error {
+		load_to_store_actual (item.retrieve_secret_sync (null));
+	}
+
+	private inline void load_to_store_actual (Secret.Value secret) throws Error {
+		var contents = secret.get_text ();
+		var parser = new Json.Parser ();
+		parser.load_from_data (contents, -1);
+
+		var root = parser.get_root ();
+		if (root == null) throw new Error.literal (-1, 3, "Malformed json");
+
+		var root_arr = root.get_array ();
+		if (root_arr == null) throw new Error.literal (-1, 3, "Malformed json");
+
+		accounts.remove_all ();
+		root_arr.foreach_element ((arr, i, node) => {
+			var arr_obj = node.get_object ();
+			string provider = arr_obj.get_string_member ("provider");
+			accounts.set (
+				provider,
+				new ScrobblerAccount (
+					arr_obj.get_string_member ("username"),
+					arr_obj.get_string_member ("token"),
+					arr_obj.has_member ("custom_url") ? arr_obj.get_string_member ("custom_url") : null
+				)
+			);
+		});
+
+		accounts_changed ();
 	}
 }
