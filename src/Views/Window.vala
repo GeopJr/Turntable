@@ -78,7 +78,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 						break;
 				}
 
-				update_album_artist_title ();
+				update_orientation ();
 				update_offset ();
 			}
 		}
@@ -254,7 +254,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		switch (this.orientation) {
 			case Gtk.Orientation.VERTICAL:
 				this.default_width = 0;
-				this.default_height = 300;
+				this.default_height = this.cover_size == Size.SMALL ? 300 : 400;
 				break;
 			default:
 				this.default_width = 534;
