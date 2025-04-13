@@ -220,7 +220,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 			prog.progress = value == 0 ? 0 : (double)this.position / (double)value;
 			#if SCROBBLING
-				add_to_scrobbler ();
+				if (value > 0) add_to_scrobbler ();
 			#endif
 		}
 	}
@@ -514,8 +514,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 			if (scrobble_enabled != new_val) {
 				scrobble_enabled = new_val;
-				add_to_scrobbler ();
-				update_scrobbler_playing ();
+				if (this.length > 0) {
+					add_to_scrobbler ();
+					update_scrobbler_playing ();
+				}
 			}
 		}
 	#endif
