@@ -34,7 +34,8 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	Scrobbler[] services = {
 		new Scrobbling.ListenBrainz (),
 		new Scrobbling.LibreFM (),
-		new Scrobbling.LastFM ()
+		new Scrobbling.LastFM (),
+		new Scrobbling.Maloja ()
 	};
 
 	public struct Payload {
