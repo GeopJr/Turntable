@@ -17,7 +17,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 
 	public bool can_go_next { get; private set; default = false; }
 	public bool can_go_back { get; private set; default = false; }
-	public bool can_play_pause { get; private set; default = false; }
+	public bool can_control { get; private set; default = false; }
 	public bool playing { get; private set; default = false; }
 	public string? art { get; private set; default = null; }
 	public string? title { get; private set; default = null; }
@@ -131,13 +131,13 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		if (!this.player.can_control) {
 			this.can_go_back =
 			this.can_go_next =
-			this.can_play_pause = false;
+			this.can_control = false;
 			return;
 		}
 
 		this.can_go_back = this.player.can_go_previous;
 		this.can_go_next = this.player.can_go_next;
-		this.can_play_pause = true;
+		this.can_control = true;
 	}
 
 	private void update_playback_status () {
