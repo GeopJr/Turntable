@@ -31,6 +31,8 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	}
 	public const Provider[] ALL_PROVIDERS = { LISTENBRAINZ, LIBREFM, LASTFM, MALOJA };
 
+	public bool cli_mode { get; set; default = false; }
+
 	Scrobbler[] services = {
 		new Scrobbling.ListenBrainz (),
 		new Scrobbling.LibreFM (),
@@ -143,7 +145,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	}
 
 	private void on_allowlist_changed () {
-		if (reserved_clients.length == 0) return;
+		if (reserved_clients.length == 0 || cli_mode) return;
 
 		string[] win_ids_to_clear = {};
 		reserved_clients.foreach ((k, v) => {

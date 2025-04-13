@@ -98,6 +98,25 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 		);
 	}
 
+	public void load_cli_sync () throws Error {
+		if (loaded) return;
+		loaded = true;
+
+		var attrs = new GLib.HashTable<string,string> (str_hash, str_equal);
+		attrs["version"] = VERSION;
+
+		List<Secret.Retrievable> secrets = Secret.password_searchv_sync (
+			schema,
+			attrs,
+			Secret.SearchFlags.UNLOCK,
+			null
+		);
+
+		secrets.foreach (item => {
+			load_to_store_sync (item);
+		});
+	}
+
 	public void save () {
 		var attrs = new GLib.HashTable<string,string> (str_hash, str_equal);
 		attrs["version"] = VERSION;
