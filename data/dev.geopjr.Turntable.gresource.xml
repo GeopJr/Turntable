@@ -25,4 +25,11 @@
     <file preprocess="xml-stripblanks" alias="librefm.svg">icons/hicolor/scalable/actions/librefm.svg</file>
     <file preprocess="xml-stripblanks" alias="lastfm-symbolic.svg">icons/hicolor/symbolic/actions/lastfm-symbolic.svg</file>
   </gresource>
+
+  <gresource prefix="/dev/geopjr/Turntable/icons/scalable/apps/">
+    <file alias="dev.geopjr.Archives.svg" preprocess="xml-stripblanks">icons/hicolor/scalable/apps/dev.geopjr.Archives.svg</file>
+    <file alias="dev.geopjr.Calligraphy.svg" preprocess="xml-stripblanks">icons/hicolor/scalable/apps/dev.geopjr.Calligraphy.svg</file>
+    <file alias="dev.geopjr.Collision.svg" preprocess="xml-stripblanks">icons/hicolor/scalable/apps/dev.geopjr.Collision.svg</file>
+    <file alias="dev.geopjr.Tuba.svg" preprocess="xml-stripblanks">icons/hicolor/scalable/apps/dev.geopjr.Tuba.svg</file>
+  </gresource>
 </gresources>

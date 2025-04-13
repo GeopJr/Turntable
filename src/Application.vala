@@ -90,24 +90,48 @@ namespace Turntable {
 		bool activated = false;
 		public override void activate () {
 			base.activate ();
+
 			var win = this.active_window ?? new Turntable.Views.Window (this);
 			win.present ();
-
-			if (!activated) account_manager.load ();
+			#if SCROBBLING
+				if (!activated) account_manager.load ();
+			#endif
 			activated = true;
 		}
 
+		const string[] DEVELOPERS = { "Evangelos “GeopJr” Paterakis" };
+		const string[] DESIGNERS = { "Evangelos “GeopJr” Paterakis" };
+		const string[] ARTISTS = { "Evangelos “GeopJr” Paterakis" };
 		private void on_about_action () {
-			string[] developers = { "Evangelos Paterakis" };
 			var about = new Adw.AboutDialog () {
-				application_name = "turntable",
-				application_icon = "dev.geopjr.Turntable",
-				developer_name = "Evangelos Paterakis",
-				translator_credits = _("translator-credits"),
-				version = "0.1.0",
-				developers = developers,
-				copyright = "© 2025 Evangelos Paterakis",
+				application_name = Build.NAME,
+				application_icon = Build.DOMAIN,
+				developer_name = DEVELOPERS[0],
+				version = Build.VERSION,
+				developers = DEVELOPERS,
+				artists = ARTISTS,
+				designers = DESIGNERS,
+				debug_info = troubleshooting,
+				debug_info_filename = @"$(Build.NAME).txt",
+				copyright = @"© 2025 $(DEVELOPERS[0])",
+				// translators: Name <email@domain.com> or Name https://website.example
+				translator_credits = _("translator-credits")
 			};
+
+			about.add_link (_("Donate"), Build.DONATE_WEBSITE);
+			//  about.add_link (_("Translate"), Build.TRANSLATE_WEBSITE);
+			#if SCROBBLING
+				about.comments = _("<b>Best Practices for Scrobbling</b>\n• Avoid allowlisting non-curated MPRIS clients like Web Browsers and Video Players\n• Tag your music with the proper track, album and artist names\n• Check, fix and match your scrobbles regularly");
+			#endif
+
+			// translators: Application metainfo for the app "Archives". <https://gitlab.gnome.org/GeopJr/Archives/>
+			about.add_other_app ("dev.geopjr.Archives", _("Archives"), _("Create and view web archives"));
+			// translators: Application metainfo for the app "Calligraphy". <https://gitlab.gnome.org/GeopJr/Calligraphy>
+			about.add_other_app ("dev.geopjr.Calligraphy", _("Calligraphy"), _("Turn text into ASCII banners"));
+			// translators: Application metainfo for the app "Collision". <https://github.com/GeopJr/Collision>
+			about.add_other_app ("dev.geopjr.Collision", _("Collision"), _("Check hashes for your files"));
+			// translators: Application metainfo for the app "Tuba". <https://github.com/GeopJr/Tuba>
+			about.add_other_app ("dev.geopjr.Tuba", _("Tuba"), _("Browse the Fediverse"));
 
 			about.present (this.active_window);
 
