@@ -17,7 +17,6 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	};
 	public signal void style_changed (Style style, Gtk.Orientation orientation);
 
-
 	Gdk.RGBA vinyl_color;
 	private void update_vinyl_color () {
 		Gdk.RGBA new_color = { 0f, 0f, 0f, 1f };
@@ -172,7 +171,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 	private class CoverLoader : GLib.Object {
 		private string file_path;
-		private Cancellable cancellable;
+		private Cancellable cancellable = new Cancellable ();
 		private Gdk.Texture? texture = null;
 		private Utils.Color.ExtractedColors? extracted_colors = null;
 		public signal void done (Gdk.Texture texture);
@@ -180,6 +179,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 		private uint done_idle_id = -1;
 		private uint done_completely_idle_id = -1;
+		private bool extract = true;
 
 		~CoverLoader () {
 			if (done_idle_id != -1) GLib.Source.remove (done_idle_id);
@@ -191,6 +191,11 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 		public CoverLoader (string file_path) {
 			this.file_path = file_path;
+			this.extract = settings.component_extract_colors;
+		}
+
+		public CoverLoader.painter (Gdk.Texture texture) {
+			this.texture = texture;
 		}
 
 		public void fetch () {
@@ -204,19 +209,72 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			//  GLib.Idle.add_once (done_idle);
 
 			var pixbuf = new Gdk.Pixbuf.from_file (clean_path);
-			if (cancellable.is_cancelled ()) return;
+			if (cancellable.is_cancelled ()) {
+				stop_it (true);
+				return;
+			}
 
 			var t_texture = Gdk.Texture.for_pixbuf (pixbuf);
-			if (cancellable.is_cancelled ()) return;
+			if (cancellable.is_cancelled ()) {
+				stop_it (true);
+				return;
+			}
 
 			this.texture = t_texture;
 			done_idle_id = GLib.Idle.add_once (done_idle);
 
-			var avg = Utils.Color.get_average_color (pixbuf);
-			if (cancellable.is_cancelled ()) return;
+			if (!this.extract) {
+				stop_it (false);
+				return;
+			}
+
+			extract_colors_from_pixbuf (pixbuf);
+		}
+
+		private inline void stop_it (bool both = false) {
+			if (both) done_idle_id = GLib.Idle.add_once (done_idle);
+			done_completely_idle_id = GLib.Idle.add_once (done_completely_idle);
+		}
+
+		private void extract_colors_from_pixbuf (Gdk.Pixbuf? pixbuf) {
+			if (pixbuf == null) {
+				stop_it (false);
+				return;
+			}
+
+			Gdk.RGBA avg = Utils.Color.get_average_color (pixbuf, cancellable);
+			if (cancellable.is_cancelled ()) {
+				stop_it (false);
+				return;
+			}
 
 			this.extracted_colors = Utils.Color.get_contrasting_colors (avg);
 			done_completely_idle_id = GLib.Idle.add_once (done_completely_idle);
+		}
+
+		public void extract_colors () {
+			if (this.texture == null) {
+				stop_it (false);
+				return;
+			}
+
+			File tmp;
+			try {
+				FileIOStream ios;
+				tmp = File.new_tmp (null, out ios);
+				this.texture.save_to_png (tmp.get_path ());
+			} catch {
+				stop_it (false);
+				return;
+			}
+
+			if (cancellable.is_cancelled ()) {
+				stop_it (false);
+				return;
+			}
+
+			var texture_pixbuf = new Gdk.Pixbuf.from_file (tmp.get_path ());
+			extract_colors_from_pixbuf (texture_pixbuf);
 		}
 
 		private void done_idle () {
@@ -354,8 +412,30 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		);
 
 		Adw.StyleManager.get_default ().notify["dark"].connect (update_vinyl_color);
-		settings.notify["component-extract-colors"].connect (update_vinyl_color);
+		settings.notify["component-extract-colors"].connect (update_extracted_colors_setting);
 		update_vinyl_color ();
+	}
+
+	private void update_extracted_colors_setting () {
+		if (settings.component_extract_colors && this.cover != null) {
+			working_loader = new CoverLoader.painter (this.cover);
+
+			try {
+				working_loader.done.connect (queue_draw_cb);
+				working_loader.done_completely.connect (done_completely_cb);
+				new GLib.Thread<void>.try ("CoverLoader - Painter", working_loader.extract_colors);
+			} catch {
+				if (working_loader != null) {
+					working_loader.cancel ();
+					working_loader = null;
+				}
+
+				this.extracted_colors = null;
+				this.queue_draw ();
+			}
+		} else {
+			update_vinyl_color ();
+		}
 	}
 
 	public override Gtk.SizeRequestMode get_request_mode () {

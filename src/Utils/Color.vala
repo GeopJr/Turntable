@@ -4,7 +4,7 @@ public class Turntable.Utils.Color {
 		public Gdk.RGBA? dark;
 	}
 
-	public static Gdk.RGBA get_average_color (Gdk.Pixbuf pixbuf) {
+	public static Gdk.RGBA get_average_color (Gdk.Pixbuf pixbuf, Cancellable cancellable) {
 		int width = pixbuf.get_width ();
 		int height = pixbuf.get_height ();
 		int rowstride = pixbuf.get_rowstride ();
