@@ -5,6 +5,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	uint update_timeout = 0;
 	Gtk.Overlay overlay;
 	Gtk.Image client_icon_widget;
+	Widgets.Tonearm tonearm;
 
 	public enum ClientIconStyle {
 		SYMBOLIC,
@@ -114,6 +115,11 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 	}
 
+	public bool tonearm_enabled {
+		get { return tonearm.enabled; }
+		set { tonearm.enabled = value; }
+	}
+
 	private bool _extract_colors_enabled = true;
 	public bool extract_colors_enabled {
 		get { return _extract_colors_enabled; }
@@ -156,7 +162,8 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 				animation.value_from = animation.state == Adw.AnimationState.PLAYING ? animation.value : _progress;
 				animation.value_to = new_val;
 
-				_progress = new_val;
+				_progress =
+				tonearm.progress = new_val;
 				if (this.enabled) animation.play ();
 			}
 		}
@@ -225,6 +232,9 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		};
 
 		overlay.add_overlay (client_icon_widget);
+
+		tonearm = new Widgets.Tonearm ();
+		overlay.add_overlay (tonearm);
 		this.child = overlay;
 	}
 

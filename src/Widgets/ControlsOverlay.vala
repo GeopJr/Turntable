@@ -130,6 +130,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		component_submenu_model.append (_("Dim Metadata Labels"), "win.meta-dim");
 		component_submenu_model.append (_("Fit Art on Cover"), "win.component-cover-fit");
 		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
+		component_submenu_model.append (_("Tonearm"), "win.component-tonearm");
 		style_section_model.append_submenu (_("Components"), component_submenu_model);
 
 		var cover_scaling_submenu_model = new GLib.Menu ();

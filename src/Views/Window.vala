@@ -11,6 +11,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction text_size_action;
 	GLib.SimpleAction cover_size_action;
 	GLib.SimpleAction cover_scaling_action;
+	GLib.SimpleAction component_tonearm_action;
 	public string uuid { get; private set; }
 
 	public enum Style {
@@ -463,6 +464,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_client_icon_action.change_state.connect (on_change_component_client_icon);
 		this.add_action (component_client_icon_action);
 
+		component_tonearm_action = new GLib.SimpleAction.stateful ("component-tonearm", null, settings.component_tonearm);
+		component_tonearm_action.change_state.connect (on_change_component_tonearm);
+		this.add_action (component_tonearm_action);
+
 		component_cover_fit_action = new GLib.SimpleAction.stateful ("component-cover-fit", null, settings.component_cover_fit);
 		component_cover_fit_action.change_state.connect (on_change_component_cover_fit);
 		this.add_action (component_cover_fit_action);
@@ -484,6 +489,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["window-style"].connect (update_window_from_settings);
 		settings.notify["client-icon-style-symbolic"].connect (update_client_icon_from_settings);
 		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
+		settings.notify["component-tonearm"].connect (update_component_tonearm_from_settings);
 		settings.notify["component-cover-fit"].connect (update_component_cover_fit_from_settings);
 		settings.notify["meta-dim"].connect (update_meta_dim_from_settings);
 		settings.notify["text-size"].connect (update_text_size_from_settings);
@@ -530,6 +536,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_window_from_settings ();
 		update_client_icon_from_settings ();
 		update_component_client_icon_from_settings ();
+		update_component_tonearm_from_settings ();
 		update_component_cover_fit_from_settings ();
 		update_meta_dim_from_settings ();
 		update_text_size_from_settings ();
@@ -598,6 +605,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_component_client_icon_from_settings () {
 		this.prog.client_icon_enabled = settings.component_client_icon;
 		component_client_icon_action.set_state (settings.component_client_icon);
+	}
+
+	private void update_component_tonearm_from_settings () {
+		this.prog.tonearm_enabled = settings.component_tonearm;
+		component_tonearm_action.set_state (settings.component_tonearm);
 	}
 
 	private void update_component_cover_fit_from_settings () {
@@ -737,6 +749,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_component_client_icon (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.component_client_icon = value.get_boolean ();
+	}
+
+	private void on_change_component_tonearm (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.component_tonearm = value.get_boolean ();
 	}
 
 	private void on_change_component_cover_fit (GLib.SimpleAction action, GLib.Variant? value) {
