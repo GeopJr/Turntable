@@ -78,6 +78,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	public string client_icon {
 		get { return _client_icon; }
 		set {
+			if (value == null) value = "application-x-executable-symbolic";
 			if (_client_icon != value) {
 				_client_icon = value;
 				update_client_icon ();
