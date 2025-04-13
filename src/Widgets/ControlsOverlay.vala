@@ -200,7 +200,8 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			icon_name = "menu-large-symbolic",
 			primary = true,
 			menu_model = menu_model,
-			css_classes = {"circular", "osd"}
+			css_classes = {"circular", "osd"},
+			tooltip_text = _("Menu")
 		};
 		sub_box.append (menu_button);
 		main_box.append (sub_box);

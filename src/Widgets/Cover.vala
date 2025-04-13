@@ -384,7 +384,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 	static construct {
 		set_css_name ("picture");
-		set_accessible_role (Gtk.AccessibleRole.IMG);
+		set_accessible_role (Gtk.AccessibleRole.NONE); // it's probably better if it doesn't get announced
 	}
 
 	private void animation_target_cb (double value) {

@@ -232,6 +232,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			_playing = value;
 			art_pic.turntable_playing = value;
 			button_play.icon_name = value ? "pause-large-symbolic" : "play-large-symbolic";
+			button_play.tooltip_text = value ? _("Pause") : _("Play");
 			#if SCROBBLING
 				update_scrobbler_playing ();
 			#endif
@@ -380,13 +381,15 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
+			tooltip_text = _("Previous Song")
 		};
 		box3.append (button_prev);
 
 		button_play = new Gtk.Button.from_icon_name ("play-large-symbolic") {
 			css_classes = {"circular", "large"},
 			halign = Gtk.Align.CENTER,
-			valign = Gtk.Align.CENTER
+			valign = Gtk.Align.CENTER,
+			tooltip_text = _("Play")
 		};
 		box3.append (button_play);
 
@@ -394,6 +397,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
+			tooltip_text = _("Next Song")
 		};
 		box3.append (button_next);
 
