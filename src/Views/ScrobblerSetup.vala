@@ -443,7 +443,23 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 				bool exists = account_manager.accounts.contains (provider);
 
 				row.state = exists ? ScrobblerRow.State.EXISTS : ScrobblerRow.State.NEW;
-				row.subtitle = exists ? account_manager.accounts.get (provider).username : "";
+
+				string subtitle = "";
+				if (exists) {
+					var acc = account_manager.accounts.get (provider);
+					subtitle = acc.username;
+					if (acc.custom_url != null) {
+						string custom_url = acc.custom_url;
+						try {
+							custom_url = GLib.Uri.parse (custom_url, GLib.UriFlags.NONE).get_host ();
+						} catch {
+							custom_url = custom_url.replace ("https://", "");
+						}
+
+						subtitle = @"$subtitle - $custom_url";
+					}
+				}
+				row.subtitle = subtitle;
 			}
 		});
 	}
