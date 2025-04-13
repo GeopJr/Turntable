@@ -462,6 +462,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 	//  	return all_scrobblers.str;
 	//  }
 
+	Adw.SwitchRow mbid_row;
 	string win_id;
 	GLib.HashTable<string, ScrobblerRow> provider_rows = new GLib.HashTable<string, ScrobblerRow> (str_hash, str_equal);
 	construct {
@@ -483,14 +484,27 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			main_group.add (row);
 			provider_rows.set (provider.to_string (), row);
 		}
-
 		main_page.add (main_group);
+
+		var settings_group = new Adw.PreferencesGroup ();
+		mbid_row = new Adw.SwitchRow () {
+			active = settings.mbid_required,
+			title = _("Lookup Metadata on MusicBrainz before Scrobbling"),
+			subtitle = _("Recommended for non-curated clients or untagged music libraries as it will fix and complete metadata but it will also prevent scrobbling tracks not found in the MusicBrainz library.")
+		};
+		mbid_row.notify["active"].connect (mbid_required_changed);
+		settings_group.add (mbid_row);
+		main_page.add (settings_group);
 		this.add (main_page);
 
 		win_id = ((Views.Window) application.active_window).uuid;
 		application.token_received[win_id].connect (on_token_received);
 		account_manager.accounts_changed.connect (update_row_states);
 		update_row_states ();
+	}
+
+	private void mbid_required_changed () {
+		settings.mbid_required = mbid_row.active;
 	}
 
 	private void update_row_states () {

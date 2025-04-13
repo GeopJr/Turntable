@@ -159,6 +159,21 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	public void scrobble_all (Payload payload) {
 		if (payload.track == null || payload.artist == null) return;
 
+		if (settings.mbid_required) {
+			scrobbling_manager.fetch_mb_data.begin (payload, (obj, res) => {
+				var new_payload = scrobbling_manager.fetch_mb_data.end (res);
+				if (new_payload != null) {
+					scrobble_all_actual (new_payload);
+				}
+			});
+
+			return;
+		}
+
+		scrobble_all_actual (payload);
+	}
+
+	private inline void scrobble_all_actual (Payload payload) {
 		var now = new GLib.DateTime.now ();
 		foreach (var scrobbler in services) {
 			scrobbler.scrobble (payload, now);
@@ -205,5 +220,60 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 				warning (e.message);
 			}
 		});
+	}
+
+	private async Payload? fetch_mb_data (Payload payload) {
+		string album_string_param = payload.album == null ? "" : @"+AND+release:$(GLib.Uri.escape_string (payload.album))";
+		var msg = new Soup.Message ("GET", @"https://musicbrainz.org/ws/2/recording?query=recording:$(GLib.Uri.escape_string (payload.track))+AND+artist:$(GLib.Uri.escape_string (payload.artist))$album_string_param&fmt=json&limit=1");
+
+		try {
+			var in_stream = yield session.send_async (msg, 0, null);
+			if (msg.status_code != Soup.Status.OK) return null;
+
+			var parser = new Json.Parser ();
+			parser.load_from_stream (in_stream);
+
+			var root = parser.get_root ();
+			if (root == null) return null;
+			var obj = root.get_object ();
+			if (obj == null) return null;
+
+			if (!obj.has_member ("count") || obj.get_int_member_with_default ("count", 0) == 0) return null;
+			if (!obj.has_member ("recordings")) return null;
+
+			var recordings = obj.get_array_member ("recordings");
+			if (recordings.get_length () == 0) return null;
+
+			var recording = recordings.get_object_element (0);
+			if (recording.has_member ("title")) {
+				payload.track = recording.get_string_member ("title");
+			}
+
+			if (recording.has_member ("artist-credit")) {
+				var artists = recording.get_array_member ("artist-credit");
+				if (artists.get_length () > 0) {
+					var artist = artists.get_object_element (0);
+					if (artist.has_member ("name")) {
+						payload.artist = artist.get_string_member ("name");
+					}
+				}
+			}
+
+			if (recording.has_member ("releases")) {
+				var releases = recording.get_array_member ("releases");
+				if (releases.get_length () > 0) {
+					var release = releases.get_object_element (0);
+					if (release.has_member ("title")) {
+						payload.album = release.get_string_member ("title");
+					}
+				}
+			}
+
+			return payload;
+		} catch (Error e) {
+			warning (e.message);
+		}
+
+		return null;
 	}
 }

@@ -22,10 +22,13 @@
 		<key name="component-extract-colors" type="b">
 			<default>true</default>
 		</key>
+		<key name="mbid-required" type="b">
+			<default>false</default>
+		</key>
 		<key name="window-style" type="s">
 			<default>''</default>
 		</key>
-    <key name="cover-scaling" type="s">
+		<key name="cover-scaling" type="s">
 			<default>'linear'</default>
 		</key>
 		<key name="client-icon-style-symbolic" type="b">
