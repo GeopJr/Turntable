@@ -3,6 +3,7 @@ namespace Turntable {
 	public static Mpris.Manager mpris_manager;
 	public const int PROGRESS_UPDATE_TIME = 1000; // it was 250ms, turns out it updates every second?
 	public static Application application;
+	public static bool debug_enabled = false;
 
 	public static Utils.Settings settings;
 	#if SCROBBLING
@@ -49,7 +50,6 @@ namespace Turntable {
 
 		protected override void startup () {
 			base.startup ();
-
 			try {
 				var lines = troubleshooting.split ("\n");
 				foreach (unowned string line in lines) {
@@ -79,6 +79,7 @@ namespace Turntable {
 			Intl.bind_textdomain_codeset (Build.GETTEXT_PACKAGE, "UTF-8");
 			Intl.textdomain (Build.GETTEXT_PACKAGE);
 
+			debug_enabled = !GLib.Log.writer_default_would_drop (GLib.LogLevelFlags.LEVEL_DEBUG, "Turntable");
 			is_flatpak = GLib.Environment.get_variable ("FLATPAK_ID") != null || GLib.File.new_for_path ("/.flatpak-info").query_exists ();
 			GLib.Environment.unset_variable ("GTK_THEME");
 			mpris_manager = new Mpris.Manager ();
