@@ -95,6 +95,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 
 	public string? client_name {
 		set {
+			// translators: default string when MPRIS Client (aka Music playing app) doesn't have a name
 			client_icon_widget.tooltip_text = value == null || value == "" ? _("Unknown Client") : value;
 		}
 	}

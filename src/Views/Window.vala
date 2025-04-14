@@ -167,10 +167,12 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	public string? song_title {
 		set {
+			// translators: default string when title is missing
 			title_label.content = value == null ? _("Unknown Title") : value;
 		}
 	}
 
+	// translators: default string when artist is missing
 	private string _artist = _("Unknown Artist");
 	public string? artist {
 		get { return _artist; }
@@ -183,6 +185,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		}
 	}
 
+	// translators: default string when album is missing
 	private string _album = _("Unknown Album");
 	public string? album {
 		get { return _album; }
@@ -239,6 +242,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			_playing = value;
 			art_pic.turntable_playing = value;
 			button_play.icon_name = value ? "pause-large-symbolic" : "play-large-symbolic";
+			// translators: button tooltip text
 			button_play.tooltip_text = value ? _("Pause") : _("Play");
 			#if SCROBBLING
 				update_scrobbler_playing ();
@@ -388,6 +392,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
+			// translators: button tooltip text
 			tooltip_text = _("Previous Song")
 		};
 		box3.append (button_prev);
@@ -404,6 +409,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
+			// translators: button tooltip text
 			tooltip_text = _("Next Song")
 		};
 		box3.append (button_next);

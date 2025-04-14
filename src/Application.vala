@@ -148,6 +148,7 @@ namespace Turntable {
 			about.add_link (_("Donate"), Build.DONATE_WEBSITE);
 			//  about.add_link (_("Translate"), Build.TRANSLATE_WEBSITE);
 			#if SCROBBLING
+				// translators: Shown in the about dialog as a tip. Leave markup as is (<b>, \n)
 				about.comments = _("<b>Best Practices for Scrobbling</b>\n• Avoid allowlisting non-curated MPRIS clients like Web Browsers and Video Players\n• Tag your music with the proper track, album and artist names\n• Check, fix and match your scrobbles regularly");
 			#endif
 

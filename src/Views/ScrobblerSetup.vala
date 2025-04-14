@@ -56,6 +56,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			trash_button = new Gtk.Button.from_icon_name ("user-trash-symbolic") {
 				valign = Gtk.Align.CENTER,
 				halign = Gtk.Align.CENTER,
+				// translators: variable is a scrobbler e.g. ListenBrainz
 				tooltip_text = _("Forget %s Account").printf (this.title),
 				css_classes = { "flat", "error" }
 			};
@@ -195,6 +196,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 							}
 
 							string settings_page = @"$(GLib.Markup.escape_text (regular_url))/settings/";
+							// translators: variable is a link
 							page.description = _("You can get your user token from %s.").printf (@"<a href=\"$settings_page\">$settings_page</a>");
 						} else {
 							error = true;
@@ -214,6 +216,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 
 			var main_group = new Adw.PreferencesGroup ();
 			url_row = new Adw.EntryRow () {
+				// translators: host as in a web server; entry title
 				title = _("Host API")
 			};
 			this.url = "https://api.listenbrainz.org";
@@ -223,6 +226,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			main_group.add (url_row);
 
 			token_row = new Adw.EntryRow () {
+				// translators: can also be translated as Authentication Token
 				title = _("User Token")
 			};
 			token_row.changed.connect (on_token_changed);
@@ -287,6 +291,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 
 						break;
 					default:
+						// translators: the variable is an error message
 						string message = _("Couldn't validate token: %s").printf (@"$(msg.status_code) $(msg.reason_phrase)");
 						critical (message);
 						return message;
@@ -351,6 +356,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 
 		construct {
 			this.title = Scrobbling.Manager.Provider.MALOJA.to_string ();
+			// translators: host as in a web server; entry title
 			url_row.title = _("Host");
 			url_row.text =
 			this.url = "";
@@ -470,9 +476,11 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			user_agent = @"$(Build.NAME)/$(Build.VERSION) libsoup/$(Soup.get_major_version()).$(Soup.get_minor_version()).$(Soup.get_micro_version()) ($(Soup.MAJOR_VERSION).$(Soup.MINOR_VERSION).$(Soup.MICRO_VERSION))" // vala-lint=line-length
 		};
 
+		// translators: probably leave it as is unless there's a way to describe it accurately
 		this.title = _("Scrobblers");
 
 		var main_page = new Adw.PreferencesPage () {
+			// translators: warning shown in the scrobbler setup window. Leave MPRIS as is. The variable is the app name (Turntable)
 			description = _("Track your music by scrobbling your MPRIS clients. By connecting your account, MPRIS information will be sent to that service when you reach the minimum listening time. To protect your privacy, %s requires you to opt-in scrobbling per MPRIS client.").printf (Build.NAME)
 		};
 
@@ -489,7 +497,9 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		var settings_group = new Adw.PreferencesGroup ();
 		mbid_row = new Adw.SwitchRow () {
 			active = settings.mbid_required,
+			// translators: switch title; lookup = search, fetch, request
 			title = _("Lookup Metadata on MusicBrainz before Scrobbling"),
+			// translators: switch description; untagged as in music files missing metadata like artist, album etc
 			subtitle = _("Recommended for non-curated clients or untagged music libraries as it will fix and complete metadata but it will also prevent scrobbling tracks not found in the MusicBrainz library.")
 		};
 		mbid_row.notify["active"].connect (mbid_required_changed);
@@ -540,6 +550,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 
 		var dlg = new Adw.AlertDialog (
 			_("Forget %s Account?").printf (provider.to_string ()),
+			// translators: dialog description
 			_("This won't affect your submitted scrobbles.")
 		);
 
@@ -633,6 +644,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			var parser = new Json.Parser ();
 			parser.load_from_stream (in_stream);
 			var root = parser.get_root ();
+			// translators: error message when lastfm/librefm token validation fails
 			if (root == null) return _("Invalid Session");
 
 			var obj = root.get_object ();
@@ -650,6 +662,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			return null;
 		} catch (Error e) {
 			provider_rows.get (provider.to_string ()).state = NEW;
+			// translators: the variable is an error message
 			return _("Couldn't get session: %s").printf (e.message);
 		}
 	}

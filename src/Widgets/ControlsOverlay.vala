@@ -49,9 +49,11 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 					if (_enabled != value) {
 						_enabled = value;
 						if (value) {
+							// translators: button tooltip text
 							this.tooltip_text = _("Disable Scrobbling");
 							this.icon_name = "fingerprint2-symbolic";
 						} else {
+							// translators: button tooltip text
 							this.tooltip_text = _("Enable Scrobbling");
 							this.icon_name = "auth-fingerprint-symbolic";
 						}
@@ -95,6 +97,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			enable_search = false,
 			factory = new Gtk.BuilderListItemFactory.from_resource (null, @"$(Build.RESOURCES)gtk/dropdown/client_display.ui"),
 			list_factory = new Gtk.BuilderListItemFactory.from_resource (null, @"$(Build.RESOURCES)gtk/dropdown/client.ui"),
+			// translators: dropdown tooltip text
 			tooltip_text = _("Select Player"),
 			css_classes = { "client-chooser" },
 			margin_start = 8,
@@ -120,72 +123,114 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		};
 		var menu_model = new GLib.Menu ();
 		var main_section_model = new GLib.Menu ();
+		// translators: menu entry
 		main_section_model.append (_("New Window"), "app.new-window");
 		#if SCROBBLING
+		// translators: menu entry that opens a dialog
 			main_section_model.append (_("Scrobbling"), "win.open-scrobbling-setup");
 		#endif
 		menu_model.append_section (null, main_section_model);
 
 		var style_section_model = new GLib.Menu ();
 		var component_submenu_model = new GLib.Menu ();
+		// translators: whether to show the (window) background progress bar
 		component_submenu_model.append (_("Background Progress"), "win.component-progressbin");
+		// translators: whether to show a client icon in the bottom right; client = music playing app
 		component_submenu_model.append (_("Client Icon"), "win.component-client-icon");
+		// translators: whether to make the artist and album labels slightly transparent / less prominent
 		component_submenu_model.append (_("Dim Metadata Labels"), "win.meta-dim");
+		// translators: whether to fit the cover art in the cover; this will stretch or crop art that is not square
 		component_submenu_model.append (_("Fit Art on Cover"), "win.component-cover-fit");
+		// translators: whether to extract the colors of the cover and use them in UI elements (like Amberol or Material You)
 		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
+		// translators: whether to show a turntable tonearm in turntable styled cover art; tonearm is the 'arm' part of the turntable,
+		//				you may translate it as 'arm' (mechanical part)
 		component_submenu_model.append (_("Tonearm"), "win.component-tonearm");
+		// translators: menu entry that opens a submenu; components = toggleable parts of the UI
 		style_section_model.append_submenu (_("Components"), component_submenu_model);
 
 		var cover_scaling_submenu_model = new GLib.Menu ();
+		// translators: cover scaling algorithm name, probably leave as is
 		cover_scaling_submenu_model.append (_("Linear"), "win.cover-scaling('linear')");
+		// translators: cover scaling algorithm name, probably leave as is
 		cover_scaling_submenu_model.append (_("Nearest"), "win.cover-scaling('nearest')");
+		// translators: cover scaling algorithm name, probably leave as is
 		cover_scaling_submenu_model.append (_("Trilinear"), "win.cover-scaling('trilinear')");
+		// translators: menu entry that opens a submenu; cover scaling = algorithm used for down/upscaling cover art
 		style_section_model.append_submenu (_("Cover Scaling"), cover_scaling_submenu_model);
 
 		var orientation_submenu_model = new GLib.Menu ();
+		// translators: orientation name
 		orientation_submenu_model.append (_("Horizontal"), "win.toggle-orientation(true)");
+		// translators: orientation name
 		orientation_submenu_model.append (_("Vertical"), "win.toggle-orientation(false)");
+		// translators: menu entry that opens a submenu; as in whether it's horizontal or vertical
 		style_section_model.append_submenu (_("Orientation"), orientation_submenu_model);
 
 		var size_submenu_model = new GLib.Menu ();
 		var cover_size_submenu_model = new GLib.Menu ();
+		// translators: cover size
 		cover_size_submenu_model.append (_("Small"), "win.cover-size('small')");
+		// translators: cover size
 		cover_size_submenu_model.append (_("Regular"), "win.cover-size('regular')");
+		// translators: cover size
 		cover_size_submenu_model.append (_("Big"), "win.cover-size('big')");
+		// translators: menu entry that opens a submenu; cover = the song cover art
 		size_submenu_model.append_submenu ("%s ".printf (_("Cover")), cover_size_submenu_model); // https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
+		// translators: menu entry that opens a submenu
 		style_section_model.append_submenu (_("Size"), size_submenu_model);
 
 		var text_size_submenu_model = new GLib.Menu ();
+		// translators: text style (size)
 		text_size_submenu_model.append (_("Small"), "win.text-size('small')");
+		// translators: text style (size)
 		text_size_submenu_model.append (_("Regular"), "win.text-size('regular')");
+		// translators: text style (size)
 		text_size_submenu_model.append (_("Big"), "win.text-size('big')");
+		// translators: menu entry that opens a submenu; text = all the app text, may be translated to fonts
 		size_submenu_model.append_submenu (_("Text"), text_size_submenu_model);
 
 		var style_submenu_model = new GLib.Menu ();
 		var client_style_submenu_model = new GLib.Menu ();
+		// translators: cover icon style; symbolic = the monochrome simplified version
 		client_style_submenu_model.append (_("Symbolic"), "win.client-icon-style-symbolic(true)");
+		// translators: cover icon style
 		client_style_submenu_model.append (_("Full Color"), "win.client-icon-style-symbolic(false)");
+		// translators: menu entry that opens a submenu; client = music playing app
 		style_submenu_model.append_submenu (_("Client Icon"), client_style_submenu_model);
 
 		var cover_style_submenu_model = new GLib.Menu ();
+		// translators: cover image style; it's a square with rounded corners
 		cover_style_submenu_model.append (_("Card"), "win.cover-style('card')");
+		// translators: cover image style; it's a rotating record like on a turntable
 		cover_style_submenu_model.append (_("Turntable"), "win.cover-style('turntable')");
+		// translators: cover image style; it's a fading out effect; may be translated to 'Fade'
 		cover_style_submenu_model.append (_("Shadow"), "win.cover-style('shadow')");
+		// translators: menu entry that opens a submenu
 		style_submenu_model.append_submenu (_("Cover"), cover_style_submenu_model);
 
 		var window_style_submenu_model = new GLib.Menu ();
+		// translators: window style name
 		window_style_submenu_model.append (_("Window"), "win.window-style('window')");
+		// translators: window style name, probably leave it as is; OSD = on screen display,
+		//				it's the dark semi-trasparent background and white text style
 		window_style_submenu_model.append (_("OSD"), "win.window-style('osd')");
+		// translators: window style name
 		window_style_submenu_model.append (_("Transparent"), "win.window-style('transparent')");
+		// translators: menu entry that opens a submenu
 		style_submenu_model.append_submenu (_("Window"), window_style_submenu_model);
 
+		// translators: menu entry that opens a submenu
 		style_section_model.append_submenu (_("Style"), style_submenu_model);
 		menu_model.append_section (null, style_section_model);
 
 		var misc_section_model = new GLib.Menu ();
 		misc_section_model = new GLib.Menu ();
 		//  misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
+
+		// translators: menu entry, variable is the app name (Turntable)
 		misc_section_model.append (_("About %s").printf (Build.NAME), "app.about");
+		// translators: menu entry
 		misc_section_model.append (_("Quit"), "app.quit");
 		menu_model.append_section (null, misc_section_model);
 
