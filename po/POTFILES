@@ -1,0 +1,12 @@
+./data/dev.geopjr.Turntable.desktop.in
+./data/dev.geopjr.Turntable.metainfo.xml.in
+./src/Build.vala.in
+
+./data/ui/gtk/help-overlay.ui
+
+./src/Application.vala
+./src/Scrobbling/Accounts.vala
+./src/Views/ScrobblerSetup.vala
+./src/Views/Window.vala
+./src/Widgets/ControlsOverlay.vala
+./src/Widgets/ProgressBin.vala

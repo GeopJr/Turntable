@@ -12,7 +12,7 @@ namespace Build {
 	public const string ISSUES_WEBSITE = "@ISSUES_WEBSITE@";
 	//  public const string SUPPORT_WEBSITE = "@SUPPORT_WEBSITE@";
 	public const string DONATE_WEBSITE = "@DONATE_WEBSITE@";
-	//  public const string TRANSLATE_WEBSITE = "@TRANSLATE_WEBSITE@";
+	public const string TRANSLATE_WEBSITE = "@TRANSLATE_WEBSITE@";
 	public const string PREFIX = "@PREFIX@";
 
 	public const string LASTFM_KEY = "@LASTFM_KEY@";

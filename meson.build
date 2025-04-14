@@ -25,6 +25,7 @@ config.set('NAME', 'Turntable')
 config.set('WEBSITE', 'https://turntable.geopjr.dev')
 config.set('ISSUES_WEBSITE', 'https://github.com/GeopJr/Turntable/issues')
 config.set('DONATE_WEBSITE', 'https://geopjr.dev/donate')
+config.set('TRANSLATE_WEBSITE', 'https://translate.codeberg.org/engage/turntable/')
 config.set('PROFILE', devel ? 'development' : 'production')
 
 config.set('LIBREFM_KEY', '778aa5b9a1a796dce785f1416ba7265a') # can be anything, 'Turntable' | md5sum
