@@ -1,7 +1,7 @@
 public class Turntable.Widgets.Tonearm : Gtk.Widget {
 	Adw.TimedAnimation animation;
 
-	const int ARM_WIDTH = 12;
+	const int ARM_WIDTH = 10;
 	const Gsk.ColorStop[] ARM_GRADIENT = {
 		{0, {0.6039f, 0.6f, 0.5882f, 1}},
 		{0.5f, {0.8706f, 0.8667f, 0.8549f, 1}},
@@ -28,7 +28,7 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 	private int circle_size = 36;
 	private int arm_height = 150;
 	private float rotation_start = 2.5f;
-	private float rotation_end = 17.2f;
+	private float rotation_end = 17.9f;
 
 	private Views.Window.Size _size = REGULAR;
 	public Views.Window.Size size {
@@ -85,9 +85,9 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 					this.margin_start = 272;
 				}
 				this.margin_top = 12;
-				arm_height = 170;
+				arm_height = 192;
 				rotation_start = 0;
-				rotation_end = 14.9f;
+				rotation_end = 14.6f;
 				break;
 			default:
 				this.visible = true;
@@ -99,8 +99,8 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 				}
 				this.margin_top = 12;
 				arm_height = 150;
-				rotation_start = 8.5f;
-				rotation_end = 22.2f;
+				rotation_start = 2.5f;
+				rotation_end = 17.9f;
 				break;
 		}
 
@@ -157,7 +157,7 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 		);
 		snapshot.pop ();
 		Graphene.Rect rect = {
-			{- (ARM_WIDTH + 2) / 2, arm_height - 6},
+			{- (ARM_WIDTH + 2) / 2, arm_height - 24},
 			{ (ARM_WIDTH + 2), 20 }
 		};
 		rounded_rect = Gsk.RoundedRect ().init_from_rect (rect, 3f);
