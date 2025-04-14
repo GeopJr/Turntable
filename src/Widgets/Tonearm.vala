@@ -35,7 +35,7 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 		get { return _size; }
 		set {
 			_size = value;
-			if (enabled) update_rotation ();
+			if (enabled) update_cover_style ();
 		}
 	}
 
@@ -47,7 +47,7 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 				_enabled = value;
 				if (value) {
 					update_size ();
-					update_rotation ();
+					update_cover_style ();
 				} else {
 					this.queue_draw ();
 				}
@@ -71,13 +71,14 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 		}
 	}
 
-	private void update_rotation () {
+	private void update_cover_style () {
+		bool is_turntable = settings.cover_style == Widgets.Cover.Style.TURNTABLE.to_string ();
 		switch (this.size) {
 			case SMALL:
 				this.visible = false;
 				break;
 			case BIG:
-				this.visible = true;
+				this.visible = is_turntable;
 				circle_size = 36;
 				if (is_rtl) {
 					this.margin_end = 14;
@@ -90,7 +91,7 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 				rotation_end = 14.6f;
 				break;
 			default:
-				this.visible = true;
+				this.visible = is_turntable;
 				circle_size = 36;
 				if (is_rtl) {
 					this.margin_end = 10;
@@ -126,6 +127,7 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 		};
 
 		settings.notify["cover-size"].connect (update_size);
+		settings.notify["cover-style"].connect (update_cover_style);
 		if (this.enabled) update_size ();
 	}
 
