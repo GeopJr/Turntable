@@ -17,6 +17,10 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	};
 	public signal void style_changed (Style style, Gtk.Orientation orientation);
 
+	~Cover () {
+		debug ("Destroying");
+	}
+
 	Gdk.RGBA vinyl_color;
 	private void update_vinyl_color () {
 		Gdk.RGBA new_color = { 0f, 0f, 0f, 1f };
@@ -29,7 +33,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 		if (new_color != vinyl_color) {
 			vinyl_color = new_color;
-			this.queue_draw ();
+			if (this.turntable) this.queue_draw ();
 		}
 	}
 	Gtk.IconPaintable fallback_icon;
@@ -167,7 +171,15 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	}
 
 
-	public Utils.Color.ExtractedColors? extracted_colors { get; set; default = null; }
+	private Utils.Color.ExtractedColors? _extracted_colors = null;
+	public Utils.Color.ExtractedColors? extracted_colors {
+		get { return _extracted_colors; }
+		set {
+			_extracted_colors = value;
+			update_vinyl_color ();
+			this.notify_property ("extracted-colors");
+		}
+	}
 
 	private class CoverLoader : GLib.Object {
 		private string file_path;
@@ -182,6 +194,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		private bool extract = true;
 
 		~CoverLoader () {
+			debug ("[CoverLoader] Destroying");
 			if (done_idle_id != -1) GLib.Source.remove (done_idle_id);
 			if (done_completely_idle_id != -1) GLib.Source.remove (done_completely_idle_id);
 			done_idle_id = done_completely_idle_id = -1;
@@ -199,16 +212,34 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 
 		public void fetch () {
-			string clean_path = this.file_path.has_prefix ("file://")
-				? this.file_path.splice (0, 7)
-				: this.file_path;
+			debug ("[CoverLoader] Spawned Fetch");
+
+			string clean_path = file_path;
+			if (clean_path.has_prefix ("file://")) {
+				clean_path = this.file_path.splice (0, 7);
+			}
+
 			//  var t_texture = Gdk.Texture.from_filename (clean_path);
 			//  if (cancellable.is_cancelled ()) return;
 
 			//  this.texture = t_texture;
 			//  GLib.Idle.add_once (done_idle);
 
-			var pixbuf = new Gdk.Pixbuf.from_file (clean_path);
+			Gdk.Pixbuf pixbuf;
+			try {
+				if (clean_path.down ().has_prefix ("https://")) {
+					File file = GLib.File.new_for_uri (this.file_path);
+					FileInputStream @is = file.read (cancellable);
+					pixbuf = new Gdk.Pixbuf.from_stream (@is, cancellable);
+				} else {
+					pixbuf = new Gdk.Pixbuf.from_file (clean_path);
+				}
+			} catch (Error e) {
+				debug ("Couldn't get pixbuf %s: %s", clean_path, e.message);
+				stop_it (true);
+				return;
+			}
+
 			if (cancellable.is_cancelled ()) {
 				stop_it (true);
 				return;
@@ -253,6 +284,8 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 
 		public void extract_colors () {
+			debug ("[CoverLoader] Spawned Extract");
+
 			if (this.texture == null) {
 				stop_it (false);
 				return;
@@ -351,7 +384,6 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	private void done_completely_cb (Utils.Color.ExtractedColors? extracted_colors) {
 		working_loader = null;
 		this.extracted_colors = extracted_colors;
-		update_vinyl_color ();
 	}
 
 	private int32 _size = 192;
