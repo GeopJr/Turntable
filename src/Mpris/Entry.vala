@@ -213,7 +213,15 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		}
 
 		if (this.player.metadata.contains ("mpris:length")) {
-			this.length = this.player.metadata["mpris:length"].get_int64 ();
+			var variant_length = this.player.metadata["mpris:length"];
+			// Spec: "If the length of the track is known, it should be provided in the metadata property with the 'mpris:length' key.
+			//		  The length must be given in microseconds, and be represented as a signed 64-bit integer."
+			// Spotify:
+			if (variant_length.is_of_type (GLib.VariantType.UINT64)) {
+				this.length = (int64) variant_length.get_uint64 ();
+			} else {
+				this.length = variant_length.get_int64 ();
+			}
 		}
 	}
 }
