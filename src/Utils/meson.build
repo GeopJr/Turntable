@@ -3,7 +3,8 @@ sources += files(
     'Celebrate.vala',
     'Color.vala',
     'Host.vala',
-    'Settings.vala'
+    'Settings.vala',
+    'Thief.vala'
 )
 
 if scrobbling

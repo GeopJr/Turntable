@@ -4,7 +4,10 @@ public class Turntable.Utils.Color {
 		public Gdk.RGBA? dark;
 	}
 
-	public static Gdk.RGBA get_average_color (Gdk.Pixbuf pixbuf, Cancellable cancellable) {
+	public static Gdk.RGBA get_prominent_color (Gdk.Pixbuf pixbuf, GLib.Cancellable cancellable) {
+		Gdk.RGBA? prominent_color = Utils.Thief.quantize (pixbuf, 4, cancellable);
+		if (prominent_color != null) return prominent_color;
+
 		int width = pixbuf.get_width ();
 		int height = pixbuf.get_height ();
 		int rowstride = pixbuf.get_rowstride ();

@@ -242,7 +242,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				return;
 			}
 
-			Gdk.RGBA avg = Utils.Color.get_average_color (pixbuf, cancellable);
+			Gdk.RGBA avg = Utils.Color.get_prominent_color (pixbuf, cancellable);
 			if (cancellable.is_cancelled ()) {
 				stop_it (false);
 				return;
@@ -273,8 +273,13 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				return;
 			}
 
-			var texture_pixbuf = new Gdk.Pixbuf.from_file (tmp.get_path ());
-			extract_colors_from_pixbuf (texture_pixbuf);
+			try {
+				var texture_pixbuf = new Gdk.Pixbuf.from_file (tmp.get_path ());
+				extract_colors_from_pixbuf (texture_pixbuf);
+			} catch (Error e) {
+				debug ("Couldn't get pixbuf from temp file: %s", e.message);
+				stop_it (false);
+			}
 		}
 
 		private void done_idle () {
@@ -310,6 +315,15 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				this.extracted_colors = null;
 				this.queue_draw ();
 			} else {
+				//  if (cache.contains (value)) {
+				//  	debug ("[CoverLoader] Cache Hit")
+				//  	var cache_item = cache.get (value);
+				//  	this.cover = cache_item.texture;
+				//  	this.extract_colors = cache_item.colors;
+				//  	this.queue_draw ();
+				//  	return;
+				//  }
+
 				try {
 					working_loader = new CoverLoader (value);
 					working_loader.done.connect (queue_draw_cb);
