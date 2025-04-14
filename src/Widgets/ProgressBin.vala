@@ -44,11 +44,13 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 				if (name.down ().has_suffix ("-symbolic")) {
 					name = name.substring (0, name.length - 9);
 				}
+				if (client_icon_widget.has_css_class ("dim-label")) client_icon_widget.remove_css_class ("dim-label");
 				break;
 			case SYMBOLIC:
 				if (!name.down ().has_suffix ("-symbolic")) {
 					name = @"$name-symbolic";
 				}
+				if (!client_icon_widget.has_css_class ("dim-label")) client_icon_widget.add_css_class ("dim-label");
 				break;
 		}
 
