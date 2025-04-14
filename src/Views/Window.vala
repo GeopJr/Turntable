@@ -408,17 +408,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		box3.append (button_next);
 
-		button_next.clicked.connect (() => {
-			player.next ();
-		});
-
-		button_play.clicked.connect (() => {
-			player.play_pause ();
-		});
-
-		button_prev.clicked.connect (() => {
-			player.back ();
-		});
+		button_next.clicked.connect (play_next);
+		button_play.clicked.connect (play_pause);
+		button_prev.clicked.connect (play_back);
 
 		#if SCROBBLING
 			var scrobbling_action = new GLib.SimpleAction ("open-scrobbling-setup", null);
@@ -510,6 +502,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 		box2.state_flags_changed.connect (on_state_flags_changed);
 		art_pic.map.connect (on_mapped);
+	}
+
+	private void play_next () {
+		if (this.player != null) this.player.next ();
+	}
+
+	private void play_back () {
+		if (this.player != null) this.player.back ();
+	}
+
+	private void play_pause () {
+		if (this.player != null) this.player.play_pause ();
 	}
 
 	private void on_mapped () {
