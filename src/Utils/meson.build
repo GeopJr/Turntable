@@ -1,4 +1,5 @@
 sources += files(
+    #'Cache.vala',
     'Celebrate.vala',
     'Color.vala',
     'Host.vala',

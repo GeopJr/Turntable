@@ -6,6 +6,7 @@ namespace Turntable {
 	public static bool debug_enabled = false;
 	public static bool is_rtl = false;
 
+	//  public static Utils.Cache custom_color_cache;
 	public static Utils.Settings settings;
 	#if SCROBBLING
 		public static Scrobbling.Manager scrobbling_manager;
@@ -70,6 +71,7 @@ namespace Turntable {
 			Adw.init ();
 
 			is_rtl = Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL;
+			//  custom_color_cache = Utils.Cache ();
 			settings = new Utils.Settings ();
 			#if SCROBBLING
 				account_manager = new Scrobbling.AccountManager ();

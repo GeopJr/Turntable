@@ -1,4 +1,7 @@
+if scrobbling
+  sources += files('ScrobblerSetup.vala')
+endif
+
 sources += files(
-    'ScrobblerSetup.vala',
     'Window.vala'
 )
