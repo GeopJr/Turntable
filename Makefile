@@ -1,15 +1,23 @@
 .PHONY: all install uninstall build test potfiles
 PREFIX ?= /usr
 
+scrobbling ?= 1
 # Remove the devel headerbar style:
 # make release=1
 release ?=
+
+ifeq ($(scrobbling),0)
+    SCROBBLING = -Dscrobbling=false
+else
+    SCROBBLING = -Dscrobbling=true
+endif
+
 
 all: build
 
 build:
 	meson setup builddir --prefix=$(PREFIX)
-	meson configure builddir -Ddevel=$(if $(release),false,true)
+	meson configure builddir -Ddevel=$(if $(release),false,true) $(SCROBBLING)
 	meson compile -C builddir
 
 install:
