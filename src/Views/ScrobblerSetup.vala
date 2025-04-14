@@ -508,6 +508,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 	}
 
 	private void update_row_states () {
+		debug ("Updating Row States");
 		provider_rows.foreach ((provider, row) => {
 			if (row.state != ScrobblerRow.State.LOADING) {
 				bool exists = account_manager.accounts.contains (provider);
@@ -535,6 +536,8 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 	}
 
 	private void on_trash (Scrobbling.Manager.Provider provider) {
+		debug ("Forgetting %s", provider.to_string ());
+
 		var dlg = new Adw.AlertDialog (
 			_("Forget %s Account?").printf (provider.to_string ()),
 			_("This won't affect your submitted scrobbles.")
@@ -557,6 +560,8 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 	bool last_fm_awaiting_token = false;
 	bool libre_fm_awaiting_token = false;
 	private void on_add (ScrobblerRow row, Scrobbling.Manager.Provider provider) {
+		debug ("Selected %s", provider.to_string ());
+
 		switch (provider) {
 			case LISTENBRAINZ:
 				var page = new ListenBrainzPage () {
@@ -587,7 +592,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 				this.push_subpage (page);
 				break;
 			default:
-				break;
+				assert_not_reached ();
 		}
 	}
 
@@ -607,6 +612,8 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 
 	private async string? do_last_fm_step_2 (string token, bool libre) {
 		var provider = libre ? Scrobbling.Manager.Provider.LIBREFM : Scrobbling.Manager.Provider.LASTFM;
+		debug ("%s Begin Step 2", provider.to_string ());
+
 		var sk_params = new GLib.HashTable<string, string> (str_hash, str_equal);
 		sk_params.set ("api_key", libre ? Build.LIBREFM_KEY : Build.LASTFM_KEY);
 		sk_params.set ("method", "auth.getSession");
@@ -648,6 +655,8 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 	}
 
 	private void on_token_received (Scrobbling.Manager.Provider provider, string token) {
+		debug ("Received token for %s", provider.to_string ());
+
 		switch (provider) {
 			case LASTFM:
 				if (!last_fm_awaiting_token) return;

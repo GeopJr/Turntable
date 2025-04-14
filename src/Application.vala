@@ -61,17 +61,13 @@ namespace Turntable {
 
 		protected override void startup () {
 			base.startup ();
-			try {
-				var lines = troubleshooting.split ("\n");
-				foreach (unowned string line in lines) {
-					debug (line);
-				}
-				Gtk.Window.set_default_icon_name (Build.DOMAIN);
-				Adw.init ();
-			} catch (Error e) {
-				var msg = "Could not start application: %s".printf (e.message);
-				error (msg);
+
+			var lines = troubleshooting.split ("\n");
+			foreach (unowned string line in lines) {
+				debug (line);
 			}
+			Gtk.Window.set_default_icon_name (Build.DOMAIN);
+			Adw.init ();
 
 			is_rtl = Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL;
 			settings = new Utils.Settings ();
@@ -172,12 +168,14 @@ namespace Turntable {
 		}
 
 		private void on_new_window () {
+			debug ("New Window");
 			(new Turntable.Views.Window (this)).present ();
 		}
 
 		public override void open (File[] files, string hint) {
 			if (!activated) activate ();
 
+			debug ("Received open signal");
 			foreach (File file in files) {
 				string unparsed_uri = file.get_uri ();
 
@@ -221,13 +219,14 @@ namespace Turntable {
 									throw new Error.literal (-1, 3, @"$(Build.NAME) does not handle '$host'");
 							}
 
-							break;
+							#if SCROBBLING
+								break;
+							#endif
 						default:
 							throw new Error.literal (-1, 3, @"$(Build.NAME) does not accept '$scheme://'");
 					}
 				} catch (GLib.Error e) {
-					string msg = @"Couldn't open $unparsed_uri: $(e.message)";
-					critical (msg);
+					critical (@"Couldn't open $unparsed_uri: $(e.message)");
 				}
 			}
 		}

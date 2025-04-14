@@ -57,9 +57,7 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		var msg = new Soup.Message ("POST", @"$(this.url)/1/submit-listens");
 		var generator = new Json.Generator ();
 		generator.set_root (builder.get_root ());
-		var awo = generator.to_data (null);
-		warning (awo);
-		msg.set_request_body_from_bytes ("application/json", new Bytes.take (awo.data));
+		msg.set_request_body_from_bytes ("application/json", new Bytes.take (generator.to_data (null).data));
 		msg.request_headers.append ("Authorization", @"Bearer $(this.token)");
 
 		scrobbling_manager.send_scrobble (msg, SERVICE);

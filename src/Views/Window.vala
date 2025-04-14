@@ -14,6 +14,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction component_tonearm_action;
 	public string uuid { get; private set; }
 
+	~Window () {
+		debug ("Destroying: %s", uuid);
+	}
+
 	public enum Style {
 		WINDOW,
 		OSD,
@@ -151,6 +155,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 					case Style.WINDOW: return;
 					case Style.TRANSPARENT:
 						this.remove_css_class ("csd");
+						break;
+					default:
 						break;
 				}
 
@@ -631,6 +637,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	GLib.Binding[] player_bindings = {};
 	private void update_player (Mpris.Entry? new_player) {
+		debug ("[%s] Player Changed", uuid);
+
 		this.player = new_player;
 		foreach (var binding in player_bindings) {
 			binding.unbind ();

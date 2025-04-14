@@ -17,6 +17,10 @@ public class Turntable.Widgets.Tonearm : Gtk.Widget {
 		{1, {0.8706f, 0.8667f, 0.8549f, 0.3f}},
 	};
 
+	~Tonearm () {
+		debug ("Destroying");
+	}
+
 	private void animation_target_cb (double value) {
 		this.queue_draw ();
 	}

@@ -42,6 +42,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	}
 
 	public void remove_from_allowlist (string client_name) {
+		debug ("Removing %s from the allowlist", client_name);
 		if (client_name in this.scrobbler_allowlist) {
 			string[] new_allowlist = {};
 
@@ -54,6 +55,8 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	}
 
 	public void add_to_allowlist (string client_name) {
+		debug ("Adding %s to the allowlist", client_name);
+
 		if (client_name in this.scrobbler_allowlist) return;
 		string[] new_allowlist = this.scrobbler_allowlist;
 		new_allowlist += client_name;

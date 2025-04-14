@@ -1,4 +1,8 @@
 public class Turntable.Mpris.Entry : GLib.Object {
+	~Entry () {
+		debug ("Destroying: %s (%s)", this.client_info_name, this.bus_namespace);
+	}
+
 	public struct ClientInfo {
 		public string identity;
 		public string desktop_entry;
@@ -27,15 +31,27 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	public int64 position { get; private set; default = -1; }
 
 	public void play_pause () {
-		this.player.play_pause ();
+		try {
+			this.player.play_pause ();
+		} catch (Error e) {
+			debug ("Couldn't PlayPause: %s", e.message);
+		}
 	}
 
 	public void next () {
-		this.player.next ();
+		try {
+			this.player.next ();
+		} catch (Error e) {
+			debug ("Couldn't Next: %s", e.message);
+		}
 	}
 
 	public void back () {
-		this.player.previous ();
+		try {
+			this.player.previous ();
+		} catch (Error e) {
+			debug ("Couldn't Previous: %s", e.message);
+		}
 	}
 
 	public Entry (string name, DesktopBus.Mpris.MediaPlayer2 media_player) {
@@ -65,26 +81,30 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		users += 1;
 		if (player != null) return;
 
-		this.player = Bus.get_proxy_sync (
-			BusType.SESSION,
-			this.bus_namespace,
-			"/org/mpris/MediaPlayer2"
-		);
+		try {
+			this.player = Bus.get_proxy_sync (
+				BusType.SESSION,
+				this.bus_namespace,
+				"/org/mpris/MediaPlayer2"
+			);
 
-		this.props = Bus.get_proxy_sync (
-			BusType.SESSION,
-			this.bus_namespace,
-			"/org/mpris/MediaPlayer2"
-		);
+			this.props = Bus.get_proxy_sync (
+				BusType.SESSION,
+				this.bus_namespace,
+				"/org/mpris/MediaPlayer2"
+			);
 
-		this.props.properties_changed.connect (on_props_changed);
+			this.props.properties_changed.connect (on_props_changed);
 
-		update_metadata ();
-		update_position ();
-		update_playback_status ();
-		update_controls ();
+			update_metadata ();
+			update_position ();
+			update_playback_status ();
+			update_controls ();
 
-		GLib.Timeout.add (PROGRESS_UPDATE_TIME, update_position);
+			GLib.Timeout.add (PROGRESS_UPDATE_TIME, update_position);
+		} catch (Error e) {
+			debug ("Couldn't setup Proxies for %s: %s", this.bus_namespace, e.message);
+		}
 	}
 
 	public void terminate_player () {
@@ -111,6 +131,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 				case "CanGoPrevious":
 				case "CanPlay":
 				case "CanPause":
+				case "CanControl":
 					update_controls ();
 					break;
 				default:
@@ -122,8 +143,12 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	private bool update_position () {
 		if (this.props == null) return GLib.Source.REMOVE;
 
-		int64 new_pos = (int64) this.props.get ("org.mpris.MediaPlayer2.Player", "Position");
-		if (this.position != new_pos) this.position = new_pos;
+		try {
+			int64 new_pos = (int64) this.props.get ("org.mpris.MediaPlayer2.Player", "Position");
+			if (this.position != new_pos) this.position = new_pos;
+		} catch (Error e) {
+			debug ("Couldn't get Position: %s", e.message);
+		}
 		return GLib.Source.CONTINUE;
 	}
 

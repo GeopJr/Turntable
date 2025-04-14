@@ -25,7 +25,7 @@ public class Turntable.Utils.CLI : GLib.Object {
 	public int run () {
 		if (cli_list_clients) {
 			stdout.printf ("Available MPRIS Clients: (ID - Name)\n");
-			foreach (var client in mpris_manager.players) {
+			foreach (var client in mpris_manager.get_players ()) {
 				stdout.printf (@"$(client.parent_bus_namespace) - $(client.client_info_name)\n");
 			}
 			return 0;
@@ -65,8 +65,10 @@ public class Turntable.Utils.CLI : GLib.Object {
 	}
 
 	private void cli_update_players () {
+		debug ("Updating players");
+
 		Mpris.Entry? new_cli_player = null;
-		foreach (var client in mpris_manager.players) {
+		foreach (var client in mpris_manager.get_players ()) {
 			if (client.parent_bus_namespace.down () == cli_client_id_scrobble.down ()) {
 				new_cli_player = client;
 				break;
@@ -91,6 +93,8 @@ public class Turntable.Utils.CLI : GLib.Object {
 
 	GLib.Binding[] cli_player_bindings = {};
 	private void cli_player_changed () {
+		debug ("Player changed");
+
 		foreach (var binding in cli_player_bindings) {
 			binding.unbind ();
 		}

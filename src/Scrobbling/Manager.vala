@@ -54,6 +54,10 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		public signal void scrobbled (Payload payload);
 		bool cleared = false;
 
+		~Pushable () {
+			debug ("[Pushable] Destroying: %s", payload.track);
+		}
+
 		private bool _playing = false;
 		public bool playing {
 			get { return _playing; }
@@ -67,6 +71,8 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 					} else {
 						this.scrobble_timeout = -1;
 					}
+
+					debug ("[Pushable] Changed play status for %s", payload.track);
 				}
 			}
 		}
@@ -85,6 +91,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		}
 
 		private void on_scrobble () {
+			debug ("[Pushable] Scrobbling %s", payload.track);
 			scrobbled (payload);
 
 			clear ();
@@ -97,6 +104,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 			this.scrobble_timeout = -1;
 			this.total_playtime = 0;
 			cleared = true;
+			debug ("[Pushable] Cleared %s", payload.track);
 		}
 	}
 
@@ -123,6 +131,8 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	}
 
 	public void clear_queue (string win_id) {
+		debug ("Clearing %s", win_id);
+
 		if (queue_squared.contains (win_id)) {
 			queue_squared.get (win_id).clear ();
 			queue_squared.remove (win_id);
@@ -139,6 +149,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	}
 
 	private void update_services () {
+		debug ("Updating service tokens");
 		foreach (var service in services) {
 			service.update_tokens ();
 		}
@@ -146,6 +157,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 
 	private void on_allowlist_changed () {
 		if (reserved_clients.length == 0 || cli_mode) return;
+		debug ("Allowlist changed");
 
 		string[] win_ids_to_clear = {};
 		reserved_clients.foreach ((k, v) => {
@@ -161,6 +173,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	public void scrobble_all (Payload payload) {
 		if (payload.track == null || payload.artist == null) return;
 
+		debug ("Scrobbling %s", payload.track);
 		if (settings.mbid_required) {
 			scrobbling_manager.fetch_mb_data.begin (payload, (obj, res) => {
 				var new_payload = scrobbling_manager.fetch_mb_data.end (res);
@@ -183,40 +196,34 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	}
 
 	public void send_scrobble (owned Soup.Message msg, Provider provider) {
+		debug ("Sending scrobble to %s", provider.to_string ());
 		session.send_async.begin (msg, 0, null, (obj, res) => {
 			try {
 				var in_stream = session.send_async.end (res);
 
 				switch (msg.status_code) {
 					case Soup.Status.OK:
-						warning (@"$provider SUCCESS $(msg.uri)");
-						DataInputStream dis = new DataInputStream (in_stream);
-						StringBuilder builder = new StringBuilder ();
-						string? line;
-
-						while ((line = dis.read_line (null)) != null) {
-							builder.append (line);
-							builder.append ("\n");
-						}
-
-    					warning (builder.str);
+						debug ("Successfully scrobbled %s", provider.to_string ());
 						break;
 					case GLib.IOError.CANCELLED:
-						message ("Message is cancelled. Ignoring callback invocation.");
-						break;
+						debug ("Cancelled scrobbling for %s", provider.to_string ());
+						return; // !
 					default:
-						critical (@"Request \"$(msg.uri.to_string ())\" failed: $(msg.status_code) $(msg.reason_phrase)");
-						DataInputStream dis = new DataInputStream (in_stream);
-						StringBuilder builder = new StringBuilder ();
-						string? line;
-
-						while ((line = dis.read_line (null)) != null) {
-							builder.append (line);
-							builder.append ("\n");
-						}
-
-    					warning (builder.str);
+						critical ("Request \"%s\" failed: %zu %s", msg.uri.to_string (), msg.status_code, msg.reason_phrase);
 						break;
+				}
+
+				if (debug_enabled) {
+					DataInputStream dis = new DataInputStream (in_stream);
+					StringBuilder builder = new StringBuilder ();
+					string? line;
+
+					while ((line = dis.read_line (null)) != null) {
+						builder.append (line);
+						builder.append ("\n");
+					}
+
+					debug ("Response: %s", builder.str);
 				}
 			} catch (GLib.Error e) {
 				warning (e.message);
@@ -226,25 +233,27 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 
 	private async Payload? fetch_mb_data (Payload payload) {
 		string album_string_param = payload.album == null ? "" : @"+AND+release:$(GLib.Uri.escape_string (payload.album))";
-		var msg = new Soup.Message ("GET", @"https://musicbrainz.org/ws/2/recording?query=recording:$(GLib.Uri.escape_string (payload.track))+AND+artist:$(GLib.Uri.escape_string (payload.artist))$album_string_param&fmt=json&limit=1");
+		string mb_url = @"https://musicbrainz.org/ws/2/recording?query=recording:$(GLib.Uri.escape_string (payload.track))+AND+artist:$(GLib.Uri.escape_string (payload.artist))$album_string_param&fmt=json&limit=1";
+		var msg = new Soup.Message ("GET", mb_url);
 
+		debug ("MBID Request %s", mb_url);
 		try {
 			var in_stream = yield session.send_async (msg, 0, null);
-			if (msg.status_code != Soup.Status.OK) return null;
+			if (msg.status_code != Soup.Status.OK) new Error.literal (-1, 2, @"Server returned $(msg.status_code)");
 
 			var parser = new Json.Parser ();
 			parser.load_from_stream (in_stream);
 
 			var root = parser.get_root ();
-			if (root == null) return null;
+			if (root == null) new Error.literal (-1, 3, "Malformed JSON");
 			var obj = root.get_object ();
-			if (obj == null) return null;
+			if (obj == null) new Error.literal (-1, 3, "Malformed JSON");
 
-			if (!obj.has_member ("count") || obj.get_int_member_with_default ("count", 0) == 0) return null;
-			if (!obj.has_member ("recordings")) return null;
+			if (!obj.has_member ("count") || obj.get_int_member_with_default ("count", 0) == 0) new Error.literal (-1, 2, "Count doesn't exist or 0");
+			if (!obj.has_member ("recordings")) new Error.literal (-1, 2, "Recordings is missing");
 
 			var recordings = obj.get_array_member ("recordings");
-			if (recordings.get_length () == 0) return null;
+			if (recordings.get_length () == 0) new Error.literal (-1, 2, "Recordings is empty");
 
 			var recording = recordings.get_object_element (0);
 			if (recording.has_member ("title")) {
@@ -273,7 +282,11 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 
 			return payload;
 		} catch (Error e) {
-			warning (e.message);
+			if (e.code == 2) {
+				debug ("Couldn't complete MBID: %s", e.message);
+			} else {
+				warning ("Couldn't complete MBID: %s", e.message);
+			}
 		}
 
 		return null;

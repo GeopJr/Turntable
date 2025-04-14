@@ -1,7 +1,10 @@
 sources += files(
     'Celebrate.vala',
-    'Cli.vala',
     'Color.vala',
     'Host.vala',
     'Settings.vala'
 )
+
+if scrobbling
+  sources += files('Cli.vala')
+endif

@@ -29,11 +29,13 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 	}
 
 	public void add (Scrobbling.Manager.Provider provider, string username, string token, string? custom_url = null) {
+		debug ("[%s] Adding %s for %s", provider.to_string (), username, custom_url == null ? "default" : custom_url);
 		accounts.set (provider.to_string (), new ScrobblerAccount (username, token, custom_url));
 		accounts_changed ();
 	}
 
 	public void remove (Scrobbling.Manager.Provider provider) {
+		debug ("[%s] Removing", provider.to_string ());
 		accounts.remove (provider.to_string ());
 		accounts_changed ();
 	}
@@ -46,6 +48,7 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 		var attrs = new GLib.HashTable<string,string> (str_hash, str_equal);
 		attrs["version"] = VERSION;
 
+		debug ("Begin search");
 		Secret.password_searchv.begin (
 			schema,
 			attrs,
@@ -105,6 +108,7 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 		var attrs = new GLib.HashTable<string,string> (str_hash, str_equal);
 		attrs["version"] = VERSION;
 
+		debug ("Begin sync search");
 		List<Secret.Retrievable> secrets = Secret.password_searchv_sync (
 			schema,
 			attrs,
@@ -113,11 +117,16 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 		);
 
 		secrets.foreach (item => {
-			load_to_store_sync (item);
+			try {
+				load_to_store_sync (item);
+			} catch (Error e) {
+				critical ("Couldn't load account: %s", e.message);
+			}
 		});
 	}
 
 	public void save () {
+		debug ("Begin secret generation");
 		var attrs = new GLib.HashTable<string,string> (str_hash, str_equal);
 		attrs["version"] = VERSION;
 		StringBuilder providers = new StringBuilder ();
@@ -144,6 +153,8 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 		builder.end_array ();
 		generator.set_root (builder.get_root ());
 		var secret = generator.to_data (null);
+
+		debug ("Begin secret saving");
 		Secret.password_storev.begin (
 			schema,
 			attrs,
@@ -178,6 +189,8 @@ public class Turntable.Scrobbling.AccountManager : GLib.Object {
 	}
 
 	private inline void load_to_store_actual (Secret.Value secret) throws Error {
+		debug ("Begin loading secret");
+
 		var contents = secret.get_text ();
 		var parser = new Json.Parser ();
 		parser.load_from_data (contents, -1);

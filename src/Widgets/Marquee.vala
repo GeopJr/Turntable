@@ -100,6 +100,7 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 	}
 
 	~Marquee () {
+		debug ("Destroying");
 		label.unparent ();
 	}
 

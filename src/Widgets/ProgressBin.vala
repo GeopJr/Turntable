@@ -7,6 +7,10 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	Gtk.Image client_icon_widget;
 	Widgets.Tonearm tonearm;
 
+	~ProgressBin () {
+		debug ("Destroying");
+	}
+
 	public enum ClientIconStyle {
 		SYMBOLIC,
 		FULL_COLOR;

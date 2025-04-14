@@ -2,6 +2,10 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	public signal void player_changed (Mpris.Entry? new_player);
 	public Mpris.Entry? last_player { get; set; default = null; }
 
+	~ControlsOverlay () {
+		debug ("[ControlsOverlay] Destroying");
+	}
+
 	private void update_style (Widgets.Cover.Style style, Gtk.Orientation orientation) {
 		this.overlay.child.valign =
 		this.overlay.child.halign =
@@ -24,7 +28,6 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 				break;
 			default:
 				assert_not_reached ();
-				break;
 		}
 
 		switch (orientation) {
@@ -248,7 +251,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	}
 
 	private void update_store () {
-		players_store.splice (0, players_store.n_items, mpris_manager.players);
+		players_store.splice (0, players_store.n_items, mpris_manager.get_players ());
 		players_store.sort ((GLib.CompareDataFunc<Mpris.Entry>) compare_players);
 
 		client_dropdown.enable_search = players_store.n_items > 10;
@@ -260,6 +263,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	}
 
 	private void selection_changed () {
+		debug ("[ControlsOverlay] Changed player");
 		bool was_null = this.last_player == null;
 
 		if (!was_null) this.last_player.terminate_player ();
@@ -280,7 +284,9 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 	private inline void trigger_player_changed (Mpris.Entry? new_entry) {
 		player_changed (new_entry);
-		update_scrobble_button ();
+		#if SCROBBLING
+			update_scrobble_button ();
+		#endif
 	}
 
 	#if SCROBBLING

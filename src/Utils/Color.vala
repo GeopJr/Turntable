@@ -38,7 +38,7 @@ public class Turntable.Utils.Color {
 		double luminance = 0.299 * color.red + 0.587 * color.green + 0.114 * color.blue;
 
 		if (luminance > 0.85) {
-			result.light = new Gdk.RGBA () {
+			result.light = Gdk.RGBA () {
 				red = color.red * 0.7f,
 				green = color.green * 0.7f,
 				blue = color.blue * 0.7f,
@@ -46,7 +46,7 @@ public class Turntable.Utils.Color {
 			};
 
 			if (luminance > 0.9) {
-				result.dark = new Gdk.RGBA () {
+				result.dark = Gdk.RGBA () {
 					red = color.red * 0.5f,
 					green = color.green * 0.5f,
 					blue = color.blue * 0.5f,
@@ -54,7 +54,7 @@ public class Turntable.Utils.Color {
 				};
 			}
 		} else if (luminance < 0.25) {
-			result.dark = new Gdk.RGBA () {
+			result.dark = Gdk.RGBA () {
 				red = color.red + (1.0f - color.red) * 0.7f,
 				green = color.green + (1.0f - color.green) * 0.7f,
 				blue = color.blue + (1.0f - color.blue) * 0.7f,
@@ -62,7 +62,7 @@ public class Turntable.Utils.Color {
 			};
 
 			if (luminance < 0.15) {
-				result.light = new Gdk.RGBA () {
+				result.light = Gdk.RGBA () {
 					red = color.red + (1.0f - color.red) * 0.25f,
 					green = color.green + (1.0f - color.green) * 0.25f,
 					blue = color.blue + (1.0f - color.blue) * 0.25f,
