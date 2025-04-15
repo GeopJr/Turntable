@@ -2,37 +2,35 @@
 <component type="desktop-application">
   <id>dev.geopjr.Turntable</id>
   <metadata_license>CC0-1.0</metadata_license>
-  <project_license>GPL-3.0-or-later</project_license>
+  <project_license>GPL-3.0-only</project_license>
 
   <name>Turntable</name>
-  <summary>Keep the summary shorter, between 10 and 35 characters</summary>
+  <summary>Scrobble your music</summary>
   <description>
-    <p>No description</p>
+    <p>Keep track of your listening habits by scrobbling them to last.fm, ListenBrainz, Libre.fm and Maloja at the same time! Turntable comes with a highly customizable and sleek design that displays information about the currently playing song and allows you to control your music player, allowlist it for scrobbling and manage your scrobbling accounts. All MPRIS-enabled apps are supported.</p>
+    <p>Not interested in the GUI but still want to scrobble your MPRIS-enabled players? Turntable comes with a CLI, allowing you to scrobble in the background! Try it out using <code>flatpak run dev.geopjr.Turntable --help</code>.</p>
   </description>
-
-  <developer id="tld.vendor">
-    <name>Developer name</name>
+  <provides>
+    <binary>dev.geopjr.Turntable</binary>
+  </provides>
+  <!-- developer_name tag deprecated with Appstream 1.0 -->
+  <developer_name translate="no">Evangelos "GeopJr" Paterakis</developer_name>
+  <developer id="dev.geopjr">
+    <name translate="no">Evangelos "GeopJr" Paterakis</name>
   </developer>
-
-  <url type="homepage">https://example.org/</url>
-  <url type="vcs-browser">https://example.org/repository</url>
-  <url type="bugtracker">https://example.org/issues</url>
-  <url type="translate">https://example.org/translate</url>
-  <url type="faq">https://example.org/faq</url>
-  <url type="help">https://example.org/help</url>
-  <url type="donation">https://example.org/donate</url>
-  <url type="contact">https://example.org/contact</url>
-  <url type="contribute">https://example.org/contribute</url>
-
+  <url type="homepage">https://turntable.geopjr.dev</url>
+  <url type="vcs-browser">https://codeberg.org/GeopJr/Turntable</url>
+  <url type="bugtracker">https://codeberg.org/GeopJr/Turntable/issues</url>
+  <url type="translate">https://translate.codeberg.org/engage/turntable/</url>
+  <url type="donation">https://geopjr.dev/donate</url>
+  <url type="contribute">https://codeberg.org/GeopJr/Turntable#contributing</url>
   <translation type="gettext">turntable</translation>
   <launchable type="desktop-id">dev.geopjr.Turntable.desktop</launchable>
   <content_rating type="oars-1.1" />
-
   <branding>
-    <color type="primary" scheme_preference="light">#ff00ff</color>
-    <color type="primary" scheme_preference="dark">#993d3d</color>
+    <color type="primary" scheme_preference="light">#c5f1a1</color>
+    <color type="primary" scheme_preference="dark">#1a5fb4</color>
   </branding>
-
   <screenshots>
     <screenshot type="default">
       <image>https://example.org/example1.png</image>
@@ -43,9 +41,7 @@
       <caption>A caption</caption>
     </screenshot>
   </screenshots>
-
   <releases>
 
   </releases>
-
 </component>
