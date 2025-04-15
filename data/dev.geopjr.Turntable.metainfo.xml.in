@@ -24,7 +24,7 @@
   <url type="translate">https://translate.codeberg.org/engage/turntable/</url>
   <url type="donation">https://geopjr.dev/donate</url>
   <url type="contribute">https://codeberg.org/GeopJr/Turntable#contributing</url>
-  <translation type="gettext">turntable</translation>
+  <translation type="gettext">dev.geopjr.Turntable</translation>
   <launchable type="desktop-id">dev.geopjr.Turntable.desktop</launchable>
   <content_rating type="oars-1.1" />
   <branding>
