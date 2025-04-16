@@ -311,13 +311,16 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		debug ("[ControlsOverlay] Changed player");
 		bool was_null = this.last_player == null;
 
-		if (!was_null) this.last_player.terminate_player ();
 		if (client_dropdown.selected == Gtk.INVALID_LIST_POSITION) {
 			if (!was_null) trigger_player_changed (null);
 			return;
 		}
 
-		this.last_player = (Mpris.Entry?) players_store.get_item (client_dropdown.selected);
+		var new_last_player = (Mpris.Entry?) players_store.get_item (client_dropdown.selected);
+		if (!was_null && new_last_player != null && new_last_player.bus_namespace == this.last_player.bus_namespace) return;
+
+		if (!was_null) this.last_player.terminate_player ();
+		this.last_player = new_last_player;
 		if (this.last_player == null) {
 			if (!was_null) trigger_player_changed (null);
 			return;
