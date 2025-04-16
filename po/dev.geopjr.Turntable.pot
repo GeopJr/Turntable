@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-15 04:17+0300\n"
+"POT-Creation-Date: 2025-04-17 02:23+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -48,11 +48,6 @@ msgid ""
 "players? Turntable comes with a CLI, allowing you to scrobble in the "
 "background! Try it out using <code>flatpak run dev.geopjr.Turntable --help</"
 "code>."
-msgstr ""
-
-#: data/dev.geopjr.Turntable.metainfo.xml.in:37
-#: data/dev.geopjr.Turntable.metainfo.xml.in:41
-msgid "A caption"
 msgstr ""
 
 #: data/ui/gtk/help-overlay.ui:11
@@ -250,17 +245,17 @@ msgstr ""
 msgid "Pause"
 msgstr ""
 
-#: src/Views/Window.vala:246 src/Views/Window.vala:404
+#: src/Views/Window.vala:246 src/Views/Window.vala:405
 msgid "Play"
 msgstr ""
 
 #. translators: button tooltip text
-#: src/Views/Window.vala:396
+#: src/Views/Window.vala:397
 msgid "Previous Song"
 msgstr ""
 
 #. translators: button tooltip text
-#: src/Views/Window.vala:413
+#: src/Views/Window.vala:414
 msgid "Next Song"
 msgstr ""
 
