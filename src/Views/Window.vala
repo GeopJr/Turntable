@@ -300,6 +300,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		set {
 			if (value != art_pic.style ) {
 				art_pic.style = value;
+				art_pic.turntable_playing = this.playing;
 				update_offset ();
 			}
 		}
