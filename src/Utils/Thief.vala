@@ -350,7 +350,7 @@ public class Turntable.Utils.Thief : GLib.Object {
 			p_vbox.score = 0.3f * p_vbox.count / max_count + 0.7f * p_vbox.volume / max_volume;
 		}
 
-		pq.sort(((CompareFunc<VBox>) compare_by_score));
+		pq.sort (((CompareFunc<VBox>) compare_by_score));
 		if (pq.length () > 0) {
 			return pq.first ().data.average;
 		}
