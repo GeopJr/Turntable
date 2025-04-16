@@ -62,7 +62,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			parent_bus_namespace = @"org.mpris.MediaPlayer2.$(namespace_parts[0]).$(namespace_parts[1]).$(namespace_parts[2])";
 		}
 
-		var app_info = new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
+		var app_info = media_player.desktop_entry == null ? null : new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
 		string icon = "application-x-executable-symbolic";
 		if (app_info != null) {
 			var app_icon = app_info.get_icon ();
