@@ -5,9 +5,9 @@ endif
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(
-  scalable_dir / ('@0@.svg').format(meson.project_name()),
+  scalable_dir / ('@0@.svg').format(icon_name),
   install_dir: get_option('datadir') / 'icons' / scalable_dir,
-  rename: ('@0@.svg').format(icon_name)
+  rename: ('@0@.svg').format(meson.project_name())
 )
 
 symbolic_dir = 'hicolor' / 'symbolic' / 'apps'
