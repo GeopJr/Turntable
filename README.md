@@ -60,7 +60,7 @@ $ make install
 # FaQ
 
 - **XYZ player controls is missing**
-- Most likely MPRIS doesn't give us enough enough about whether the player supports it or is inaccurate.
+- Most likely MPRIS doesn't give us enough info about whether the player supports it or is inaccurate.
 
 - **What's MBID?**
 - MusicBrainz is, among other things, a big database for song metadata. Enabling the option on Turntable, will check if the song to-be scrolled exists and will fix its metadata.
