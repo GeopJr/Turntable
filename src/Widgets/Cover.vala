@@ -323,8 +323,9 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		private void done_completely_idle () {
 			this.texture = null;
 			done_completely (this.extracted_colors);
-			this.extracted_colors = null;
-			done_completely_idle_id = -1;
+			// flatpak crashes?
+			//  this.extracted_colors = null;
+			//  done_completely_idle_id = -1;
 		}
 
 		public void cancel () {
