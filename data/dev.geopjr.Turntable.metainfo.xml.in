@@ -33,10 +33,16 @@
   </branding>
   <screenshots>
     <screenshot type="default">
-      <image>https://example.org/example1.png</image>
+      <image>https://codeberg.org/GeopJr/Turntable/media/branch/main/data/screenshots/screenshot-1.png</image>
     </screenshot>
     <screenshot>
-      <image>https://example.org/example2.png</image>
+      <image>https://codeberg.org/GeopJr/Turntable/media/branch/main/data/screenshots/screenshot-2.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://codeberg.org/GeopJr/Turntable/media/branch/main/data/screenshots/screenshot-3.png</image>
+    </screenshot>
+    <screenshot>
+      <image>https://codeberg.org/GeopJr/Turntable/media/branch/main/data/screenshots/screenshot-4.png</image>
     </screenshot>
   </screenshots>
   <releases>
