@@ -1,0 +1,16 @@
+name: Feature Request
+description: Suggest an idea for this app
+labels: enhancement
+body:
+- type: textarea
+  attributes:
+    label: Describe the request
+    description: A clear and concise description of what the request is.
+  validations:
+    required: true
+- type: checkboxes
+  attributes:
+    label: Checks
+    options:
+      - label: This follows the [GNOME HIG](https://developer.gnome.org/hig/).
+        required: true

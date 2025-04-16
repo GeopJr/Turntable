@@ -1,18 +1,34 @@
 {
     "id" : "dev.geopjr.Turntable",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "47",
+    "runtime-version" : "48",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions" : [
         "org.freedesktop.Sdk.Extension.vala"
     ],
-    "command" : "turntable",
+    "command" : "dev.geopjr.Turntable",
     "finish-args" : [
         "--share=network",
         "--share=ipc",
         "--socket=fallback-x11",
         "--device=dri",
-        "--socket=wayland"
+        "--socket=wayland",
+        "--talk-name=org.mpris.MediaPlayer2.*",
+        "--talk-name=org.freedesktop.DBus",
+        "--filesystem=~/.mozilla/firefox/firefox-mpris/:ro",
+        "--filesystem=~/.var/app/org.mozilla.firefox/.mozilla/firefox/firefox-mpris/:ro",
+		"--filesystem=~/.librewolf/firefox/firefox-mpris/:ro",
+        "--filesystem=~/.var/app/io.gitlab.librewolf-community/.librewolf/:ro",
+        "--filesystem=~/.floorp/firefox/firefox-mpris/:ro",
+		"--filesystem=~/.var/app/app.zen_browser.zen/data/firefox-mpris/:ro",
+		"--filesystem=~/.zen/firefox/firefox-mpris/:ro",
+        "--filesystem=~/.var/app/one.ablaze.floorp/data/firefox-mpris/:ro",
+		"--filesystem=~/.var/app/io.bassi.Amberol/cache/amberol/covers/:ro",
+		"--filesystem=~/.var/app/com.github.neithern.g4music/cache/com.github.neithern.g4music/:ro",
+		"--filesystem=~/.var/app/ca.edestcroix.Recordbox/data/Recordbox/:ro",
+		"--filesystem=~/.var/app/org.gnome.Rhythmbox3/cache/rhythmbox/album-art/:ro",
+		"--filesystem=~/.var/app/org.gnome.Lollypop/cache/lollypop/:ro",
+		"--filesystem=~/.cache/:ro"
     ],
     "build-options" : {
         "append-path" : "/usr/lib/sdk/vala/bin",
@@ -35,10 +51,24 @@
             "name" : "turntable",
             "builddir" : true,
             "buildsystem" : "meson",
-            "sources" : [
+            "config-opts": [
+                "-Ddevel=true"
+            ],
+            "build-options": {
+                "arch": {
+                    "aarch64": {
+                        "append-path": "/usr/lib/sdk/llvm19/bin",
+                        "prepend-ld-library-path": "/usr/lib/sdk/llvm19/lib",
+                        "env": {
+                          "CC": "clang"
+                        }
+                    }
+                }
+            },
+            "sources": [
                 {
-                    "type" : "git",
-                    "url" : "file:///home/geopjr/Projects"
+                    "type": "dir",
+                    "path": "../"
                 }
             ]
         }
