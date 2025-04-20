@@ -219,6 +219,8 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			// Spotify:
 			if (variant_length.is_of_type (GLib.VariantType.UINT64)) {
 				this.length = (int64) variant_length.get_uint64 ();
+			} else if (variant_length.is_of_type (GLib.VariantType.STRING)) { // whatever at this point, nobody reads the spec
+				this.length = int64.parse (variant_length.get_string ());
 			} else {
 				this.length = variant_length.get_int64 ();
 			}
