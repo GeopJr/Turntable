@@ -227,7 +227,15 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 			Gdk.Pixbuf pixbuf;
 			try {
-				if (clean_path.down ().has_prefix ("https://")) {
+				if (clean_path.has_prefix ("data:")) {
+					int comma_pos = clean_path.index_of (",");
+					if (comma_pos == -1) throw new Error.literal (-1, 3, "Invalid base64 encoded image");
+					var base64_data = GLib.Base64.decode (clean_path.substring (comma_pos + 1));
+					var loader = new Gdk.PixbufLoader ();
+					loader.write (base64_data);
+					loader.close ();
+					pixbuf = loader.get_pixbuf ();
+				} else if (clean_path.down ().has_prefix ("https://")) {
 					File file = GLib.File.new_for_uri (this.file_path);
 					FileInputStream @is = file.read (cancellable);
 					pixbuf = new Gdk.Pixbuf.from_stream (@is, cancellable);
