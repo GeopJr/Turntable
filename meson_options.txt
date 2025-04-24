@@ -1,5 +1,6 @@
 option('devel', type: 'boolean', value: false)
 option('scrobbling', type: 'boolean', value: true)
+option('sandboxed', type: 'boolean', value: false)
 
 # Distros need to fill these for last.fm to work.
 # You can get a key on https://www.last.fm/api/account/create

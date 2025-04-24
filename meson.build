@@ -70,12 +70,16 @@ asresources = gnome.compile_resources(
     c_name: 'as',
 )
 
+if get_option('sandboxed')
+  add_project_arguments(['--define=SANDBOXED'], language: 'vala')
+endif
+
 scrobbling = false
 libsoup_dep = dependency('libsoup-3.0', required: false)
 json_glib_dep = dependency('json-glib-1.0', version: '>=1.4.4', required: false)
 libsecret_dep = dependency('libsecret-1', required: false)
 
-if  get_option('scrobbling') and libsoup_dep.found () and json_glib_dep.found () and libsecret_dep.found ()
+if get_option('scrobbling') and libsoup_dep.found () and json_glib_dep.found () and libsecret_dep.found ()
   scrobbling = true
   add_project_arguments(['--define=SCROBBLING'], language: 'vala')
 endif

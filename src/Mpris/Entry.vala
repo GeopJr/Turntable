@@ -54,6 +54,25 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		}
 	}
 
+	#if SANDBOXED
+		GLib.HashTable<string, string> cached_desktop_icons = new GLib.HashTable<string, string> (str_hash, str_equal);
+		private string get_sandboxed_icon_for_id (string id) {
+			if (cached_desktop_icons.contains (id)) return cached_desktop_icons.get (id);
+
+			string icon = "application-x-executable-symbolic";
+			try {
+				var key_file = new GLib.KeyFile ();
+				if (key_file.load_from_dirs (@"$id.desktop", desktop_file_dirs, null, GLib.KeyFileFlags.NONE)) {
+					var icon_key = key_file.get_string ("Desktop Entry", "Icon");
+					if (icon_key != null) icon = icon_key;
+				}
+			} catch {}
+
+			cached_desktop_icons.set (id, icon);
+			return icon;
+		}
+	#endif
+
 	public Entry (string name, DesktopBus.Mpris.MediaPlayer2 media_player) {
 		this.bus_namespace = name;
 		parent_bus_namespace = name;
@@ -62,12 +81,22 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			parent_bus_namespace = @"org.mpris.MediaPlayer2.$(namespace_parts[0]).$(namespace_parts[1]).$(namespace_parts[2])";
 		}
 
-		var app_info = media_player.desktop_entry == null ? null : new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
 		string icon = "application-x-executable-symbolic";
-		if (app_info != null) {
-			var app_icon = app_info.get_icon ();
-			if (app_icon != null) icon = app_icon.to_string ();
-		}
+		#if SCROBBLING
+			if (!cli_mode) {
+		#endif
+			#if SANDBOXED
+				icon = get_sandboxed_icon_for_id (media_player.desktop_entry);
+			#else
+				var app_info = media_player.desktop_entry == null ? null : new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
+				if (app_info != null) {
+					var app_icon = app_info.get_icon ();
+					if (app_icon != null) icon = app_icon.to_string ();
+				}
+			#endif
+		#if SCROBBLING
+			}
+		#endif
 
 		this.client_info = {
 			media_player.identity,

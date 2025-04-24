@@ -28,7 +28,11 @@
 		"--filesystem=~/.var/app/ca.edestcroix.Recordbox/data/Recordbox/:ro",
 		"--filesystem=~/.var/app/org.gnome.Rhythmbox3/cache/rhythmbox/album-art/:ro",
 		"--filesystem=~/.var/app/org.gnome.Lollypop/cache/lollypop/:ro",
-		"--filesystem=~/.cache/:ro"
+		"--filesystem=~/.cache/:ro",
+		"--filesystem=xdg-data/applications",
+		"--filesystem=~/.local/share/xdg-desktop-portal:ro",
+		"--filesystem=/var/lib/snapd/:ro",
+		"--filesystem=xdg-data/flatpak:ro"
     ],
     "build-options" : {
         "append-path" : "/usr/lib/sdk/vala/bin",
@@ -52,7 +56,8 @@
             "builddir" : true,
             "buildsystem" : "meson",
             "config-opts": [
-                "-Ddevel=true"
+                "-Ddevel=true",
+                "-Dsandboxed=true"
             ],
             "build-options": {
                 "arch": {

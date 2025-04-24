@@ -1,10 +1,12 @@
 namespace Turntable {
-	public static bool is_flatpak = false;
 	public static Mpris.Manager mpris_manager;
 	public const int PROGRESS_UPDATE_TIME = 1000; // it was 250ms, turns out it updates every second?
 	public static Application application;
 	public static bool debug_enabled = false;
 	public static bool is_rtl = false;
+	#if SANDBOXED
+		public static string[]? desktop_file_dirs = null;
+	#endif
 
 	//  public static Utils.Cache custom_color_cache;
 	public static Utils.Settings settings;
@@ -13,6 +15,7 @@ namespace Turntable {
 		public static Scrobbling.AccountManager account_manager;
 		public static bool cli_list_clients = false;
 		public static string cli_client_id_scrobble;
+		public static bool cli_mode = false;
 	#endif
 	public class Application : Adw.Application {
 		#if SCROBBLING
@@ -32,10 +35,14 @@ namespace Turntable {
 			{ "quit", quit }
 		};
 
-		string troubleshooting = "os: %s %s\nprefix: %s\nflatpak: %s\nversion: %s (%s)\ngtk: %u.%u.%u (%d.%d.%d)\nlibadwaita: %u.%u.%u (%d.%d.%d)\ndebug-logs: %s\nscrobbling: %s".printf (
+		string troubleshooting = "os: %s %s\nprefix: %s\nsandboxed: %s\nversion: %s (%s)\ngtk: %u.%u.%u (%d.%d.%d)\nlibadwaita: %u.%u.%u (%d.%d.%d)\ndebug-logs: %s\nscrobbling: %s".printf (
 			GLib.Environment.get_os_info ("NAME"), GLib.Environment.get_os_info ("VERSION"),
 			Build.PREFIX,
-			Turntable.is_flatpak.to_string (),
+			#if SANDBOXED
+				"true",
+			#else
+				"false",
+			#endif
 			Build.VERSION, Build.PROFILE,
 			Gtk.get_major_version (), Gtk.get_minor_version (), Gtk.get_micro_version (),
 			Gtk.MAJOR_VERSION, Gtk.MINOR_VERSION, Gtk.MICRO_VERSION,
@@ -48,7 +55,7 @@ namespace Turntable {
 					Soup.MAJOR_VERSION, Soup.MINOR_VERSION, Soup.MICRO_VERSION,
 					Json.MAJOR_VERSION, Json.MINOR_VERSION, Json.MICRO_VERSION,
 					Secret.MAJOR_VERSION, Secret.MINOR_VERSION, Secret.MICRO_VERSION,
-					@"$(cli_list_clients || cli_client_id_scrobble != null)"
+					cli_mode.to_string ()
 				)
 			#else
 				"false"
@@ -81,6 +88,18 @@ namespace Turntable {
 			this.add_action_entries (APP_ENTRIES, this);
 			this.set_accels_for_action ("app.quit", {"<primary>q"});
 			this.set_accels_for_action ("app.new-window", {"<primary>n"});
+
+			#if SANDBOXED
+				var display = Gdk.Display.get_default ();
+				if (display != null) {
+					string home = GLib.Environment.get_home_dir ();
+					var theme = Gtk.IconTheme.get_for_display (display);
+					theme.add_search_path (@"$home/.local/share/icons");
+					theme.add_search_path (@"$home/.local/share/flatpak/exports/share/icons");
+					theme.add_search_path ("/var/lib/snapd/desktop/icons");
+					theme.add_search_path ("/var/lib/flatpak/exports/share/icons");
+				}
+			#endif
 		}
 
 		public static int main (string[] args) {
@@ -102,15 +121,44 @@ namespace Turntable {
 			Intl.textdomain (Build.GETTEXT_PACKAGE);
 
 			debug_enabled = !GLib.Log.writer_default_would_drop (GLib.LogLevelFlags.LEVEL_DEBUG, "Turntable");
-			is_flatpak = GLib.Environment.get_variable ("FLATPAK_ID") != null || GLib.File.new_for_path ("/.flatpak-info").query_exists ();
 			GLib.Environment.unset_variable ("GTK_THEME");
-			mpris_manager = new Mpris.Manager ();
-			application = new Application ();
 
 			#if SCROBBLING
-				if (cli_list_clients || cli_client_id_scrobble != null) return (new Utils.CLI ()). run ();
+				cli_mode = cli_list_clients || cli_client_id_scrobble != null;
 			#endif
 
+			#if SANDBOXED
+				#if SCROBBLING
+					if (!cli_mode)
+				#endif
+				{
+					string[] temp_dirs = {};
+					string home = GLib.Environment.get_home_dir ();
+					string[] def_dirs = {
+						"/usr/share/applications",
+						@"$home/.local/share/applications",
+						"/var/lib/flatpak/exports/share/applications",
+						@"$home/.local/share/flatpak/exports/share/applications",
+						"/var/lib/snapd/desktop/applications"
+					};
+
+					foreach (string path in def_dirs) {
+						if (GLib.FileUtils.test (path, GLib.FileTest.IS_DIR)) {
+							temp_dirs += path;
+						}
+					}
+
+					desktop_file_dirs = temp_dirs;
+				}
+			#endif
+
+			mpris_manager = new Mpris.Manager ();
+
+			#if SCROBBLING
+				if (cli_mode) return (new Utils.CLI ()).run ();
+			#endif
+
+			application = new Application ();
 			return application.run (args);
 		}
 
