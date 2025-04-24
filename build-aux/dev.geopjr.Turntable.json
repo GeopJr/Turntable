@@ -4,7 +4,8 @@
     "runtime-version" : "48",
     "sdk" : "org.gnome.Sdk",
     "sdk-extensions" : [
-        "org.freedesktop.Sdk.Extension.vala"
+        "org.freedesktop.Sdk.Extension.vala",
+		"org.freedesktop.Sdk.Extension.llvm19"
     ],
     "command" : "dev.geopjr.Turntable",
     "finish-args" : [
