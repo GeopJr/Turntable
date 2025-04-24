@@ -46,12 +46,20 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.2.0" date="2025-04-24">
+      <description translate="no">
+        <ul>
+          <li>Fixed client icon finding for sandboxed environments</li>
+          <li>Optimized CLI mode further by avoiding searching for icons and creating an application instance</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.1.0" date="2025-04-17">
       <description translate="no">
         <ul>
-            <li>Initial release</li>
+          <li>Initial release</li>
         </ul>
       </description>
-  </release>
+    </release>
   </releases>
 </component>
