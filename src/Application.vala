@@ -130,7 +130,7 @@ namespace Turntable {
 			#if SANDBOXED
 				#if SCROBBLING
 					if (!cli_mode)
-				#endif
+				#endif // vala-lint=block-opening-brace-space-before
 				{
 					string[] temp_dirs = {};
 					string home = GLib.Environment.get_home_dir ();
