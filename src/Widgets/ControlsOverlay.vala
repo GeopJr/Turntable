@@ -236,7 +236,9 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 		#if SCROBBLING
 			scrobble_button = new ScrobbleButton () {
-				css_classes = {"circular", "osd", "min34px"}
+				css_classes = {"circular", "osd", "min34px"},
+				sensitive = false,
+				enabled = false
 			};
 			scrobble_button.clicked.connect (on_scrobble_client_toggle);
 			sub_box.append (scrobble_button);
@@ -312,7 +314,11 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		bool was_null = this.last_player == null;
 
 		if (client_dropdown.selected == Gtk.INVALID_LIST_POSITION) {
-			if (!was_null) trigger_player_changed (null);
+			if (!was_null) {
+				this.last_player.terminate_player ();
+				this.last_player = null;
+				trigger_player_changed (null);
+			}
 			return;
 		}
 
