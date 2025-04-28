@@ -46,11 +46,20 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.2.1" date="2025-04-28">
+      <description translate="no">
+        <ul>
+          <li>Fixed a bug caused not properly clearing the last player when it's the last available one</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.2.0" date="2025-04-24">
       <description translate="no">
         <ul>
           <li>Fixed client icon finding for sandboxed environments</li>
           <li>Optimized CLI mode further by avoiding searching for icons and creating an application instance</li>
+          <li>Added the ability to decode base64 encoded artUrls</li>
+          <li>Added the ability to handle lengths as strings</li>
         </ul>
       </description>
     </release>
