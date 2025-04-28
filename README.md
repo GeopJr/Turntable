@@ -59,23 +59,23 @@ $ make install
 
 # FaQ
 
-- **XYZ player controls is missing**
+- **XYZ player is missing controls**
 - Most likely MPRIS doesn't give us enough info about whether the player supports it or is inaccurate.
 
 - **What's MBID?**
-- MusicBrainz is, among other things, a big database for song metadata. Enabling the option on Turntable, will check if the song to-be scrolled exists and will fix its metadata.
+- MusicBrainz is, among other things, a big database for song metadata. Enabling the option on Turntable, will check if the song to-be scrobbled exists and will fix its metadata.
 
 - **When does a scrobble get sent?**
 - A song will be scrobbled either when it hits 4 minutes of playtime or half the playtime, whichever one comes first. Playtime does not count while the song is not playing.
 
 - **What if I have multiple Turntable windows open?**
-- Turntable was built with multiple windows open in mind. The scrobbling manager will make sure a filter out requests so only 1 instance of an MPRIS client will get counted.
+- Turntable was built with multiple windows open in mind. The scrobbling manager will make sure to filter out requests so only 1 instance of an MPRIS client will be counted.
 
 - **CLI can't find any accounts**
 - Use the GUI to set them up. They require validation and callbacks which the GUI can handle.
 
 - **Flatpak can't access my player's cover**
-- Due to the way the sandbox works, Turntable has to get access to its files. Please open an issue.
+- Due to the way the sandbox works, Turntable has to get access to its files. Please open an issue or give the flatpak access to your host filesystem.
 
 # Sponsors
 
