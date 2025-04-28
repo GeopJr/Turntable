@@ -39,17 +39,26 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	Gtk.IconPaintable fallback_icon;
 	Gdk.Texture? cover = null;
 	Adw.TimedAnimation animation;
-	Gsk.RoundedRect? record_center = null;
-	Graphene.Rect record_center_inner = Graphene.Rect () {
-		origin = Graphene.Point () {
-			x = 0,
-			y = 0
-		},
-		size = Graphene.Size () {
-			width = 128,
-			height = 128
-		}
-	};
+	Gsk.RoundedRect record_center;
+	Graphene.Rect record_center_inner;
+
+	private void update_record_rects () {
+		record_center_inner = Graphene.Rect () {
+			origin = Graphene.Point () {
+				x = 0,
+				y = 0
+			},
+			size = Graphene.Size () {
+				width = 128 * this.scale_factor,
+				height = 128 * this.scale_factor
+			}
+		};
+
+		record_center = Gsk.RoundedRect ().init_from_rect (
+			record_center_inner,
+			9999f
+		);
+	}
 
 	public enum Style {
 		CARD,
@@ -135,13 +144,6 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			if (_turntable != value) {
 				_turntable = value;
 				if (value) {
-					if (record_center == null) {
-						record_center = Gsk.RoundedRect ().init_from_rect (
-							record_center_inner,
-							9999f
-						);
-					}
-
 					animation.play ();
 				} else {
 					animation.pause ();
@@ -447,8 +449,9 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	}
 
 	construct {
+		update_record_rects ();
 		this.overflow = Gtk.Overflow.HIDDEN;
-		this.notify["scale-factor"].connect (this.queue_draw);
+		this.notify["scale-factor"].connect (on_scale_factor_changed);
 
 		var target = new Adw.CallbackAnimationTarget (animation_target_cb);
 		animation = new Adw.TimedAnimation (this, 0.0, 1.0, 5000, target) {
@@ -469,6 +472,11 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		Adw.StyleManager.get_default ().notify["dark"].connect (update_vinyl_color);
 		settings.notify["component-extract-colors"].connect (update_extracted_colors_setting);
 		update_vinyl_color ();
+	}
+
+	private void on_scale_factor_changed () {
+		update_record_rects ();
+		this.queue_draw ();
 	}
 
 	private void update_extracted_colors_setting () {
@@ -540,6 +548,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		float y = Math.floorf ((height - h)) / 2f;
 
 		snapshot.save ();
+		if (this.scale_factor != 1) snapshot.scale (1.0f / this.scale_factor, 1.0f / this.scale_factor);
 		if (this.turntable) {
 			var snapshot_vinyl_color_groove = vinyl_color;
 			snapshot_vinyl_color_groove.alpha = 0.8f;
@@ -600,8 +609,6 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				x = - translation_point.x,
 				y = - translation_point.y
 			});
-		} else {
-			snapshot.scale (1.0f / this.scale_factor, 1.0f / this.scale_factor);
 		}
 
 		if (this.style == Style.SHADOW) {
@@ -682,7 +689,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 		if (cover == null) {
 			Gdk.RGBA note_color = this.get_color ();
-			if (this.turntable && this.record_center != null) {
+			if (this.turntable) {
 				var translation_point = Graphene.Point () {
 					x = width / 2 - this.record_center_inner.size.width / 2,
 					y = height / 2 - this.record_center_inner.size.height / 2
@@ -709,12 +716,13 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				note_color = {0, 0, 0, 0.5f};
 			}
 
+			int scaled_size = 64 * this.scale_factor; // always int
 			snapshot.translate (Graphene.Point () {
-				x = width / 2 - 64 / 2,
-				y = height / 2 - 64 / 2
+				x = width / 2 - scaled_size / 2,
+				y = height / 2 - scaled_size / 2
 			});
 
-			fallback_icon.snapshot_symbolic (snapshot, 64, 64, {note_color});
+			fallback_icon.snapshot_symbolic (snapshot, scaled_size, scaled_size, {note_color});
 		} else {
 			float texture_w = w;
 			float texture_h = h;
