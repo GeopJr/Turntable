@@ -46,5 +46,8 @@
 		<key name="scrobbler-allowlist" type="as">
 			<default>[]</default>
 		</key>
+    <key name="component-center-text" type="b">
+			<default>false</default>
+		</key>
 	</schema>
 </schemalist>

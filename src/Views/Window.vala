@@ -12,6 +12,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction cover_size_action;
 	GLib.SimpleAction cover_scaling_action;
 	GLib.SimpleAction component_tonearm_action;
+	GLib.SimpleAction component_center_text_action;
 	public string uuid { get; private set; }
 
 	~Window () {
@@ -473,6 +474,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_tonearm_action.change_state.connect (on_change_component_tonearm);
 		this.add_action (component_tonearm_action);
 
+		component_center_text_action = new GLib.SimpleAction.stateful ("component-center-text", null, settings.component_center_text);
+		component_center_text_action.change_state.connect (on_change_component_center_text);
+		this.add_action (component_center_text_action);
+
 		component_cover_fit_action = new GLib.SimpleAction.stateful ("component-cover-fit", null, settings.component_cover_fit);
 		component_cover_fit_action.change_state.connect (on_change_component_cover_fit);
 		this.add_action (component_cover_fit_action);
@@ -495,6 +500,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["client-icon-style-symbolic"].connect (update_client_icon_from_settings);
 		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
 		settings.notify["component-tonearm"].connect (update_component_tonearm_from_settings);
+		settings.notify["component-center-text"].connect (update_component_center_text_from_settings);
 		settings.notify["component-cover-fit"].connect (update_component_cover_fit_from_settings);
 		settings.notify["meta-dim"].connect (update_meta_dim_from_settings);
 		settings.notify["text-size"].connect (update_text_size_from_settings);
@@ -559,6 +565,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_text_size_from_settings ();
 		update_cover_size_from_settings ();
 		update_cover_scaling_from_settings ();
+		update_component_center_text_from_settings ();
 	}
 
 	private void update_cover_scaling_from_settings () {
@@ -627,6 +634,13 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_component_tonearm_from_settings () {
 		this.prog.tonearm_enabled = settings.component_tonearm;
 		component_tonearm_action.set_state (settings.component_tonearm);
+	}
+
+	private void update_component_center_text_from_settings () {
+		album_label.xalign =
+		artist_label.xalign =
+		title_label.xalign = settings.component_center_text ? 0.5f : 0f;
+		component_center_text_action.set_state (settings.component_center_text);
 	}
 
 	private void update_component_cover_fit_from_settings () {
@@ -773,6 +787,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_component_tonearm (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.component_tonearm = value.get_boolean ();
+	}
+
+	private void on_change_component_center_text (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.component_center_text = value.get_boolean ();
 	}
 
 	private void on_change_component_cover_fit (GLib.SimpleAction action, GLib.Variant? value) {

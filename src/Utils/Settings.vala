@@ -8,6 +8,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public bool component_client_icon { get; set; }
 	public bool component_cover_fit { get; set; }
 	public bool component_tonearm { get; set; }
+	public bool component_center_text { get; set; }
 	public bool meta_dim { get; set; }
 	public bool mbid_required { get; set; }
 	public string cover_size { get; set; }
@@ -30,7 +31,8 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"text-size",
 		"cover-scaling",
 		"mbid-required",
-		"component-tonearm"
+		"component-tonearm",
+		"component-center-text"
 	};
 
 	public Settings () {

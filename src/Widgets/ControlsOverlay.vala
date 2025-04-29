@@ -135,6 +135,8 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		var component_submenu_model = new GLib.Menu ();
 		// translators: whether to show the (window) background progress bar
 		component_submenu_model.append (_("Background Progress"), "win.component-progressbin");
+		// translators: whether to show center the title, album and artist labels
+		component_submenu_model.append (_("Center Text"), "win.component-center-text");
 		// translators: whether to show a client icon in the bottom right; client = music playing app
 		component_submenu_model.append (_("Client Icon"), "win.component-client-icon");
 		// translators: whether to make the artist and album labels slightly transparent / less prominent
