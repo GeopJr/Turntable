@@ -46,6 +46,14 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.3.0" date="2025-04-29">
+      <description translate="no">
+        <ul>
+          <li>Added center text option</li>
+          <li>Fixed incorrect positioning when scaling is anything but 1</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.2.1" date="2025-04-28">
       <description translate="no">
         <ul>
