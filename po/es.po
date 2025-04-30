@@ -7,28 +7,33 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-17 02:23+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-05-01 02:26+0000\n"
+"Last-Translator: Sergio Varela <ingrownmink4@noreply.codeberg.org>\n"
+"Language-Team: Spanish <https://translate.codeberg.org/projects/turntable/"
+"turntable/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.10.2\n"
 
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
 #: data/dev.geopjr.Turntable.metainfo.xml.in:7
 #: src/Widgets/ControlsOverlay.vala:206
 msgid "Turntable"
-msgstr ""
+msgstr "Giradiscos"
 
 #: data/dev.geopjr.Turntable.desktop.in:8
 msgid "music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
 msgstr ""
+"música;reproductor;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;canción;audio;"
+""
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:8
 msgid "Scrobble your music"
-msgstr ""
+msgstr "Haz «scroblling» de tu música"
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:10
 msgid ""
@@ -39,6 +44,13 @@ msgid ""
 "allows you to control your music player, allowlist it for scrobbling and "
 "manage your scrobbling accounts. All MPRIS-enabled apps are supported."
 msgstr ""
+"Mantén un registro de tus hábitos de escucha haciendo scrobbling en last.fm, "
+"ListenBrainz, Libre.fm y Maloja al mismo tiempo utilizando tus aplicaciones "
+"de música favoritas. Giradiscos viene con un diseño elegante y altamente "
+"personalizable que muestra información sobre la canción que se está "
+"reproduciendo en ese momento y te permite controlar tu reproductor de "
+"música, permitirle hacer scrobbling y gestionar tus cuentas de scrobbling. "
+"Todas las aplicaciones compatibles con MPRIS son compatibles."
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:11
 msgid ""
@@ -47,34 +59,39 @@ msgid ""
 "background! Try it out using <code>flatpak run dev.geopjr.Turntable --help</"
 "code>."
 msgstr ""
+"¿No te interesa la interfaz gráfica de usuario, pero quieres hacer "
+"«scrobbling» con tus reproductores compatibles con MPRIS? Giradiscos trae "
+"consigo una interfaz de línea de comandos, ¡permitiéndote hacer scrobbling "
+"en segundo plano! Pruébalo usando <code>flatpak run dev.geopjr.Turntable "
+"--help</code>."
 
 #: data/ui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr ""
+msgstr "General"
 
 #: data/ui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr ""
+msgstr "Mostrar atajos"
 
 #: data/ui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr ""
+msgstr "Salir"
 
 #. translators: Name <email@domain.com> or Name https://website.example
 #: src/Application.vala:145
 msgid "translator-credits"
-msgstr ""
+msgstr "Sergio Varela https://ingrownmink4.codeberg.page/"
 
 #: src/Application.vala:148
 msgid "Donate"
-msgstr ""
+msgstr "Donar"
 
 #: src/Application.vala:149
 msgid "Translate"
-msgstr ""
+msgstr "Traducir"
 
 #. translators: Shown in the about dialog as a tip. Leave markup as is (<b>, \n)
 #: src/Application.vala:152
@@ -85,50 +102,55 @@ msgid ""
 "• Tag your music with the proper track, album and artist names\n"
 "• Check, fix and match your scrobbles regularly"
 msgstr ""
+"<b>Buenas prácticas para el «scrobbling»</b>\n"
+"• Evitar la inclusión en la lista de clientes MPRIS no seleccionados, como "
+"navegadores web y reproductores de vídeo\n"
+"• Etiqueta tu música con los nombres adecuados de pista, álbum y artista\n"
+"• Comprueba, arregla y empareja tus scrobbles con regularidad"
 
 #. translators: Application metainfo for the app "Archives". <https://gitlab.gnome.org/GeopJr/Archives/>
 #: src/Application.vala:156
 msgid "Archives"
-msgstr ""
+msgstr "Archives"
 
 #: src/Application.vala:156
 msgid "Create and view web archives"
-msgstr ""
+msgstr "Crea y visualiza archivos web"
 
 #. translators: Application metainfo for the app "Calligraphy". <https://gitlab.gnome.org/GeopJr/Calligraphy>
 #: src/Application.vala:158
 msgid "Calligraphy"
-msgstr ""
+msgstr "Calligraphy"
 
 #: src/Application.vala:158
 msgid "Turn text into ASCII banners"
-msgstr ""
+msgstr "Convierte texto en banners ASCII"
 
 #. translators: Application metainfo for the app "Collision". <https://github.com/GeopJr/Collision>
 #: src/Application.vala:160
 msgid "Collision"
-msgstr ""
+msgstr "Collision"
 
 #: src/Application.vala:160
 msgid "Check hashes for your files"
-msgstr ""
+msgstr "Comprueba los hashes de tus archivos"
 
 #. translators: Application metainfo for the app "Tuba". <https://github.com/GeopJr/Tuba>
 #: src/Application.vala:162
 msgid "Tuba"
-msgstr ""
+msgstr "Tuba"
 
 #: src/Application.vala:162
 msgid "Browse the Fediverse"
-msgstr ""
+msgstr "Navega por el Fediverso"
 
 #: src/Scrobbling/Accounts.vala:83 src/Views/ScrobblerSetup.vala:558
 msgid "_Cancel"
-msgstr ""
+msgstr "_Cancelar"
 
 #: src/Scrobbling/Accounts.vala:84
 msgid "_Read More"
-msgstr ""
+msgstr "_Más información"
 
 #. translators: variable is a scrobbler e.g. ListenBrainz
 #: src/Views/ScrobblerSetup.vala:60
