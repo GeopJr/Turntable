@@ -46,6 +46,15 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.3.1" date="2025-05-05">
+      <description translate="no">
+        <ul>
+          <li>Fixed some gapless players being unscrollable because their playing status does not change</li>
+          <li>Fixed scrobbling queue not getting cleared between client changes</li>
+          <li>Fixed scrobbling allowlist not being re-checked between client changes</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.0" date="2025-04-29">
       <description translate="no">
         <ul>
