@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-17 02:23+0300\n"
+"POT-Creation-Date: 2025-04-29 03:04+0300\n"
 "PO-Revision-Date: 2025-04-30 00:05+0000\n"
 "Last-Translator: Vistaus <vistaus@noreply.codeberg.org>\n"
 "Language-Team: Dutch <https://translate.codeberg.org/projects/turntable/"
@@ -21,15 +21,17 @@ msgstr ""
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
 #: data/dev.geopjr.Turntable.metainfo.xml.in:7
-#: src/Widgets/ControlsOverlay.vala:206
+#: src/Widgets/ControlsOverlay.vala:208
 msgid "Turntable"
 msgstr "Draaitafel"
 
 #: data/dev.geopjr.Turntable.desktop.in:8
-msgid "music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
+msgid ""
+"music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;"
+"maloja;song;audio;"
 msgstr ""
-"muziek;speler;widget;mpris;scrobble;lastfm;librefm;listenbrainz;maloja;nummer;lied;song;audio;"
-""
+"muziek;speler;widget;mpris;scrobble;lastfm;librefm;listenbrainz;maloja;"
+"nummer;lied;song;audio;"
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:8
 msgid "Scrobble your music"
@@ -61,8 +63,8 @@ msgid ""
 msgstr ""
 "Wel interesse in scrobbelen, maar niet in het grafische venster? Dan heb je "
 "geluk: Draaitafel beschikt namelijk ook over een cli, zodat je dat op de "
-"achtergrond kunt doen! Probeer het maar eens: <code>flatpak run "
-"dev.geopjr.Turntable --help</code>."
+"achtergrond kunt doen! Probeer het maar eens: <code>flatpak run dev.geopjr."
+"Turntable --help</code>."
 
 #: data/ui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
@@ -80,20 +82,20 @@ msgid "Quit"
 msgstr "Afsluiten"
 
 #. translators: Name <email@domain.com> or Name https://website.example
-#: src/Application.vala:145
+#: src/Application.vala:193
 msgid "translator-credits"
 msgstr "Heimen Stoffels <vistausss@fastmail.com>"
 
-#: src/Application.vala:148
+#: src/Application.vala:196
 msgid "Donate"
 msgstr "Doneren"
 
-#: src/Application.vala:149
+#: src/Application.vala:197
 msgid "Translate"
 msgstr "Vertalen"
 
 #. translators: Shown in the about dialog as a tip. Leave markup as is (<b>, \n)
-#: src/Application.vala:152
+#: src/Application.vala:200
 msgid ""
 "<b>Best Practices for Scrobbling</b>\n"
 "• Avoid allowlisting non-curated MPRIS clients like Web Browsers and Video "
@@ -108,38 +110,38 @@ msgstr ""
 "• Controleer je scrobbles regelmatig en voer reparaties uit waar nodig."
 
 #. translators: Application metainfo for the app "Archives". <https://gitlab.gnome.org/GeopJr/Archives/>
-#: src/Application.vala:156
+#: src/Application.vala:204
 msgid "Archives"
 msgstr "Archieven"
 
-#: src/Application.vala:156
+#: src/Application.vala:204
 msgid "Create and view web archives"
 msgstr "Maak en bekijk webarchieven"
 
 #. translators: Application metainfo for the app "Calligraphy". <https://gitlab.gnome.org/GeopJr/Calligraphy>
-#: src/Application.vala:158
+#: src/Application.vala:206
 msgid "Calligraphy"
 msgstr "Kalligrafie"
 
-#: src/Application.vala:158
+#: src/Application.vala:206
 msgid "Turn text into ASCII banners"
 msgstr "Zet tekst om naar ascii"
 
 #. translators: Application metainfo for the app "Collision". <https://github.com/GeopJr/Collision>
-#: src/Application.vala:160
+#: src/Application.vala:208
 msgid "Collision"
 msgstr "Botsing"
 
-#: src/Application.vala:160
+#: src/Application.vala:208
 msgid "Check hashes for your files"
 msgstr "Loop de controlesommen van bestanden na"
 
 #. translators: Application metainfo for the app "Tuba". <https://github.com/GeopJr/Tuba>
-#: src/Application.vala:162
+#: src/Application.vala:210
 msgid "Tuba"
 msgstr "Tuba"
 
-#: src/Application.vala:162
+#: src/Application.vala:210
 msgid "Browse the Fediverse"
 msgstr "Verken het fediverse"
 
@@ -252,36 +254,36 @@ msgid "Couldn't get session: %s"
 msgstr "De sessie kan niet worden opgehaald: %s"
 
 #. translators: default string when title is missing
-#: src/Views/Window.vala:171
+#: src/Views/Window.vala:172
 msgid "Unknown Title"
 msgstr "Onbekende titel"
 
 #. translators: default string when artist is missing
-#: src/Views/Window.vala:176 src/Views/Window.vala:181
+#: src/Views/Window.vala:177 src/Views/Window.vala:182
 msgid "Unknown Artist"
 msgstr "Onbekende artiest"
 
 #. translators: default string when album is missing
-#: src/Views/Window.vala:189 src/Views/Window.vala:194
+#: src/Views/Window.vala:190 src/Views/Window.vala:195
 msgid "Unknown Album"
 msgstr "Onbekend album"
 
 #. translators: button tooltip text
-#: src/Views/Window.vala:246
+#: src/Views/Window.vala:247
 msgid "Pause"
 msgstr "Pauzeren"
 
-#: src/Views/Window.vala:246 src/Views/Window.vala:405
+#: src/Views/Window.vala:247 src/Views/Window.vala:406
 msgid "Play"
 msgstr "Beluisteren"
 
 #. translators: button tooltip text
-#: src/Views/Window.vala:397
+#: src/Views/Window.vala:398
 msgid "Previous Song"
 msgstr "Vorig nummer"
 
 #. translators: button tooltip text
-#: src/Views/Window.vala:414
+#: src/Views/Window.vala:415
 msgid "Next Song"
 msgstr "Volgend nummer"
 
@@ -315,163 +317,168 @@ msgstr "Scrobbelen"
 msgid "Background Progress"
 msgstr "Achtergrondproces"
 
+#. translators: whether to show center the title, album and artist labels
+#: src/Widgets/ControlsOverlay.vala:139
+msgid "Center Text"
+msgstr ""
+
 #. translators: whether to show a client icon in the bottom right; client = music playing app
 #. translators: menu entry that opens a submenu; client = music playing app
-#: src/Widgets/ControlsOverlay.vala:139 src/Widgets/ControlsOverlay.vala:200
+#: src/Widgets/ControlsOverlay.vala:141 src/Widgets/ControlsOverlay.vala:202
 msgid "Client Icon"
 msgstr "Spelerpictogram"
 
 #. translators: whether to make the artist and album labels slightly transparent / less prominent
-#: src/Widgets/ControlsOverlay.vala:141
+#: src/Widgets/ControlsOverlay.vala:143
 msgid "Dim Metadata Labels"
 msgstr "Metagegevenslabels dimmen"
 
 #. translators: whether to fit the cover art in the cover; this will stretch or crop art that is not square
-#: src/Widgets/ControlsOverlay.vala:143
+#: src/Widgets/ControlsOverlay.vala:145
 msgid "Fit Art on Cover"
 msgstr "Albumhoezen automatisch inpassen"
 
 #. translators: whether to extract the colors of the cover and use them in UI elements (like Amberol or Material You)
-#: src/Widgets/ControlsOverlay.vala:145
+#: src/Widgets/ControlsOverlay.vala:147
 msgid "Extract Cover Colors"
 msgstr "Albumhoeskleuren extraheren"
 
 #. translators: whether to show a turntable tonearm in turntable styled cover art; tonearm is the 'arm' part of the turntable,
 #. you may translate it as 'arm' (mechanical part)
-#: src/Widgets/ControlsOverlay.vala:148
+#: src/Widgets/ControlsOverlay.vala:150
 msgid "Tonearm"
 msgstr "Toonarm"
 
 #. translators: menu entry that opens a submenu; components = toggleable parts of the UI
-#: src/Widgets/ControlsOverlay.vala:150
+#: src/Widgets/ControlsOverlay.vala:152
 msgid "Components"
 msgstr "Onderdelen"
 
 #. translators: cover scaling algorithm name, probably leave as is
-#: src/Widgets/ControlsOverlay.vala:154
+#: src/Widgets/ControlsOverlay.vala:156
 msgid "Linear"
 msgstr "Lineair"
 
 #. translators: cover scaling algorithm name, probably leave as is
-#: src/Widgets/ControlsOverlay.vala:156
+#: src/Widgets/ControlsOverlay.vala:158
 msgid "Nearest"
 msgstr "Dichtstbijzijnd"
 
 #. translators: cover scaling algorithm name, probably leave as is
-#: src/Widgets/ControlsOverlay.vala:158
+#: src/Widgets/ControlsOverlay.vala:160
 msgid "Trilinear"
 msgstr "Trilineair"
 
 #. translators: menu entry that opens a submenu; cover scaling = algorithm used for down/upscaling cover art
-#: src/Widgets/ControlsOverlay.vala:160
+#: src/Widgets/ControlsOverlay.vala:162
 msgid "Cover Scaling"
 msgstr "Afmetingen van albumhoezen"
 
 #. translators: orientation name
-#: src/Widgets/ControlsOverlay.vala:164
+#: src/Widgets/ControlsOverlay.vala:166
 msgid "Horizontal"
 msgstr "Horizontaal"
 
 #. translators: orientation name
-#: src/Widgets/ControlsOverlay.vala:166
+#: src/Widgets/ControlsOverlay.vala:168
 msgid "Vertical"
 msgstr "Verticaal"
 
 #. translators: menu entry that opens a submenu; as in whether it's horizontal or vertical
-#: src/Widgets/ControlsOverlay.vala:168
+#: src/Widgets/ControlsOverlay.vala:170
 msgid "Orientation"
 msgstr "Oriëntatie"
 
 #. translators: cover size
 #. translators: text style (size)
-#: src/Widgets/ControlsOverlay.vala:173 src/Widgets/ControlsOverlay.vala:185
+#: src/Widgets/ControlsOverlay.vala:175 src/Widgets/ControlsOverlay.vala:187
 msgid "Small"
 msgstr "Klein"
 
 #. translators: cover size
 #. translators: text style (size)
-#: src/Widgets/ControlsOverlay.vala:175 src/Widgets/ControlsOverlay.vala:187
+#: src/Widgets/ControlsOverlay.vala:177 src/Widgets/ControlsOverlay.vala:189
 msgid "Regular"
 msgstr "Normaal"
 
 #. translators: cover size
 #. translators: text style (size)
-#: src/Widgets/ControlsOverlay.vala:177 src/Widgets/ControlsOverlay.vala:189
+#: src/Widgets/ControlsOverlay.vala:179 src/Widgets/ControlsOverlay.vala:191
 msgid "Big"
 msgstr "Groot"
 
 #. translators: menu entry that opens a submenu; cover = the song cover art
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:179 src/Widgets/ControlsOverlay.vala:210
+#: src/Widgets/ControlsOverlay.vala:181 src/Widgets/ControlsOverlay.vala:212
 msgid "Cover"
 msgstr "Albumhoes"
 
 #. https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:181
+#: src/Widgets/ControlsOverlay.vala:183
 msgid "Size"
 msgstr "Grootte"
 
 #. translators: menu entry that opens a submenu; text = all the app text, may be translated to fonts
-#: src/Widgets/ControlsOverlay.vala:191
+#: src/Widgets/ControlsOverlay.vala:193
 msgid "Text"
 msgstr "Tekst"
 
 #. translators: cover icon style; symbolic = the monochrome simplified version
-#: src/Widgets/ControlsOverlay.vala:196
+#: src/Widgets/ControlsOverlay.vala:198
 msgid "Symbolic"
 msgstr "Symbolisch"
 
 #. translators: cover icon style
-#: src/Widgets/ControlsOverlay.vala:198
+#: src/Widgets/ControlsOverlay.vala:200
 msgid "Full Color"
 msgstr "Gekleurd"
 
 #. translators: cover image style; it's a square with rounded corners
-#: src/Widgets/ControlsOverlay.vala:204
+#: src/Widgets/ControlsOverlay.vala:206
 msgid "Card"
 msgstr "Kaart"
 
 #. translators: cover image style; it's a fading out effect; may be translated to 'Fade'
-#: src/Widgets/ControlsOverlay.vala:208
+#: src/Widgets/ControlsOverlay.vala:210
 msgid "Shadow"
 msgstr "Schaduw"
 
 #. translators: window style name
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:214 src/Widgets/ControlsOverlay.vala:221
+#: src/Widgets/ControlsOverlay.vala:216 src/Widgets/ControlsOverlay.vala:223
 msgid "Window"
 msgstr "Venster"
 
 #. translators: window style name, probably leave it as is; OSD = on screen display,
 #. it's the dark semi-trasparent background and white text style
-#: src/Widgets/ControlsOverlay.vala:217
+#: src/Widgets/ControlsOverlay.vala:219
 msgid "OSD"
 msgstr "OSD"
 
 #. translators: window style name
-#: src/Widgets/ControlsOverlay.vala:219
+#: src/Widgets/ControlsOverlay.vala:221
 msgid "Transparent"
 msgstr "Doorzichtig"
 
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:224
+#: src/Widgets/ControlsOverlay.vala:226
 msgid "Style"
 msgstr "Stijl"
 
 #. misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
 #. translators: menu entry, variable is the app name (Turntable)
-#: src/Widgets/ControlsOverlay.vala:232
+#: src/Widgets/ControlsOverlay.vala:234
 #, c-format
 msgid "About %s"
 msgstr "Over %s"
 
 #. translators: menu entry
-#: src/Widgets/ControlsOverlay.vala:234
+#: src/Widgets/ControlsOverlay.vala:236
 msgid "Quit"
 msgstr "Afsluiten"
 
-#: src/Widgets/ControlsOverlay.vala:253
+#: src/Widgets/ControlsOverlay.vala:257
 msgid "Menu"
 msgstr "Menu"
 
