@@ -98,6 +98,7 @@ public class Turntable.Utils.CLI : GLib.Object {
 	private void cli_player_changed () {
 		debug ("Player changed");
 
+		scrobbling_manager.clear_queue ("1");
 		foreach (var binding in cli_player_bindings) {
 			binding.unbind ();
 		}

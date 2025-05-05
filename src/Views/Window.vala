@@ -513,7 +513,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		#if SCROBBLING
 			settings.notify["scrobbler-allowlist"].connect (update_scrobble_status);
 			account_manager.accounts_changed.connect (update_scrobble_status);
-			update_scrobble_status ();
 		#endif
 
 		box2.state_flags_changed.connect (on_state_flags_changed);
@@ -667,6 +666,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_player (Mpris.Entry? new_player) {
 		debug ("[%s] Player Changed", uuid);
 
+		scrobbling_manager.clear_queue (uuid);
+		scrobble_enabled = false;
 		this.player = new_player;
 		foreach (var binding in player_bindings) {
 			binding.unbind ();
@@ -707,6 +708,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		prog.client_name = this.player.client_info_name;
 
 		button_play.grab_focus ();
+		update_scrobble_status ();
 	}
 
 	#if SCROBBLING
