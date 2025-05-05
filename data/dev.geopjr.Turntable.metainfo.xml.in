@@ -46,6 +46,14 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.3.2" date="2025-05-05">
+      <description translate="no">
+        <ul>
+          <li>Fixed CLI-mode typo in property name</li>
+          <li>Read the last changelog</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.1" date="2025-05-05">
       <description translate="no">
         <ul>
