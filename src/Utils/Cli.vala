@@ -6,7 +6,10 @@ public class Turntable.Utils.CLI : GLib.Object {
 		get { return _cli_length; }
 		set {
 			_cli_length = value;
-			if (value > 0) cli_add_to_scrobbler ();
+			if (value > 0) {
+				cli_add_to_scrobbler ();
+				if (this.playing) cli_update_scrobbler_playing ();
+			}
 		}
 	}
 

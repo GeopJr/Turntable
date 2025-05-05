@@ -231,7 +231,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 			prog.progress = value == 0 ? 0 : (double)this.position / (double)value;
 			#if SCROBBLING
-				if (value > 0) add_to_scrobbler ();
+				if (value > 0) {
+					add_to_scrobbler ();
+					if (this.playing) update_scrobbler_playing ();
+				}
 			#endif
 		}
 	}
