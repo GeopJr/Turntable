@@ -354,7 +354,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			}
 
 			scrobble_button.sensitive = true;
-			scrobble_button.enabled = this.last_player.parent_bus_namespace in settings.scrobbler_allowlist;
+			scrobble_button.enabled = this.last_player.bus_namespace in settings.scrobbler_allowlist;
 		}
 
 		private void on_accounts_changed () {
@@ -365,9 +365,9 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			update_scrobble_button ();
 
 			if (scrobble_button.enabled) {
-				settings.remove_from_allowlist (this.last_player.parent_bus_namespace);
+				settings.remove_from_allowlist (this.last_player.bus_namespace);
 			} else {
-				settings.add_to_allowlist (this.last_player.parent_bus_namespace);
+				settings.add_to_allowlist (this.last_player.bus_namespace);
 			}
 			scrobble_button.enabled = !scrobble_button.enabled;
 		}

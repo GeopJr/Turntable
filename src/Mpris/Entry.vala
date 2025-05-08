@@ -9,7 +9,6 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		public string icon;
 	}
 
-	public string parent_bus_namespace { get; private set; }
 	public string bus_namespace { get; private set; }
 	public ClientInfo client_info { get; private set; }
 	public DesktopBus.Mpris.MediaPlayer2Player? player { get; private set; default = null; }
@@ -75,11 +74,6 @@ public class Turntable.Mpris.Entry : GLib.Object {
 
 	public Entry (string name, DesktopBus.Mpris.MediaPlayer2 media_player) {
 		this.bus_namespace = name;
-		parent_bus_namespace = name;
-		string[] namespace_parts = name.split (".");
-		if (namespace_parts.length > 6) {
-			parent_bus_namespace = @"org.mpris.MediaPlayer2.$(namespace_parts[0]).$(namespace_parts[1]).$(namespace_parts[2])";
-		}
 
 		string icon = "application-x-executable-symbolic";
 		#if SCROBBLING

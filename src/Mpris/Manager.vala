@@ -38,11 +38,11 @@ public class Turntable.Mpris.Manager : GLib.Object {
 		}
 	}
 
-	void remove_player (string name, bool whole_bus = false) {
+	void remove_player (string name) {
 		bool removed = false;
 		for (int i = 0; i < entries.length ; i++) {
 			var entry = entries.index (i);
-			string name_for_removal = whole_bus ? entry.parent_bus_namespace : entry.bus_namespace;
+			string name_for_removal = entry.bus_namespace;
 			if (name_for_removal != name) continue;
 
 			entries.remove_index_fast (i);

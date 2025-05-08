@@ -541,7 +541,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		private void update_scrobble_status () {
 			bool new_val = account_manager.accounts.length > 0
 				&& this.player != null
-				&& this.player.parent_bus_namespace in settings.scrobbler_allowlist;
+				&& this.player.bus_namespace in settings.scrobbler_allowlist;
 
 			if (scrobble_enabled != new_val) {
 				scrobble_enabled = new_val;
@@ -717,7 +717,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 			scrobbling_manager.queue_payload (
 				uuid,
-				this.player.parent_bus_namespace,
+				this.player.bus_namespace,
 				{ this.player.title, this.player.artist, this.player.album },
 				this.player.length
 			);

@@ -29,7 +29,7 @@ public class Turntable.Utils.CLI : GLib.Object {
 		if (cli_list_clients) {
 			stdout.printf ("Available MPRIS Clients: (ID - Name)\n");
 			foreach (var client in mpris_manager.get_players ()) {
-				stdout.printf (@"$(client.parent_bus_namespace) - $(client.client_info_name)\n");
+				stdout.printf (@"$(client.bus_namespace) - $(client.client_info_name)\n");
 			}
 			return 0;
 		} else if (cli_client_id_scrobble != null) {
@@ -72,7 +72,7 @@ public class Turntable.Utils.CLI : GLib.Object {
 
 		Mpris.Entry? new_cli_player = null;
 		foreach (var client in mpris_manager.get_players ()) {
-			if (client.parent_bus_namespace.down () == cli_client_id_scrobble.down ()) {
+			if (client.bus_namespace.down () == cli_client_id_scrobble.down ()) {
 				new_cli_player = client;
 				break;
 			}
@@ -114,7 +114,7 @@ public class Turntable.Utils.CLI : GLib.Object {
 
 		scrobbling_manager.queue_payload (
 			"1",
-			this.cli_last_player.parent_bus_namespace,
+			this.cli_last_player.bus_namespace,
 			{ this.cli_last_player.title, this.cli_last_player.artist, this.cli_last_player.album },
 			this.cli_last_player.length
 		);
