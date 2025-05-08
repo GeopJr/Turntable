@@ -217,6 +217,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 				_position = 0;
 				prog.progress = 0;
 			} else {
+				#if SCROBBLING
+					if (value == 0 && this.player != null && this.player.looping && _position > 0) {
+						this.length = this.length; // re-trigger it
+					}
+				#endif
 				_position = value;
 				prog.progress = (double)value / (double)this.length;
 			}

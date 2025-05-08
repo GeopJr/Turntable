@@ -18,6 +18,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	public string client_info_name { get { return this.client_info.identity; } }
 	public string client_info_icon { get { return this.client_info.icon; } }
 
+	public bool looping { get; private set; default = false; }
 	public bool can_go_next { get; private set; default = false; }
 	public bool can_go_back { get; private set; default = false; }
 	public bool can_control { get; private set; default = false; }
@@ -123,6 +124,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			update_position ();
 			update_playback_status ();
 			update_controls ();
+			update_loop_status ();
 
 			GLib.Timeout.add (PROGRESS_UPDATE_TIME, update_position);
 		} catch (Error e) {
@@ -150,6 +152,9 @@ public class Turntable.Mpris.Entry : GLib.Object {
 				case "PlaybackStatus":
 					update_playback_status ();
 					break;
+				case "LoopStatus":
+					update_loop_status ();
+					break;
 				case "CanGoNext":
 				case "CanGoPrevious":
 				case "CanPlay":
@@ -161,6 +166,10 @@ public class Turntable.Mpris.Entry : GLib.Object {
 					break;
 			}
 		});
+	}
+
+	private void update_loop_status () {
+		this.looping = this.player.loop_status == "Track";
 	}
 
 	private bool update_position () {
@@ -247,6 +256,8 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			} else {
 				this.length = variant_length.get_int64 ();
 			}
+
+			this.notify_property ("length");
 		}
 	}
 }
