@@ -525,22 +525,47 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		float ratio = cover == null ? 1f : (float) cover.get_intrinsic_aspect_ratio ();
 		float w = 0;
 		float h = 0;
+		float t_w = 0;
+		float t_h = 0;
 
-		if (ratio > 1) {
+		if (ratio == 1) {
+			w = width;
+			h = height;
+			if (this.turntable) {
+				t_w = this.record_center_inner.size.width;
+				t_h = this.record_center_inner.size.height;
+			}
+		} else if (ratio > 1) {
 			if (fit_cover) {
 				w = height * ratio;
 				h = height;
+				if (this.turntable) {
+					t_w = this.record_center_inner.size.height * ratio;
+					t_h = this.record_center_inner.size.height;
+				}
 			} else {
 				w = width;
 				h = width / ratio;
+				if (this.turntable) {
+					t_w = this.record_center_inner.size.width;
+					t_h = this.record_center_inner.size.width / ratio;
+				}
 			}
 		} else {
 			if (fit_cover) {
 				w = width;
 				h = width / ratio;
+				if (this.turntable) {
+					t_w = this.record_center_inner.size.width;
+					t_h = this.record_center_inner.size.width / ratio;
+				}
 			} else {
 				w = height * ratio;
 				h = height;
+				if (this.turntable) {
+					t_w = this.record_center_inner.size.height * ratio;
+					t_h = this.record_center_inner.size.height;
+				}
 			}
 		}
 
@@ -727,34 +752,48 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			float texture_w = w;
 			float texture_h = h;
 			if (this.turntable) {
-				if (this.fit_cover) {
-					texture_w = width * 0.65f;
-					texture_h = height * 0.65f;
-				} else {
-					texture_w = texture_w * 0.65f;
-					texture_h = texture_h * 0.65f;
-				}
+				texture_w = t_w;
+				texture_h = t_h;
 
-				snapshot.translate (Graphene.Point () {
-					x = (width - Math.ceilf (texture_w)) / 2f,
-					y = Math.floorf ((height - texture_h)) / 2f
-				});
+				var center_point = Graphene.Point () {
+					x = width / 2 - this.record_center_inner.size.width / 2,
+					y = height / 2 - this.record_center_inner.size.height / 2
+				};
 
 				snapshot.push_rounded_clip (
 					Gsk.RoundedRect ().init_from_rect (
 						Graphene.Rect () {
-							origin = Graphene.Point () {
-								x = 0,
-								y = 0
-							},
-							size = Graphene.Size () {
-								width = texture_w,
-								height = texture_h
-							}
+							origin = center_point,
+							size = this.record_center_inner.size
 						},
 						9999f
 					)
 				);
+
+				if (ratio == 1) {
+					snapshot.translate (center_point);
+				} else if (this.fit_cover) {
+					float new_x = 0;
+					float new_y = 0;
+
+					if (ratio < 1) {
+						new_x = width / 2 - this.record_center_inner.size.width / 2;
+						new_y = height / 2 - texture_h / 2;
+					} else {
+						new_y = height / 2 - this.record_center_inner.size.height / 2;
+						new_x = width / 2 - texture_w / 2;
+					}
+
+					snapshot.translate (Graphene.Point () {
+						x = new_x,
+						y = new_y
+					});
+				} else {
+					snapshot.translate (Graphene.Point () {
+						x = width / 2 - texture_w / 2,
+						y = height / 2 - texture_h / 2
+					});
+				}
 			} else if (this.style == Style.SHADOW) {
 				snapshot.translate (Graphene.Point () {
 					x = 0,
