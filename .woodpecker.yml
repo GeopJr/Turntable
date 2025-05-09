@@ -1,0 +1,10 @@
+steps:
+  lint:
+    image: valalang/lint:latest
+    commands:
+      - io.elementary.vala-lint -c vala-lint.conf || exit 1
+
+  lint:
+    image: debian:testing
+    commands:
+      - make build test
