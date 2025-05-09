@@ -671,8 +671,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_player (Mpris.Entry? new_player) {
 		debug ("[%s] Player Changed", uuid);
 
-		scrobbling_manager.clear_queue (uuid);
-		scrobble_enabled = false;
+		#if SCROBBLING
+			scrobbling_manager.clear_queue (uuid);
+			scrobble_enabled = false;
+		#endif
 		this.player = new_player;
 		foreach (var binding in player_bindings) {
 			binding.unbind ();
@@ -713,7 +715,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		prog.client_name = this.player.client_info_name;
 
 		button_play.grab_focus ();
-		update_scrobble_status ();
+		#if SCROBBLING
+			update_scrobble_status ();
+		#endif
 	}
 
 	#if SCROBBLING

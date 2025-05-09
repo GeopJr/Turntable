@@ -37,7 +37,7 @@ jobs:
       with:
         bundle: "dev.geopjr.Turntable.Devel.flatpak"
         run-tests: true
-        manifest-path: "build-aux/dev.geopjr.Turntable.Devel.json"
+        manifest-path: "build-aux/dev.geopjr.Turntable.json"
         cache-key: flatpak-builder-${{ github.sha }}
         arch: ${{ matrix.variant.arch }}
         repository-name: flathub
