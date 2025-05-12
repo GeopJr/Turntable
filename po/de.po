@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-29 03:04+0300\n"
-"PO-Revision-Date: 2025-05-07 18:53+0000\n"
+"PO-Revision-Date: 2025-05-13 06:53+0000\n"
 "Last-Translator: jak2k <jakob@schwanenberg.name>\n"
 "Language-Team: German <https://translate.codeberg.org/projects/turntable/"
 "turntable/de/>\n"
@@ -129,11 +129,11 @@ msgstr ""
 
 #: src/Scrobbling/Accounts.vala:83 src/Views/ScrobblerSetup.vala:558
 msgid "_Cancel"
-msgstr ""
+msgstr "_Abbrechen"
 
 #: src/Scrobbling/Accounts.vala:84
 msgid "_Read More"
-msgstr ""
+msgstr "_Mehr lesen"
 
 #. translators: variable is a scrobbler e.g. ListenBrainz
 #: src/Views/ScrobblerSetup.vala:60
@@ -314,7 +314,7 @@ msgstr "Metadaten-Beschriftungen dimmen"
 #. translators: whether to fit the cover art in the cover; this will stretch or crop art that is not square
 #: src/Widgets/ControlsOverlay.vala:145
 msgid "Fit Art on Cover"
-msgstr ""
+msgstr "Bild an Cover anpassen"
 
 #. translators: whether to extract the colors of the cover and use them in UI elements (like Amberol or Material You)
 #: src/Widgets/ControlsOverlay.vala:147
@@ -340,7 +340,7 @@ msgstr "Linear"
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:158
 msgid "Nearest"
-msgstr ""
+msgstr "Nächstes"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:160
@@ -350,7 +350,7 @@ msgstr "Trilinear"
 #. translators: menu entry that opens a submenu; cover scaling = algorithm used for down/upscaling cover art
 #: src/Widgets/ControlsOverlay.vala:162
 msgid "Cover Scaling"
-msgstr ""
+msgstr "Berechnungsmethode für die Cover-Höhe"
 
 #. translators: orientation name
 #: src/Widgets/ControlsOverlay.vala:166
@@ -389,7 +389,7 @@ msgstr "Groß"
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:181 src/Widgets/ControlsOverlay.vala:212
 msgid "Cover"
-msgstr ""
+msgstr "Cover"
 
 #. https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
 #. translators: menu entry that opens a submenu
@@ -410,7 +410,7 @@ msgstr "Symbolisch"
 #. translators: cover icon style
 #: src/Widgets/ControlsOverlay.vala:200
 msgid "Full Color"
-msgstr ""
+msgstr "Farbig"
 
 #. translators: cover image style; it's a square with rounded corners
 #: src/Widgets/ControlsOverlay.vala:206
