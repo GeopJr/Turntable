@@ -62,7 +62,10 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			string icon = "application-x-executable-symbolic";
 			try {
 				var key_file = new GLib.KeyFile ();
-				if (key_file.load_from_dirs (@"$id.desktop", desktop_file_dirs, null, GLib.KeyFileFlags.NONE)) {
+				if (
+					key_file.load_from_dirs (@"$id.desktop", desktop_file_dirs, null, GLib.KeyFileFlags.NONE)
+					|| key_file.load_from_dirs (@"$(id)_$id.desktop", desktop_file_dirs, null, GLib.KeyFileFlags.NONE)
+				) {
 					var icon_key = key_file.get_string ("Desktop Entry", "Icon");
 					if (icon_key != null) icon = icon_key;
 				}
@@ -84,6 +87,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 				if (media_player.desktop_entry != null) icon = get_sandboxed_icon_for_id (media_player.desktop_entry);
 			#else
 				var app_info = media_player.desktop_entry == null ? null : new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
+				if (app_info == null && media_player.desktop_entry != null) app_info = new GLib.DesktopAppInfo (@"$(media_player.desktop_entry)_$(media_player.desktop_entry).desktop");
 				if (app_info != null) {
 					var app_icon = app_info.get_icon ();
 					if (app_icon != null) icon = app_icon.to_string ();
