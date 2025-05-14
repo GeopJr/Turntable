@@ -46,6 +46,17 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.3.3" date="2025-05-14">
+      <description translate="no">
+        <ul>
+          <li>Fixed remote cover arts not being fetch on flatpak due to missing permission</li>
+          <li>Fixed cover art scaling when fit cover and turntable style are enabled</li>
+          <li>Fixed scrobbling on looping tracks</li>
+          <li>Fixed issues with namespaces that had more than 3 parts</li>
+          <li>Updated translations</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.2" date="2025-05-05">
       <description translate="no">
         <ul>
