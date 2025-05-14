@@ -238,9 +238,11 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 					loader.close ();
 					pixbuf = loader.get_pixbuf ();
 				} else if (clean_path.down ().has_prefix ("https://")) {
-					File file = GLib.File.new_for_uri (this.file_path);
-					FileInputStream @is = file.read (cancellable);
-					pixbuf = new Gdk.Pixbuf.from_stream (@is, cancellable);
+					var session = new Soup.Session () {
+						user_agent = @"$(Build.NAME)/$(Build.VERSION) libsoup/$(Soup.get_major_version()).$(Soup.get_minor_version()).$(Soup.get_micro_version()) ($(Soup.MAJOR_VERSION).$(Soup.MINOR_VERSION).$(Soup.MICRO_VERSION))" // vala-lint=line-length
+					};
+					var in_stream = session.send (new Soup.Message ("GET", this.file_path), cancellable);
+					pixbuf = new Gdk.Pixbuf.from_stream (in_stream, cancellable);
 				} else {
 					pixbuf = new Gdk.Pixbuf.from_file (clean_path);
 				}

@@ -81,12 +81,14 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			if (!cli_mode) {
 		#endif
 			#if SANDBOXED
-				icon = get_sandboxed_icon_for_id (media_player.desktop_entry);
+				if (media_player.desktop_entry != null) icon = get_sandboxed_icon_for_id (media_player.desktop_entry);
 			#else
 				var app_info = media_player.desktop_entry == null ? null : new GLib.DesktopAppInfo (@"$(media_player.desktop_entry).desktop");
 				if (app_info != null) {
 					var app_icon = app_info.get_icon ();
 					if (app_icon != null) icon = app_icon.to_string ();
+				} else if (media_player.desktop_entry == "spotify") {
+					icon = "com.spotify.Client";
 				}
 			#endif
 		#if SCROBBLING
