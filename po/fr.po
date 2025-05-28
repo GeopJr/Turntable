@@ -2,13 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Mrdaft <mrdaft@noreply.codeberg.org>, 2025.
+# milimarg <milimarg@noreply.codeberg.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-29 03:04+0300\n"
-"PO-Revision-Date: 2025-05-08 23:53+0000\n"
-"Last-Translator: Mrdaft <mrdaft@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2025-05-29 11:58+0000\n"
+"Last-Translator: milimarg <milimarg@noreply.codeberg.org>\n"
 "Language-Team: French <https://translate.codeberg.org/projects/turntable/"
 "turntable/fr/>\n"
 "Language: fr\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.10.2\n"
+"X-Generator: Weblate 5.11.4\n"
 
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
@@ -28,6 +29,8 @@ msgstr "Turntable"
 #: data/dev.geopjr.Turntable.desktop.in:8
 msgid "music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
 msgstr ""
+"musique;lecteur;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;chanson;audio;"
+""
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:8
 msgid "Scrobble your music"
