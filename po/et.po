@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-29 03:04+0300\n"
-"PO-Revision-Date: 2025-07-29 19:09+0000\n"
+"PO-Revision-Date: 2025-08-05 08:09+0000\n"
 "Last-Translator: Priit Jõerüüt <jrtcdbrg@noreply.codeberg.org>\n"
 "Language-Team: Estonian <https://translate.codeberg.org/projects/turntable/"
 "turntable/et/>\n"
@@ -192,7 +192,7 @@ msgstr ""
 #. translators: switch title; lookup = search, fetch, request
 #: src/Views/ScrobblerSetup.vala:501
 msgid "Lookup Metadata on MusicBrainz before Scrobbling"
-msgstr ""
+msgstr "Enne kraasimist otsi MusicBrainzi teenusest loo metateavet"
 
 #. translators: switch description; untagged as in music files missing metadata like artist, album etc
 #: src/Views/ScrobblerSetup.vala:503
@@ -201,6 +201,10 @@ msgid ""
 "fix and complete metadata but it will also prevent scrobbling tracks not "
 "found in the MusicBrainz library."
 msgstr ""
+"Kuna selle valikuga lisatakse puuduv metateave, siis on see soovitatav "
+"haldamata muusikamängijate haldamaata muusikakogu või jaoks. Sel juhul palun "
+"arvesta, et kui MusicBrainzi kogus andmeid ei leidu, siis lugu kraasida ei "
+"saa."
 
 #: src/Views/ScrobblerSetup.vala:552
 #, c-format
@@ -322,12 +326,12 @@ msgstr "Kasuta kaanepildi värve"
 #. you may translate it as 'arm' (mechanical part)
 #: src/Widgets/ControlsOverlay.vala:150
 msgid "Tonearm"
-msgstr ""
+msgstr "Nõelahoidja"
 
 #. translators: menu entry that opens a submenu; components = toggleable parts of the UI
 #: src/Widgets/ControlsOverlay.vala:152
 msgid "Components"
-msgstr ""
+msgstr "Komponendid"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:156
