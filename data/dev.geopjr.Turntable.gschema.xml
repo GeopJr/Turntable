@@ -49,5 +49,8 @@
     <key name="component-center-text" type="b">
 			<default>false</default>
 		</key>
+    <key name="now-playing" type="b">
+			<default>false</default>
+		</key>
 	</schema>
 </schemalist>

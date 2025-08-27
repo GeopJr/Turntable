@@ -51,7 +51,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		private uint scrobble_timeout { get; set; default = -1; }
 		private int scrobble_in_seconds { get; set; }
 		private int total_playtime { get; set; default = 0; }
-		public signal void scrobbled (Payload payload);
+		public signal void scrobbled (Payload payload, bool now_playing = false);
 		bool cleared = false;
 
 		~Pushable () {
@@ -86,11 +86,25 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 			if (cleared) return GLib.Source.REMOVE;
 
 			total_playtime += 1;
-			if (total_playtime >= scrobble_in_seconds) on_scrobble ();
+			if (total_playtime == 3 && settings.now_playing) on_started_playing ();
+			else if (total_playtime >= scrobble_in_seconds) on_scrobble ();
 			return GLib.Source.CONTINUE;
 		}
 
+		bool now_played = false;
+		private void on_started_playing () {
+			if (now_played) return;
+			now_played = true;
+
+			debug ("[Pushable] Now Playing %s", payload.track);
+			scrobbled (payload, true);
+		}
+
+		bool lock_scrobbled = false;
 		private void on_scrobble () {
+			if (lock_scrobbled) return;
+			lock_scrobbled = true;
+
 			debug ("[Pushable] Scrobbling %s", payload.track);
 			scrobbled (payload);
 
@@ -170,43 +184,43 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		}
 	}
 
-	public void scrobble_all (Payload payload) {
+	public void scrobble_all (Payload payload, bool now_playing) {
 		if (payload.track == null || payload.artist == null) return;
 
-		debug ("Scrobbling %s", payload.track);
+		debug (now_playing ? "Now Playing %s" : "Scrobbling %s", payload.track);
 		if (settings.mbid_required) {
 			scrobbling_manager.fetch_mb_data.begin (payload, (obj, res) => {
 				var new_payload = scrobbling_manager.fetch_mb_data.end (res);
 				if (new_payload != null) {
-					scrobble_all_actual (new_payload);
+					scrobble_all_actual (new_payload, now_playing);
 				}
 			});
 
 			return;
 		}
 
-		scrobble_all_actual (payload);
+		scrobble_all_actual (payload, now_playing);
 	}
 
-	private inline void scrobble_all_actual (Payload payload) {
+	private inline void scrobble_all_actual (Payload payload, bool now_playing) {
 		var now = new GLib.DateTime.now ();
 		foreach (var scrobbler in services) {
-			scrobbler.scrobble (payload, now);
+			scrobbler.scrobble (payload, now, now_playing);
 		}
 	}
 
-	public void send_scrobble (owned Soup.Message msg, Provider provider) {
-		debug ("Sending scrobble to %s", provider.to_string ());
+	public void send_scrobble (owned Soup.Message msg, Provider provider, bool now_playing) {
+		debug ("Sending %s to %s", now_playing ? "now playing" : "scrobble", provider.to_string ());
 		session.send_async.begin (msg, 0, null, (obj, res) => {
 			try {
 				var in_stream = session.send_async.end (res);
 
 				switch (msg.status_code) {
 					case Soup.Status.OK:
-						debug ("Successfully scrobbled %s", provider.to_string ());
+						debug ("Successfully %s %s", now_playing ? "submitted" : "scrobbled", provider.to_string ());
 						break;
 					case GLib.IOError.CANCELLED:
-						debug ("Cancelled scrobbling for %s", provider.to_string ());
+						debug ("Cancelled %s for %s", now_playing ? "submitting" : "scrobbling", provider.to_string ());
 						return; // !
 					default:
 						critical ("Request \"%s\" failed: %zu %s", msg.uri.to_string (), msg.status_code, msg.reason_phrase);
@@ -231,12 +245,27 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		});
 	}
 
+	struct MbCached {
+		string mb_url;
+		Payload? payload;
+	}
+	MbCached? mb_cached = null;
+
 	private async Payload? fetch_mb_data (Payload payload) {
 		string album_string_param = payload.album == null ? "" : @"+AND+release:$(GLib.Uri.escape_string (payload.album))";
 		string mb_url = @"https://musicbrainz.org/ws/2/recording?query=recording:$(GLib.Uri.escape_string (payload.track))+AND+artist:$(GLib.Uri.escape_string (payload.artist))$album_string_param&fmt=json&limit=1";
-		var msg = new Soup.Message ("GET", mb_url);
 
 		debug ("MBID Request %s", mb_url);
+		if (mb_cached != null) {
+			if (mb_cached.mb_url == mb_url) {
+				debug ("MBID Found in Cache");
+				return mb_cached.payload;
+			} else {
+				mb_cached = null;
+			}
+		}
+
+		var msg = new Soup.Message ("GET", mb_url);
 		try {
 			var in_stream = yield session.send_async (msg, 0, null);
 			if (msg.status_code != Soup.Status.OK) new Error.literal (-1, 2, @"Server returned $(msg.status_code)");
@@ -280,6 +309,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 				}
 			}
 
+			mb_cached = {mb_url, payload};
 			return payload;
 		} catch (Error e) {
 			if (e.code == 2) {
@@ -289,6 +319,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 			}
 		}
 
+		mb_cached = {mb_url, null};
 		return null;
 	}
 }

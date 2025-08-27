@@ -29,16 +29,18 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		}
 	}
 
-	protected void scrobble_actual (Scrobbling.Manager.Payload payload, GLib.DateTime datetime) {
+	protected void scrobble_actual (Scrobbling.Manager.Payload payload, GLib.DateTime datetime, bool now_playing) {
 		var builder = new Json.Builder ();
 		builder.begin_object ();
 			builder.set_member_name ("listen_type");
-			builder.add_string_value ("single");
+			builder.add_string_value (now_playing ? "playing_now" : "single");
 			builder.set_member_name ("payload");
 			builder.begin_array ();
 				builder.begin_object ();
-					builder.set_member_name ("listened_at");
-					builder.add_int_value (datetime.to_unix ());
+					if (!now_playing) {
+						builder.set_member_name ("listened_at");
+						builder.add_int_value (datetime.to_unix ());
+					}
 					builder.set_member_name ("track_metadata");
 					builder.begin_object ();
 						builder.set_member_name ("artist_name");
@@ -60,6 +62,6 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		msg.set_request_body_from_bytes ("application/json", new Bytes.take (generator.to_data (null).data));
 		msg.request_headers.append ("Authorization", @"Bearer $(this.token)");
 
-		scrobbling_manager.send_scrobble (msg, SERVICE);
+		scrobbling_manager.send_scrobble (msg, SERVICE, now_playing);
 	}
 }

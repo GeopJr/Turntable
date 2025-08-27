@@ -469,6 +469,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 	//  }
 
 	Adw.SwitchRow mbid_row;
+	Adw.SwitchRow now_playing_row;
 	string win_id;
 	GLib.HashTable<string, ScrobblerRow> provider_rows = new GLib.HashTable<string, ScrobblerRow> (str_hash, str_equal);
 	construct {
@@ -495,6 +496,16 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		main_page.add (main_group);
 
 		var settings_group = new Adw.PreferencesGroup ();
+		now_playing_row = new Adw.SwitchRow () {
+			active = settings.now_playing,
+			// translators: as explained later, "Now Playing" means the currently playing song even if it hasn't hit the scrobbling mark, please make sure they are not confused with each other, this doesn't mean scrobbling.
+			title = _("Submit Now Playing"),
+			// translators: switch description
+			subtitle = _("Indicate that you started listening to a track.")
+		};
+		now_playing_row.notify["active"].connect (np_changed);
+		settings_group.add (now_playing_row);
+
 		mbid_row = new Adw.SwitchRow () {
 			active = settings.mbid_required,
 			// translators: switch title; lookup = search, fetch, request
@@ -511,6 +522,10 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		application.token_received[win_id].connect (on_token_received);
 		account_manager.accounts_changed.connect (update_row_states);
 		update_row_states ();
+	}
+
+	private void np_changed () {
+		settings.now_playing = now_playing_row.active;
 	}
 
 	private void mbid_required_changed () {
