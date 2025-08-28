@@ -85,7 +85,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 				}
 
 				update_orientation ();
-				update_offset ();
+				//  update_offset ();
 			}
 		}
 	}
@@ -215,6 +215,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		set {
 			if (this.length == 0) {
 				_position = 0;
+				tonearm.progress =
 				prog.progress = 0;
 			} else {
 				#if SCROBBLING
@@ -223,6 +224,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 					}
 				#endif
 				_position = value;
+				tonearm.progress =
 				prog.progress = (double)value / (double)this.length;
 			}
 		}
@@ -234,6 +236,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		set {
 			_length = value;
 
+			tonearm.progress =
 			prog.progress = value == 0 ? 0 : (double)this.position / (double)value;
 			#if SCROBBLING
 				if (value > 0) {
@@ -271,17 +274,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	}
 
 	private void update_orientation () {
-		switch (this.orientation) {
-			case Gtk.Orientation.VERTICAL:
-				this.default_width = 0;
-				this.default_height = this.cover_size == Size.SMALL ? 300 : 400;
-				break;
-			default:
-				this.default_width = 534;
-				this.default_height = 0;
-				break;
-		}
-
 		art_pic.orientation =
 		main_box.orientation =
 		prog.orientation = this.orientation;
@@ -310,24 +302,50 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			if (value != art_pic.style ) {
 				art_pic.style = value;
 				art_pic.turntable_playing = this.playing;
-				update_offset ();
+				//  update_offset ();
 			}
 		}
 	}
 
-	private void update_offset () {
-		switch (this.cover_style) {
-			case Widgets.Cover.Style.SHADOW:
-				prog.offset = art_pic.size - (int32) (Widgets.Cover.FADE_WIDTH / 2);
-				break;
-			default:
-				prog.offset = 0;
-				break;
-		}
-	}
+	//  private void update_offset () {
+	//  	switch (this.cover_style) {
+	//  		case Widgets.Cover.Style.SHADOW:
+	//  			prog.offset = art_pic.size - (int32) (Widgets.Cover.FADE_WIDTH / 2);
+	//  			break;
+	//  		default:
+	//  			prog.offset = 0;
+	//  			break;
+	//  	}
+	//  }
 
 	private void update_extracted_colors () {
 		prog.extracted_colors = art_pic.extracted_colors;
+	}
+
+	private inline void setup_window_size () {
+		this.default_width = settings.get_int ("window-w");
+		this.default_height = settings.get_int ("window-h");
+		this.maximized = settings.get_boolean ("window-maximized");
+
+		this.notify["default-width"].connect (on_window_size_changed);
+		this.notify["default-height"].connect (on_window_size_changed);
+		this.notify["maximized"].connect (on_window_size_changed);
+	}
+
+	uint window_settings_timeout = 0;
+	private void on_window_size_changed () {
+		//  non_art_box.visible = settings.orientation_horizontal ? this.default_width > 452 : this.default_height > 423;
+		if (window_settings_timeout > 0) GLib.Source.remove (window_settings_timeout);
+		window_settings_timeout = GLib.Timeout.add (2 * 1000, update_window_size_settings, Priority.LOW);
+	}
+
+	private bool update_window_size_settings () {
+		settings.set_int ("window-h", this.default_height);
+		settings.set_int ("window-w", this.default_width);
+		settings.set_boolean ("window-maximized", this.maximized);
+
+		window_settings_timeout = 0;
+		return GLib.Source.REMOVE;
 	}
 
 	Mpris.Entry? player = null;
@@ -335,6 +353,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Widgets.Marquee title_label;
 	Widgets.Marquee album_label;
 	Widgets.Cover art_pic;
+	Widgets.Tonearm tonearm;
+	Gtk.Box non_art_box;
 	Widgets.ProgressBin prog;
 	Gtk.Box main_box;
 	Gtk.Button button_play;
@@ -344,31 +364,37 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	construct {
 		this.uuid = GLib.Uuid.string_random ();
 		this.icon_name = Build.DOMAIN;
-		this.resizable = false;
 		this.title = Build.NAME;
 
-		this.default_width = 0;
-		this.default_height = 0;
+		setup_window_size ();
 		this.height_request = -1;
 		this.width_request = -1;
 
-		main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0);
+		main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
+			valign = CENTER,
+			halign = CENTER
+		};
 		art_pic = new Widgets.Cover () {
 			valign = Gtk.Align.START,
 			halign = Gtk.Align.START
 		};
 		art_pic.notify["extracted-colors"].connect (update_extracted_colors);
 		controls_overlay = new Widgets.ControlsOverlay (art_pic);
-		main_box.append (controls_overlay);
 
-		var box2 = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
+		tonearm = new Widgets.Tonearm () {
+			halign = CENTER,
+			child = controls_overlay
+		};
+		main_box.append (tonearm);
+
+		non_art_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
 			hexpand = true,
 			margin_top = 16,
 			margin_bottom = 16,
 			margin_end = 16,
 			margin_start = 16
 		};
-		main_box.append (box2);
+		main_box.append (non_art_box);
 
 
 		title_label = new Widgets.Marquee () {
@@ -382,9 +408,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			xalign = 0.0f
 		};
 
-		box2.append (title_label);
-		box2.append (artist_label);
-		box2.append (album_label);
+		non_art_box.append (title_label);
+		non_art_box.append (artist_label);
+		non_art_box.append (album_label);
 
 		prog = new Widgets.ProgressBin () {
 			content = main_box
@@ -396,7 +422,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
 		};
-		box2.append (box3);
+		non_art_box.append (box3);
 
 		button_prev = new Gtk.Button.from_icon_name (is_rtl ? "skip-forward-large-symbolic" : "skip-backward-large-symbolic") {
 			css_classes = {"circular"},
@@ -520,8 +546,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			account_manager.accounts_changed.connect (update_scrobble_status);
 		#endif
 
-		box2.state_flags_changed.connect (on_state_flags_changed);
+		non_art_box.state_flags_changed.connect (on_state_flags_changed);
 		art_pic.map.connect (on_mapped);
+
+		Gtk.GestureClick click_gesture = new Gtk.GestureClick () {
+			button = Gdk.BUTTON_PRIMARY
+		};
+		click_gesture.pressed.connect (on_click);
+		prog.add_controller (click_gesture);
+	}
+
+	private void on_click () {
+		if (controls_overlay.hide_overlay ()) this.focus_widget = null;
 	}
 
 	private void play_next () {
@@ -537,7 +573,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	}
 
 	private void on_mapped () {
-		update_offset ();
+		//  update_offset ();
 		art_pic.turntable_playing = this.playing;
 	}
 
@@ -639,7 +675,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	}
 
 	private void update_component_tonearm_from_settings () {
-		this.prog.tonearm_enabled = settings.component_tonearm;
+		this.tonearm.enabled = settings.component_tonearm;
 		component_tonearm_action.set_state (settings.component_tonearm);
 	}
 
@@ -663,9 +699,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	#if SCROBBLING
 		private void open_scrobbling_setup () {
-			(new Views.ScrobblerSetup ()).present (this);
+			this.resizable = false;
+
+			var dlg = new Views.ScrobblerSetup ();
+			dlg.present (this);
+			dlg.closed.connect (make_resizable);
 		}
 	#endif
+
+	// hack to force present dialogs as windows
+	public void make_resizable () {
+		this.resizable = true;
+	}
 
 	GLib.Binding[] player_bindings = {};
 	private void update_player (Mpris.Entry? new_player) {

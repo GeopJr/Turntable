@@ -43,14 +43,15 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 	Graphene.Rect record_center_inner;
 
 	private void update_record_rects () {
+		int new_size = (int) (this.size * 0.666666666666);
 		record_center_inner = Graphene.Rect () {
 			origin = Graphene.Point () {
 				x = 0,
 				y = 0
 			},
 			size = Graphene.Size () {
-				width = 128 * this.scale_factor,
-				height = 128 * this.scale_factor
+				width = new_size * this.scale_factor,
+				height = new_size * this.scale_factor
 			}
 		};
 
@@ -408,6 +409,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		set {
 			if (_size != value) {
 				_size = value;
+				update_record_rects ();
 				this.queue_resize ();
 			}
 		}
@@ -636,9 +638,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				x = - translation_point.x,
 				y = - translation_point.y
 			});
-		}
-
-		if (this.style == Style.SHADOW) {
+		} else if (this.style == Style.SHADOW) {
 			snapshot.push_mask (Gsk.MaskMode.INVERTED_ALPHA);
 
 			if (this.orientation == Gtk.Orientation.HORIZONTAL) {

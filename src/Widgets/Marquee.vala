@@ -112,13 +112,13 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 		out int minimum_baseline,
 		out int natural_baseline
 	) {
+		label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
+
 		if (orientation == Gtk.Orientation.HORIZONTAL) {
 			minimum = 0;
-			natural = this.width_pixels;
+			natural = int.min (308, natural);
 			minimum_baseline = -1;
 			natural_baseline = -1;
-		} else {
-			label.measure (orientation, for_size, out minimum, out natural, out minimum_baseline, out natural_baseline);
 		}
 	}
 

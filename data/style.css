@@ -8,26 +8,26 @@ button.large {
 }
 
 .card-like {
-	margin-top: 16px;
-	margin-left: 16px;
+	margin: 16px;
 }
 
-.card-like.horizontal {
-	margin-right: 0px;
-	margin-bottom: 16px;
+.transparent .fade {
+	border-radius: 0;
 }
 
-.card-like:dir(rtl) {
-	margin-right: 16px;
+.fade.horizontal:dir(ltr) {
+	border-top-left-radius: 15px;
+	border-bottom-left-radius: 15px;
 }
 
-.card-like.horizontal:dir(rtl) {
-	margin-left: 0px;
+.fade.horizontal:dir(rtl) {
+	border-top-right-radius: 15px;
+	border-bottom-right-radius: 15px;
 }
 
-.card-like.vertical {
-	margin-right: 16px;
-	margin-bottom: 0px;
+.fade.vertical {
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 }
 
 .bigger-label {

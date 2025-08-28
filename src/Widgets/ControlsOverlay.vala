@@ -20,7 +20,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 				this.css_classes = { "card", "circular-art", "card-like" };
 				break;
 			case SHADOW:
-				this.css_classes = {};
+				this.css_classes = { "fade" };
 				this.overlay.child.valign =
 				this.overlay.child.halign =
 				this.valign =

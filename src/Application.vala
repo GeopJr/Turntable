@@ -209,7 +209,9 @@ namespace Turntable {
 			// translators: Application metainfo for the app "Tuba". <https://github.com/GeopJr/Tuba>
 			about.add_other_app ("dev.geopjr.Tuba", _("Tuba"), _("Browse the Fediverse"));
 
+			this.active_window.resizable = false;
 			about.present (this.active_window);
+			about.closed.connect (((Views.Window) this.active_window).make_resizable);
 
 			GLib.Idle.add (() => {
 				var style = Utils.Celebrate.get_celebration_css_class (new GLib.DateTime.now ());

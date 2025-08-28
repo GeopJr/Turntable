@@ -46,10 +46,20 @@
 		<key name="scrobbler-allowlist" type="as">
 			<default>[]</default>
 		</key>
-    <key name="component-center-text" type="b">
+		<key name="component-center-text" type="b">
 			<default>false</default>
 		</key>
-    <key name="now-playing" type="b">
+		<key name="now-playing" type="b">
+			<default>false</default>
+		</key>
+
+		<key name="window-w" type="i">
+			<default>0</default>
+		</key>
+		<key name="window-h" type="i">
+			<default>0</default>
+		</key>
+		<key name="window-maximized" type="b">
 			<default>false</default>
 		</key>
 	</schema>
