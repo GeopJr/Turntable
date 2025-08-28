@@ -145,6 +145,8 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		component_submenu_model.append (_("Fit Art on Cover"), "win.component-cover-fit");
 		// translators: whether to extract the colors of the cover and use them in UI elements (like Amberol or Material You)
 		component_submenu_model.append (_("Extract Cover Colors"), "win.component-extract-colors");
+		// translators: whether to show the shuffle and loop buttons
+		component_submenu_model.append (_("More Player Controls"), "win.component-more-controls");
 		// translators: whether to show a turntable tonearm in turntable styled cover art; tonearm is the 'arm' part of the turntable,
 		//				you may translate it as 'arm' (mechanical part)
 		component_submenu_model.append (_("Tonearm"), "win.component-tonearm");

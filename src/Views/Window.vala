@@ -13,6 +13,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction cover_scaling_action;
 	GLib.SimpleAction component_tonearm_action;
 	GLib.SimpleAction component_center_text_action;
+	GLib.SimpleAction component_more_controls_action;
 	public string uuid { get; private set; }
 
 	~Window () {
@@ -219,7 +220,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 				prog.progress = 0;
 			} else {
 				#if SCROBBLING
-					if (value == 0 && this.player != null && this.player.looping && _position > 0) {
+					if (value == 0 && this.player != null && this.player.loop_status == Mpris.Entry.LoopStatus.TRACK && _position > 0) {
 						this.length = this.length; // re-trigger it
 					}
 				#endif
@@ -251,11 +252,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public bool playing {
 		get { return _playing; }
 		set {
-			_playing = value;
+			_playing =
+			mpris_controls.playing =
 			art_pic.turntable_playing = value;
-			button_play.icon_name = value ? "pause-large-symbolic" : "play-large-symbolic";
-			// translators: button tooltip text
-			button_play.tooltip_text = value ? _("Pause") : _("Play");
 			#if SCROBBLING
 				update_scrobbler_playing ();
 			#endif
@@ -357,10 +356,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Gtk.Box non_art_box;
 	Widgets.ProgressBin prog;
 	Gtk.Box main_box;
-	Gtk.Button button_play;
-	Gtk.Button button_prev;
-	Gtk.Button button_next;
 	Widgets.ControlsOverlay controls_overlay;
+	Widgets.MPRISControls mpris_controls;
 	construct {
 		this.uuid = GLib.Uuid.string_random ();
 		this.icon_name = Build.DOMAIN;
@@ -416,43 +413,14 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			content = main_box
 		};
 
-		var box3 = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 8) {
+		mpris_controls = new Widgets.MPRISControls () {
 			hexpand = true,
 			vexpand = true,
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER,
 		};
-		non_art_box.append (box3);
-
-		button_prev = new Gtk.Button.from_icon_name (is_rtl ? "skip-forward-large-symbolic" : "skip-backward-large-symbolic") {
-			css_classes = {"circular"},
-			halign = Gtk.Align.CENTER,
-			valign = Gtk.Align.CENTER,
-			// translators: button tooltip text
-			tooltip_text = _("Previous Song")
-		};
-		box3.append (button_prev);
-
-		button_play = new Gtk.Button.from_icon_name ("play-large-symbolic") {
-			css_classes = {"circular", "large"},
-			halign = Gtk.Align.CENTER,
-			valign = Gtk.Align.CENTER,
-			tooltip_text = _("Play")
-		};
-		box3.append (button_play);
-
-		button_next = new Gtk.Button.from_icon_name (is_rtl ? "skip-backward-large-symbolic" : "skip-forward-large-symbolic") {
-			css_classes = {"circular"},
-			halign = Gtk.Align.CENTER,
-			valign = Gtk.Align.CENTER,
-			// translators: button tooltip text
-			tooltip_text = _("Next Song")
-		};
-		box3.append (button_next);
-
-		button_next.clicked.connect (play_next);
-		button_play.clicked.connect (play_pause);
-		button_prev.clicked.connect (play_back);
+		mpris_controls.commanded.connect (mpris_command_received);
+		non_art_box.append (mpris_controls);
 
 		#if SCROBBLING
 			var scrobbling_action = new GLib.SimpleAction ("open-scrobbling-setup", null);
@@ -512,6 +480,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_center_text_action.change_state.connect (on_change_component_center_text);
 		this.add_action (component_center_text_action);
 
+		component_more_controls_action = new GLib.SimpleAction.stateful ("component-more-controls", null, settings.component_more_controls);
+		component_more_controls_action.change_state.connect (on_change_component_more_controls);
+		this.add_action (component_more_controls_action);
+
 		component_cover_fit_action = new GLib.SimpleAction.stateful ("component-cover-fit", null, settings.component_cover_fit);
 		component_cover_fit_action.change_state.connect (on_change_component_cover_fit);
 		this.add_action (component_cover_fit_action);
@@ -535,6 +507,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
 		settings.notify["component-tonearm"].connect (update_component_tonearm_from_settings);
 		settings.notify["component-center-text"].connect (update_component_center_text_from_settings);
+		settings.notify["component-more-controls"].connect (update_component_more_controls_from_settings);
 		settings.notify["component-cover-fit"].connect (update_component_cover_fit_from_settings);
 		settings.notify["meta-dim"].connect (update_meta_dim_from_settings);
 		settings.notify["text-size"].connect (update_text_size_from_settings);
@@ -560,16 +533,34 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		if (controls_overlay.hide_overlay ()) this.focus_widget = null;
 	}
 
-	private void play_next () {
-		if (this.player != null) this.player.next ();
-	}
+	private void mpris_command_received (Widgets.MPRISControls.Command command) {
+		if (this.player == null || !this.player.can_control) return;
 
-	private void play_back () {
-		if (this.player != null) this.player.back ();
-	}
-
-	private void play_pause () {
-		if (this.player != null) this.player.play_pause ();
+		switch (command) {
+			case PLAY_PAUSE:
+				this.player.play_pause ();
+				break;
+			case NEXT:
+				this.player.next ();
+				break;
+			case PREVIOUS:
+				this.player.back ();
+				break;
+			case SHUFFLE:
+				this.player.toggle_shuffle ();
+				break;
+			case LOOP_NONE:
+				this.player.loop_none ();
+				break;
+			case LOOP_PLAYLIST:
+				this.player.loop_playlist ();
+				break;
+			case LOOP_TRACK:
+				this.player.loop_track ();
+				break;
+			default:
+				assert_not_reached ();
+		}
 	}
 
 	private void on_mapped () {
@@ -609,6 +600,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_cover_size_from_settings ();
 		update_cover_scaling_from_settings ();
 		update_component_center_text_from_settings ();
+		update_component_more_controls_from_settings ();
 	}
 
 	private void update_cover_scaling_from_settings () {
@@ -686,6 +678,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_center_text_action.set_state (settings.component_center_text);
 	}
 
+	private void update_component_more_controls_from_settings () {
+		mpris_controls.more_controls = settings.component_more_controls;
+		component_more_controls_action.set_state (settings.component_more_controls);
+	}
+
 	private void update_component_cover_fit_from_settings () {
 		this.art_pic.fit_cover = settings.component_cover_fit;
 		component_cover_fit_action.set_state (settings.component_cover_fit);
@@ -738,9 +735,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			this.length = 0;
 
 			this.playing =
-			button_next.sensitive =
-			button_prev.sensitive =
-			button_play.sensitive = false;
+			mpris_controls.can_control = false;
 
 			return;
 		}
@@ -752,14 +747,16 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		player_bindings += this.player.bind_property ("position", this, "position", GLib.BindingFlags.SYNC_CREATE);
 		player_bindings += this.player.bind_property ("length", this, "length", GLib.BindingFlags.SYNC_CREATE);
 		player_bindings += this.player.bind_property ("playing", this, "playing", GLib.BindingFlags.SYNC_CREATE);
-		player_bindings += this.player.bind_property ("can-go-next", button_next, "sensitive", GLib.BindingFlags.SYNC_CREATE);
-		player_bindings += this.player.bind_property ("can-go-back", button_prev, "sensitive", GLib.BindingFlags.SYNC_CREATE);
-		player_bindings += this.player.bind_property ("can-control", button_play, "sensitive", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("can-go-next", mpris_controls, "can-go-next", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("can-go-back", mpris_controls, "can-go-back", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("can-control", mpris_controls, "can-control", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("shuffle", mpris_controls, "shuffle", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("loop-status", mpris_controls, "loop-status", GLib.BindingFlags.SYNC_CREATE);
 
 		prog.client_icon = this.player.client_info_icon;
 		prog.client_name = this.player.client_info_name;
 
-		button_play.grab_focus ();
+		mpris_controls.grab_play_focus ();
 		#if SCROBBLING
 			update_scrobble_status ();
 		#endif
@@ -851,6 +848,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_component_center_text (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.component_center_text = value.get_boolean ();
+	}
+
+	private void on_change_component_more_controls (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.component_more_controls = value.get_boolean ();
 	}
 
 	private void on_change_component_cover_fit (GLib.SimpleAction action, GLib.Variant? value) {

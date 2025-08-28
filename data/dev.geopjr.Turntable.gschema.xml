@@ -52,6 +52,9 @@
 		<key name="now-playing" type="b">
 			<default>false</default>
 		</key>
+    <key name="component-more-controls" type="b">
+			<default>false</default>
+		</key>
 
 		<key name="window-w" type="i">
 			<default>0</default>

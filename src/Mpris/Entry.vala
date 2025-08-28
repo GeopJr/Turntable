@@ -18,11 +18,18 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	public string client_info_name { get { return this.client_info.identity; } }
 	public string client_info_icon { get { return this.client_info.icon; } }
 
-	public bool looping { get; private set; default = false; }
+	public enum LoopStatus {
+		NONE,
+		TRACK,
+		PLAYLIST;
+	}
+
+	public LoopStatus loop_status { get; private set; default = LoopStatus.NONE; }
 	public bool can_go_next { get; private set; default = false; }
 	public bool can_go_back { get; private set; default = false; }
 	public bool can_control { get; private set; default = false; }
 	public bool playing { get; private set; default = false; }
+	public bool shuffle { get; private set; default = false; }
 	public string? art { get; private set; default = null; }
 	public string? title { get; private set; default = null; }
 	public string? artist { get; private set; default = null; }
@@ -52,6 +59,22 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		} catch (Error e) {
 			debug ("Couldn't Previous: %s", e.message);
 		}
+	}
+
+	public void toggle_shuffle () {
+		this.player.shuffle = !this.player.shuffle;
+	}
+
+	public void loop_none () {
+		this.player.loop_status = "None";
+	}
+
+	public void loop_track () {
+		this.player.loop_status = "Track";
+	}
+
+	public void loop_playlist () {
+		this.player.loop_status = "Playlist";
 	}
 
 	#if SANDBOXED
@@ -127,6 +150,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			update_playback_status ();
 			update_controls ();
 			update_loop_status ();
+			update_shuffle_status ();
 
 			GLib.Timeout.add (PROGRESS_UPDATE_TIME, update_position);
 		} catch (Error e) {
@@ -157,6 +181,9 @@ public class Turntable.Mpris.Entry : GLib.Object {
 				case "LoopStatus":
 					update_loop_status ();
 					break;
+				case "Shuffle":
+					update_shuffle_status ();
+					break;
 				case "CanGoNext":
 				case "CanGoPrevious":
 				case "CanPlay":
@@ -171,7 +198,17 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	}
 
 	private void update_loop_status () {
-		this.looping = this.player.loop_status == "Track";
+		switch (this.player.loop_status) {
+			case "Track":
+				this.loop_status = LoopStatus.TRACK;
+				break;
+			case "Playlist":
+				this.loop_status = LoopStatus.PLAYLIST;
+				break;
+			default:
+				this.loop_status = LoopStatus.NONE;
+				break;
+		}
 	}
 
 	private bool update_position () {
@@ -184,6 +221,10 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			debug ("Couldn't get Position: %s", e.message);
 		}
 		return GLib.Source.CONTINUE;
+	}
+
+	private void update_shuffle_status () {
+		this.shuffle = this.player.shuffle;
 	}
 
 	private void update_controls () {

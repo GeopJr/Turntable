@@ -9,6 +9,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public bool component_cover_fit { get; set; }
 	public bool component_tonearm { get; set; }
 	public bool component_center_text { get; set; }
+	public bool component_more_controls { get; set; }
 	public bool meta_dim { get; set; }
 	public bool mbid_required { get; set; }
 	public bool now_playing { get; set; }
@@ -34,7 +35,8 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"mbid-required",
 		"component-tonearm",
 		"component-center-text",
-		"now-playing"
+		"now-playing",
+		"component-more-controls"
 	};
 
 	public Settings () {
