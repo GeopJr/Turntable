@@ -52,8 +52,14 @@
 		<key name="now-playing" type="b">
 			<default>false</default>
 		</key>
-    <key name="component-more-controls" type="b">
+		<key name="component-more-controls" type="b">
 			<default>false</default>
+		</key>
+    <key name="offline-scrobbling" type="b">
+			<default>true</default>
+		</key>
+		<key name="offline-scrobbles" type="as">
+			<default>[]</default>
 		</key>
 
 		<key name="window-w" type="i">

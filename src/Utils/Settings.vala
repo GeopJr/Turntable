@@ -13,6 +13,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public bool meta_dim { get; set; }
 	public bool mbid_required { get; set; }
 	public bool now_playing { get; set; }
+	public bool offline_scrobbling { get; set; }
 	public string cover_size { get; set; }
 	public string text_size { get; set; }
 	public string cover_scaling { get; set; }
@@ -36,7 +37,8 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"component-tonearm",
 		"component-center-text",
 		"now-playing",
-		"component-more-controls"
+		"component-more-controls",
+		"offline-scrobbling"
 	};
 
 	public Settings () {

@@ -16,11 +16,13 @@ namespace Turntable {
 		public static bool cli_list_clients = false;
 		public static string cli_client_id_scrobble;
 		public static bool cli_mode = false;
+		public static NetworkMonitor network_monitor;
 	#endif
 	public class Application : Adw.Application {
 		#if SCROBBLING
 			[Signal (detailed = true)]
 			public signal void token_received (Scrobbling.Manager.Provider provider, string token);
+			public bool batch_in_progress { get; set; default = false; }
 
 			public const GLib.OptionEntry[] APP_OPTIONS = {
 				{ "list-clients", 'l', 0, GLib.OptionArg.NONE, ref cli_list_clients, "List all currently available MPRIS clients (ID - Name)", null },
@@ -155,6 +157,7 @@ namespace Turntable {
 			mpris_manager = new Mpris.Manager ();
 
 			#if SCROBBLING
+				network_monitor = NetworkMonitor.get_default ();
 				if (cli_mode) return (new Utils.CLI ()).run ();
 			#endif
 

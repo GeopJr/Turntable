@@ -24,6 +24,7 @@
     <file preprocess="xml-stripblanks" alias="playlist-repeat-symbolic.svg">icons/hicolor/symbolic/actions/playlist-repeat-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="playlist-repeat-song-symbolic.svg">icons/hicolor/symbolic/actions/playlist-repeat-song-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="playlist-consecutive-symbolic.svg">icons/hicolor/symbolic/actions/playlist-consecutive-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="background-app-ghost-symbolic.svg">icons/hicolor/symbolic/actions/background-app-ghost-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="listenbrainz.svg">icons/hicolor/scalable/actions/listenbrainz.svg</file>
     <file preprocess="xml-stripblanks" alias="maloja.svg">icons/hicolor/scalable/actions/maloja.svg</file>
     <file preprocess="xml-stripblanks" alias="librefm.svg">icons/hicolor/scalable/actions/librefm.svg</file>

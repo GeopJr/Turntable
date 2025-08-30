@@ -79,380 +79,6 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		}
 	}
 
-	public class ProviderPage : Adw.NavigationPage {
-		public signal void errored (string error_message);
-		protected Gtk.Button add_button { get; set; }
-		protected Adw.PreferencesPage page { get; set; }
-		public Soup.Session session { get; set; }
-
-		construct {
-			page = new Adw.PreferencesPage ();
-			add_button = new Gtk.Button.with_label ("Continue") {
-				sensitive = false,
-				css_classes = {"pill", "suggested-action" },
-				valign = Gtk.Align.CENTER,
-				halign = Gtk.Align.CENTER,
-				margin_top = 8,
-				margin_bottom = 8
-			};
-			add_button.clicked.connect (on_continue);
-
-			var toolbar_view = new Adw.ToolbarView () {
-				content = page
-			};
-			toolbar_view.add_top_bar (new Adw.HeaderBar ());
-			toolbar_view.add_bottom_bar (add_button);
-
-			this.child = toolbar_view;
-		}
-
-		protected virtual void update_validity () {}
-		protected virtual void on_continue () {}
-	}
-
-	public class ListenBrainzPage : ProviderPage {
-		protected Adw.EntryRow url_row;
-		Adw.EntryRow token_row;
-		protected string token { get; set; default = ""; }
-		public signal void done ();
-
-		private bool _url_entry_valid = true;
-		protected bool url_entry_valid {
-			get { return _url_entry_valid; }
-			set {
-				_url_entry_valid = value;
-				bool has_error_class = url_row.has_css_class ("error");
-				if (value && has_error_class) {
-					url_row.remove_css_class ("error");
-				} else if (!value && !has_error_class) {
-					url_row.add_css_class ("error");
-				}
-
-				update_validity ();
-			}
-		}
-
-		private bool _token_row_valid = false;
-		protected bool token_row_valid {
-			get { return _token_row_valid; }
-			set {
-				_token_row_valid = value;
-				bool has_error_class = token_row.has_css_class ("error");
-				if (value && has_error_class) {
-					token_row.remove_css_class ("error");
-				} else if (!value && !has_error_class) {
-					token_row.add_css_class ("error");
-				}
-
-				update_validity ();
-			}
-		}
-
-		protected override void update_validity () {
-			add_button.sensitive = this.token_row_valid && this.url_entry_valid;
-		}
-
-		private string _url = "";
-		public virtual string url {
-			get { return _url; }
-			set {
-				bool error = false;
-				string normalized_value = value.contains ("://") ? value : @"https://$value";
-
-				if (!normalized_value.contains (".")) {
-					error = true;
-				} else if (_url != normalized_value) {
-					try {
-						if (GLib.Uri.is_valid (normalized_value, GLib.UriFlags.NONE)) {
-							var uri = GLib.Uri.parse (normalized_value, GLib.UriFlags.NONE);
-							string host = uri.get_host ();
-							string path = uri.get_path ();
-							if (path.has_suffix ("/")) path = path.slice (0, path.length - 1);
-
-							_url = GLib.Uri.build (
-								GLib.UriFlags.NONE,
-								"https",
-								uri.get_userinfo (),
-								host,
-								uri.get_port (),
-								path,
-								null,
-								null
-							).to_string ();
-
-							string regular_url = _url;
-							int first_dot = host.index_of_char ('.');
-							if (host.index_of_char ('.', first_dot) != -1) {
-								regular_url = GLib.Uri.build (
-									GLib.UriFlags.NONE,
-									"https",
-									uri.get_userinfo (),
-									host.splice (0, first_dot + 1),
-									uri.get_port (),
-									"",
-									null,
-									null
-								).to_string ();
-							}
-
-							string settings_page = @"$(GLib.Markup.escape_text (regular_url))/settings/";
-							// translators: variable is a link
-							page.description = _("You can get your user token from %s.").printf (@"<a href=\"$settings_page\">$settings_page</a>");
-						} else {
-							error = true;
-						}
-					} catch {
-						error = true;
-					}
-				}
-
-				url_entry_valid = !error;
-			}
-		}
-
-		protected virtual Scrobbling.Manager.Provider scrobbler_provider { get { return LISTENBRAINZ; }}
-		construct {
-			this.title = Scrobbling.Manager.Provider.LISTENBRAINZ.to_string ();
-
-			var main_group = new Adw.PreferencesGroup ();
-			url_row = new Adw.EntryRow () {
-				// translators: host as in a web server; entry title
-				title = _("Host API")
-			};
-			this.url = "https://api.listenbrainz.org";
-
-			url_row.text = this.url;
-			url_row.changed.connect (on_url_row_changed);
-			main_group.add (url_row);
-
-			token_row = new Adw.EntryRow () {
-				// translators: can also be translated as Authentication Token
-				title = _("User Token")
-			};
-			token_row.changed.connect (on_token_changed);
-			main_group.add (token_row);
-			page.add (main_group);
-		}
-
-		protected virtual void on_url_row_changed (Gtk.Editable url_row_editable) {
-			string clean_uri = url_row_editable.text.strip ();
-			if (clean_uri == "") clean_uri = "https://api.listenbrainz.org";
-
-			this.url = clean_uri;
-		}
-
-		protected virtual void on_token_changed (Gtk.Editable token_row_editable) {
-			this.token = token_row_editable.text.strip ();
-			token_row_valid = GLib.Uuid.string_is_valid (this.token);
-		}
-
-		protected override void on_continue () {
-			this.can_pop =
-			url_row.sensitive =
-			token_row.sensitive =
-			add_button.sensitive = false;
-			validate_token.begin (this.token, (obj, res) => {
-				string? error = validate_token.end (res);
-				this.can_pop =
-				url_row.sensitive =
-				token_row.sensitive =
-				add_button.sensitive = true;
-
-				if (error == null) {
-					done ();
-					return;
-				}
-				errored (error);
-			});
-		}
-
-		private async string? validate_token (string user_token) {
-			var msg = new Soup.Message ("GET", @"$(this.url)/1/validate-token");
-			msg.request_headers.append ("Authorization", @"Token $user_token");
-
-			try {
-				var in_stream = yield session.send_async (msg, 0, null);
-
-				switch (msg.status_code) {
-					case Soup.Status.OK:
-						var parser = new Json.Parser ();
-						parser.load_from_stream (in_stream);
-
-						var root = parser.get_root ();
-						if (root == null) return _("Invalid Token");
-						var obj = root.get_object ();
-						if (obj == null) return _("Invalid Token");
-
-						if (!obj.has_member ("valid") || !obj.get_boolean_member ("valid")) return _("Invalid Token");
-						if (!obj.has_member ("user_name")) return _("Invalid Token");
-
-						var user_name = obj.get_string_member ("user_name");
-						account_manager.add (this.scrobbler_provider, user_name, user_token, this.url);
-
-						break;
-					default:
-						// translators: the variable is an error message
-						string message = _("Couldn't validate token: %s").printf (@"$(msg.status_code) $(msg.reason_phrase)");
-						critical (message);
-						return message;
-				}
-			} catch (Error e) {
-				string message = _("Couldn't validate token: %s").printf (e.message);
-				critical (message);
-				return message;
-			}
-
-			return null;
-		}
-	}
-
-	public class MalojaPage : ListenBrainzPage {
-		protected override Scrobbling.Manager.Provider scrobbler_provider { get { return MALOJA; }}
-
-		private string _url = "";
-		public override string url {
-			get { return _url; }
-			set {
-				bool error = false;
-				string normalized_value = value.contains ("://") ? value : @"https://$value";
-
-				if (!normalized_value.contains (".")) {
-					error = true;
-				} else if (_url != normalized_value) {
-					try {
-						if (GLib.Uri.is_valid (normalized_value, GLib.UriFlags.NONE)) {
-							var uri = GLib.Uri.parse (normalized_value, GLib.UriFlags.NONE);
-
-							_url = GLib.Uri.build (
-								GLib.UriFlags.NONE,
-								"https",
-								uri.get_userinfo (),
-								uri.get_host (),
-								uri.get_port (),
-								"/apis/listenbrainz",
-								null,
-								null
-							).to_string ();
-						} else {
-							error = true;
-						}
-					} catch {
-						error = true;
-					}
-				}
-
-				url_entry_valid = !error;
-			}
-		}
-
-		protected override void on_url_row_changed (Gtk.Editable url_row_editable) {
-			this.url = url_row_editable.text.strip ();
-		}
-
-		protected override void on_token_changed (Gtk.Editable token_row_editable) {
-			this.token = token_row_editable.text.strip ();
-			token_row_valid = this.token != "";
-		}
-
-		construct {
-			this.title = Scrobbling.Manager.Provider.MALOJA.to_string ();
-			// translators: host as in a web server; entry title
-			url_row.title = _("Host");
-			url_row.text =
-			this.url = "";
-		}
-	}
-
-	public class LibreFMPage : ProviderPage {
-		public signal void chose_url (string chosen_url);
-		Adw.EntryRow url_row;
-
-		private bool _url_entry_valid = true;
-		private bool url_entry_valid {
-			get { return _url_entry_valid; }
-			set {
-				_url_entry_valid = value;
-				bool has_error_class = url_row.has_css_class ("error");
-				if (value && has_error_class) {
-					url_row.remove_css_class ("error");
-				} else if (!value && !has_error_class) {
-					url_row.add_css_class ("error");
-				}
-
-				update_validity ();
-			}
-		}
-
-		protected override void update_validity () {
-			add_button.sensitive = this.url_entry_valid;
-		}
-
-		private string _url = "";
-		public string url {
-			get { return _url; }
-			set {
-				bool error = false;
-				string normalized_value = value.contains ("://") ? value : @"https://$value";
-
-				if (!normalized_value.contains (".")) {
-					error = true;
-				} else if (_url != normalized_value) {
-					try {
-						if (GLib.Uri.is_valid (normalized_value, GLib.UriFlags.NONE)) {
-							var uri = GLib.Uri.parse (normalized_value, GLib.UriFlags.NONE);
-
-							_url = GLib.Uri.build (
-								GLib.UriFlags.NONE,
-								"https",
-								uri.get_userinfo (),
-								uri.get_host (),
-								uri.get_port (),
-								"",
-								null,
-								null
-							).to_string ();
-						} else {
-							error = true;
-						}
-					} catch {
-						error = true;
-					}
-				}
-
-				url_entry_valid = !error;
-			}
-		}
-
-		construct {
-			this.title = Scrobbling.Manager.Provider.LIBREFM.to_string ();
-
-			var main_group = new Adw.PreferencesGroup ();
-			url_row = new Adw.EntryRow () {
-				title = _("Host")
-			};
-			this.url = "https://libre.fm";
-
-			url_row.text = this.url;
-			url_row.changed.connect (on_url_row_changed);
-
-			main_group.add (url_row);
-			page.add (main_group);
-		}
-
-		protected override void on_continue () {
-			url_row.sensitive =
-			add_button.sensitive = false;
-			chose_url (this.url);
-		}
-
-		private void on_url_row_changed (Gtk.Editable url_row_editable) {
-			string clean_uri = url_row_editable.text.strip ();
-			if (clean_uri == "") clean_uri = "https://libre.fm";
-
-			this.url = clean_uri;
-		}
-	}
-
 	//  private string generate_all_scrobblers_list () {
 	//  	GLib.StringBuilder all_scrobblers = new GLib.StringBuilder ();
 	//  	int total_providers = Scrobbling.Manager.ALL_PROVIDERS.length;
@@ -470,6 +96,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 
 	Adw.SwitchRow mbid_row;
 	Adw.SwitchRow now_playing_row;
+	Gtk.Switch offline_scrobbling_switch;
 	string win_id;
 	GLib.HashTable<string, ScrobblerRow> provider_rows = new GLib.HashTable<string, ScrobblerRow> (str_hash, str_equal);
 	construct {
@@ -496,6 +123,25 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		main_page.add (main_group);
 
 		var settings_group = new Adw.PreferencesGroup ();
+		var offline_scrobbling_row = new Adw.ActionRow () {
+			activatable = true,
+			// translators: row title
+			title = _("Offline Scrobbling"),
+			// translators: row description
+			subtitle = _("Scrobble even when you are offline and submit them automatically when you get online.")
+		};
+		offline_scrobbling_row.activated.connect (open_offline_scrobbling_page);
+
+		offline_scrobbling_switch = new Gtk.Switch () {
+			active = settings.offline_scrobbling,
+			valign = CENTER,
+			halign = CENTER
+		};
+		offline_scrobbling_switch.notify["active"].connect (offline_changed);
+		offline_scrobbling_row.add_suffix (offline_scrobbling_switch);
+		offline_scrobbling_row.add_suffix (new Gtk.Image.from_icon_name (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL ? "left-large-symbolic" : "right-large-symbolic"));
+		settings_group.add (offline_scrobbling_row);
+
 		now_playing_row = new Adw.SwitchRow () {
 			active = settings.now_playing,
 			// translators: as explained later, "Now Playing" means the currently playing song even if it hasn't hit the scrobbling mark, please make sure they are not confused with each other, this doesn't mean scrobbling.
@@ -522,6 +168,14 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		application.token_received[win_id].connect (on_token_received);
 		account_manager.accounts_changed.connect (update_row_states);
 		update_row_states ();
+	}
+
+	private void open_offline_scrobbling_page () {
+		this.push_subpage (new Views.OfflineScrobbling ());
+	}
+
+	private void offline_changed () {
+		settings.offline_scrobbling = offline_scrobbling_switch.active;
 	}
 
 	private void np_changed () {
@@ -590,7 +244,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 
 		switch (provider) {
 			case LISTENBRAINZ:
-				var page = new ListenBrainzPage () {
+				var page = new Views.ListenBrainzPage () {
 					session = session
 				};
 				page.done.connect (on_page_done);
@@ -598,7 +252,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 				this.push_subpage (page);
 				break;
 			case MALOJA:
-				var page = new MalojaPage () {
+				var page = new Views.MalojaPage () {
 					session = session
 				};
 				page.done.connect (on_page_done);
@@ -611,7 +265,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 				Utils.Host.open_in_default_app.begin (@"https://www.last.fm/api/auth/?api_key=$(Build.LASTFM_KEY)&cb=turntable://lastfm/$win_id", application.active_window);
 				break;
 			case LIBREFM:
-				var page = new LibreFMPage () {
+				var page = new Views.LibreFMPage () {
 					session = session
 				};
 				page.chose_url.connect (on_librefm_chose);

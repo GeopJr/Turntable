@@ -29,30 +29,32 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		}
 	}
 
-	protected void scrobble_actual (Scrobbling.Manager.Payload payload, GLib.DateTime datetime, bool now_playing) {
+	protected void scrobble_actual (ScrobbleEntry[] scrobble_entries, ScrobbleType scrobble_type) {
 		var builder = new Json.Builder ();
 		builder.begin_object ();
 			builder.set_member_name ("listen_type");
-			builder.add_string_value (now_playing ? "playing_now" : "single");
+			builder.add_string_value (scrobble_type.to_listenbrainz ());
 			builder.set_member_name ("payload");
 			builder.begin_array ();
-				builder.begin_object ();
-					if (!now_playing) {
-						builder.set_member_name ("listened_at");
-						builder.add_int_value (datetime.to_unix ());
-					}
-					builder.set_member_name ("track_metadata");
+				foreach (ScrobbleEntry entry in scrobble_entries) {
 					builder.begin_object ();
-						builder.set_member_name ("artist_name");
-						builder.add_string_value (payload.artist);
-						builder.set_member_name ("track_name");
-						builder.add_string_value (payload.track);
-						if (payload.album != null) {
-							builder.set_member_name ("release_name");
-							builder.add_string_value (payload.album);
+						if (scrobble_type != NOW_PLAYING) {
+							builder.set_member_name ("listened_at");
+							builder.add_int_value (entry.datetime.to_unix ());
 						}
+						builder.set_member_name ("track_metadata");
+						builder.begin_object ();
+							builder.set_member_name ("artist_name");
+							builder.add_string_value (entry.payload.artist);
+							builder.set_member_name ("track_name");
+							builder.add_string_value (entry.payload.track);
+							if (entry.payload.album != null) {
+								builder.set_member_name ("release_name");
+								builder.add_string_value (entry.payload.album);
+							}
+						builder.end_object ();
 					builder.end_object ();
-				builder.end_object ();
+				}
 			builder.end_array ();
 		builder.end_object ();
 
@@ -62,6 +64,6 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		msg.set_request_body_from_bytes ("application/json", new Bytes.take (generator.to_data (null).data));
 		msg.request_headers.append ("Authorization", @"Bearer $(this.token)");
 
-		scrobbling_manager.send_scrobble (msg, SERVICE, now_playing);
+		scrobbling_manager.send_scrobble (msg, SERVICE, scrobble_type);
 	}
 }

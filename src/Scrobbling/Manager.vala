@@ -122,6 +122,64 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		}
 	}
 
+	private class BatchSplitter : GLib.Object {
+		const int BATCH_SIZE = 50;
+		public signal void done (Scrobbler.ScrobbleEntry[] batch);
+		public signal void done_all ();
+
+		string[] batches = {};
+		public BatchSplitter (string[] batches) {
+			this.batches = batches;
+		}
+
+		public void split () {
+			int batches_length = this.batches.length;
+			if (batches_length == 0) {
+				done_all ();
+				this.batches = {};
+				return;
+			}
+
+			int total_batches = (batches_length + BATCH_SIZE - 1) / BATCH_SIZE;
+			for (int b = 0; b < total_batches; b++) {
+				int start = b * BATCH_SIZE;
+				int end = int.min (start + BATCH_SIZE, batches_length);
+				Scrobbler.ScrobbleEntry[] batch_entries = {};
+
+				foreach (string payload in this.batches[start:end]) {
+					var parser = new Json.Parser ();
+					try {
+						parser.load_from_data (payload, -1);
+
+						var root = parser.get_root ();
+						if (root == null) assert_not_reached ();
+
+						var obj = root.get_object ();
+						if (obj == null) assert_not_reached ();
+						if (!obj.has_member ("track") || !obj.has_member ("artist") || !obj.has_member ("date")) assert_not_reached ();
+
+						batch_entries += Scrobbler.ScrobbleEntry () {
+							payload = Payload () {
+								track = obj.get_string_member ("track"),
+								artist = obj.get_string_member ("artist"),
+								album = obj.has_member ("album") ? obj.get_string_member ("album") : null
+							},
+							datetime = new GLib.DateTime.from_iso8601 (obj.get_string_member ("date"), null)
+						};
+					} catch {
+						assert_not_reached ();
+					}
+				}
+
+				done (batch_entries);
+				GLib.Thread.usleep (250000);
+			}
+
+			done_all ();
+			this.batches = {};
+		}
+	}
+
 	construct {
 		session = new Soup.Session.with_options ("max-conns", 64, "max-conns-per-host", 64) {
 			user_agent = @"$(Build.NAME)/$(Build.VERSION) libsoup/$(Soup.get_major_version()).$(Soup.get_minor_version()).$(Soup.get_micro_version()) ($(Soup.MAJOR_VERSION).$(Soup.MINOR_VERSION).$(Soup.MICRO_VERSION))" // vala-lint=line-length
@@ -130,6 +188,8 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		settings.notify["scrobbler-allowlist"].connect (on_allowlist_changed);
 		account_manager.accounts_changed.connect (update_services);
 		update_services ();
+
+		GLib.Timeout.add_once (5000, submit_offline_scrobbles);
 	}
 
 	public void queue_payload (string win_id, string client, Payload payload, int64 length) {
@@ -184,10 +244,42 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		}
 	}
 
+	private void add_to_offline_scrobbling (Payload payload) {
+		debug ("[OFFLINE] Adding %s to the offline scrobbling list", payload.track);
+
+		var builder = new Json.Builder ();
+		builder.begin_object ();
+			builder.set_member_name ("date");
+			builder.add_string_value ((new DateTime.now_local ()).format_iso8601 ());
+			builder.set_member_name ("track");
+			builder.add_string_value (payload.track);
+			builder.set_member_name ("artist");
+			builder.add_string_value (payload.artist);
+
+			if (payload.album != null) {
+				builder.set_member_name ("album");
+				builder.add_string_value (payload.album);
+			}
+		builder.end_object ();
+
+		var generator = new Json.Generator ();
+		generator.set_root (builder.get_root ());
+
+		// this can be long, let's not keep it in memory
+		string[] offline_scrobbles = settings.get_strv ("offline-scrobbles");
+		offline_scrobbles += generator.to_data (null);
+		settings.set_strv ("offline-scrobbles", offline_scrobbles);
+	}
+
 	public void scrobble_all (Payload payload, bool now_playing) {
 		if (payload.track == null || payload.artist == null) return;
 
 		debug (now_playing ? "Now Playing %s" : "Scrobbling %s", payload.track);
+		if (settings.offline_scrobbling && !network_monitor.network_available) {
+			if (!now_playing) add_to_offline_scrobbling (payload);
+			return;
+		}
+
 		if (settings.mbid_required) {
 			scrobbling_manager.fetch_mb_data.begin (payload, (obj, res) => {
 				var new_payload = scrobbling_manager.fetch_mb_data.end (res);
@@ -205,22 +297,61 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 	private inline void scrobble_all_actual (Payload payload, bool now_playing) {
 		var now = new GLib.DateTime.now ();
 		foreach (var scrobbler in services) {
-			scrobbler.scrobble (payload, now, now_playing);
+			scrobbler.scrobble ({Scrobbler.ScrobbleEntry () {payload = payload, datetime = now}}, now_playing ? Scrobbler.ScrobbleType.NOW_PLAYING : Scrobbler.ScrobbleType.TRACK);
 		}
 	}
 
-	public void send_scrobble (owned Soup.Message msg, Provider provider, bool now_playing) {
-		debug ("Sending %s to %s", now_playing ? "now playing" : "scrobble", provider.to_string ());
+	public void submit_offline_scrobbles () {
+		if (!network_monitor.network_available || !settings.offline_scrobbling || application.batch_in_progress) return;
+		application.batch_in_progress = true;
+
+		BatchSplitter splitter;
+		{
+			string[] offline_scrobbles = settings.get_strv ("offline-scrobbles");
+			int total = offline_scrobbles.length;
+			if (total == 0) {
+				application.batch_in_progress = false;
+				return;
+			}
+			debug ("Splitting %d offline scrobbles", total);
+			splitter = new BatchSplitter (offline_scrobbles);
+		}
+
+		try {
+			splitter.done.connect (on_split_done);
+			splitter.done_all.connect (on_split_done_all);
+			debug ("Spawining BatchSplitter thread");
+			new GLib.Thread<void>.try ("BatchSplitter", splitter.split);
+			settings.set_strv ("offline-scrobbles", {});
+		} catch (Error e) {
+			critical (@"Couldn't spawn BatchSplitter thread: $(e.code) $(e.message)");
+		}
+	}
+
+	private void on_split_done (Scrobbler.ScrobbleEntry[] batch) {
+		debug ("Submitting BatchSplitter batch");
+		foreach (var scrobbler in services) {
+			scrobbler.scrobble (batch, Scrobbler.ScrobbleType.IMPORT);
+		}
+	}
+
+	private void on_split_done_all () {
+		debug ("Finished BatchSplitter");
+		application.batch_in_progress = false;
+	}
+
+	public void send_scrobble (owned Soup.Message msg, Provider provider, Scrobbler.ScrobbleType scrobble_type) {
+		debug ("Sending %s to %s", scrobble_type.to_action (), provider.to_string ());
 		session.send_async.begin (msg, 0, null, (obj, res) => {
 			try {
 				var in_stream = session.send_async.end (res);
 
 				switch (msg.status_code) {
 					case Soup.Status.OK:
-						debug ("Successfully %s %s", now_playing ? "submitted" : "scrobbled", provider.to_string ());
+						debug ("Successfully %s %s", scrobble_type.to_past_action (), provider.to_string ());
 						break;
 					case GLib.IOError.CANCELLED:
-						debug ("Cancelled %s for %s", now_playing ? "submitting" : "scrobbling", provider.to_string ());
+						debug ("Cancelled %s for %s", scrobble_type.to_present_action (), provider.to_string ());
 						return; // !
 					default:
 						critical ("Request \"%s\" failed: %zu %s", msg.uri.to_string (), msg.status_code, msg.reason_phrase);
