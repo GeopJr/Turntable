@@ -7,26 +7,30 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-29 03:04+0300\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2025-08-31 13:09+0000\n"
+"Last-Translator: Katy248 <katy248@noreply.codeberg.org>\n"
+"Language-Team: Russian <https://translate.codeberg.org/projects/turntable/"
+"turntable/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
 #: data/dev.geopjr.Turntable.metainfo.xml.in:7
 #: src/Widgets/ControlsOverlay.vala:208
 msgid "Turntable"
-msgstr ""
+msgstr "Turntable"
 
 #: data/dev.geopjr.Turntable.desktop.in:8
 msgid "music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
 msgstr ""
+"music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
+""
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:8
 msgid "Scrobble your music"
@@ -53,26 +57,27 @@ msgstr ""
 #: data/ui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr ""
+msgstr "Общие"
 
 #: data/ui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr ""
+msgstr "Показать комбинации клавиш"
 
 #: data/ui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr ""
+msgstr "Закрыть"
 
 #. translators: Name <email@domain.com> or Name https://website.example
 #: src/Application.vala:193
 msgid "translator-credits"
-msgstr ""
+msgstr "Перевод"
 
 #: src/Application.vala:196
+#, fuzzy
 msgid "Donate"
-msgstr ""
+msgstr "Пожертвования"
 
 #: src/Application.vala:197
 msgid "Translate"
