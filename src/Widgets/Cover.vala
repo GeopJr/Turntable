@@ -802,15 +802,15 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 					y = 0
 				});
 
-				snapshot.push_blur (15);
-				snapshot.append_texture (
-					cover,
-					Graphene.Rect () {
-						origin = Graphene.Point () { x = 0, y = 0 },
-						size = Graphene.Size () { width = width, height = height }
-					}
-				);
-				snapshot.pop ();
+				//  snapshot.push_blur (15);
+				//  snapshot.append_texture (
+				//  	cover,
+				//  	Graphene.Rect () {
+				//  		origin = Graphene.Point () { x = 0, y = 0 },
+				//  		size = Graphene.Size () { width = width, height = height }
+				//  	}
+				//  );
+				//  snapshot.pop ();
 
 				snapshot.translate (Graphene.Point () {
 					x = x,

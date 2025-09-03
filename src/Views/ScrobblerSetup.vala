@@ -108,6 +108,10 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		this.title = _("Scrobblers");
 
 		var main_page = new Adw.PreferencesPage () {
+			icon_name = "network-server-symbolic",
+			// translators: scrobbling dialog tab title of the page that allows you to setup your accounts
+			//				services as in "Scrobbling Services", if it's easier, translate it into "Platforms" or "Providers"
+			title = _("Services"),
 			// translators: warning shown in the scrobbler setup window. Leave MPRIS as is. The variable is the app name (Turntable)
 			description = _("Track your music by scrobbling your MPRIS clients. By connecting your account, MPRIS information will be sent to that service when you reach the minimum listening time. To protect your privacy, %s requires you to opt-in scrobbling per MPRIS client.").printf (Build.NAME)
 		};
@@ -121,7 +125,12 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			provider_rows.set (provider.to_string (), row);
 		}
 		main_page.add (main_group);
+		this.add (main_page);
 
+		var settings_page = new Adw.PreferencesPage () {
+			icon_name = "settings-symbolic",
+			title = _("Settings")
+		};
 		var settings_group = new Adw.PreferencesGroup ();
 		var offline_scrobbling_row = new Adw.ActionRow () {
 			activatable = true,
@@ -161,8 +170,8 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		};
 		mbid_row.notify["active"].connect (mbid_required_changed);
 		settings_group.add (mbid_row);
-		main_page.add (settings_group);
-		this.add (main_page);
+		settings_page.add (settings_group);
+		this.add (settings_page);
 
 		win_id = ((Views.Window) application.active_window).uuid;
 		application.token_received[win_id].connect (on_token_received);
