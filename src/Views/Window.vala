@@ -17,6 +17,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public string uuid { get; private set; }
 
 	~Window () {
+		update_player (null);
 		debug ("Destroying: %s", uuid);
 	}
 

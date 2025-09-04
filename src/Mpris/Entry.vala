@@ -163,6 +163,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		users -= 1;
 		if (users > 0) return;
 
+		this.props.properties_changed.disconnect (on_props_changed);
 		this.props = null;
 		this.player = null;
 	}

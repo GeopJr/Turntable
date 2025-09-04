@@ -59,12 +59,15 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 		set_accessible_role (Gtk.AccessibleRole.LABEL);
 	}
 
-	private void animation_target_cb (double value) {
-		this.rotation_progress = (float) value;
+	uint animation_end_id = 0;
+	private void on_animation_end () {
+		animation_end_id = GLib.Timeout.add_once (1500, start_animation_once);
 	}
 
-	private void on_animation_end () {
-		GLib.Timeout.add_once (1500, start_animation);
+	private void start_animation_once () {
+		if (animation_end_id == 0) return;
+		animation_end_id = 0;
+		start_animation ();
 	}
 
 	private void start_animation () {
@@ -92,8 +95,7 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 		label = new Gtk.Label ("");
 		label.set_parent (this);
 
-		var target = new Adw.CallbackAnimationTarget (animation_target_cb);
-		animation = new Adw.TimedAnimation (this, 0.0, 1.0, ANIMATION_DURATION, target) {
+		animation = new Adw.TimedAnimation (this, 0.0, 1.0, ANIMATION_DURATION, new Adw.PropertyAnimationTarget (this, "rotation-progress")) {
 			easing = Adw.Easing.EASE_IN_OUT_CUBIC
 		};
 		animation.done.connect (on_animation_end);
@@ -102,6 +104,8 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 	~Marquee () {
 		debug ("Destroying");
 		label.unparent ();
+		if (animation_end_id != 0) GLib.Source.remove (animation_end_id);
+		animation_end_id = 0;
 	}
 
 	public override void measure (

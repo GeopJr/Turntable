@@ -197,8 +197,12 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		update_color ();
 	}
 
-	private void animation_target_cb (double value) {
-		this.queue_draw ();
+	// fix leak
+	// callback animation target seems to leak
+	public double animation_cb {
+		set {
+			this.queue_draw ();
+		}
 	}
 
 	construct {
@@ -216,8 +220,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 			};
 		}
 
-		var target = new Adw.CallbackAnimationTarget (animation_target_cb);
-		animation = new Adw.TimedAnimation (this, 0.0, 1.0, PROGRESS_UPDATE_TIME, target) {
+		animation = new Adw.TimedAnimation (this, 0.0, 1.0, PROGRESS_UPDATE_TIME, new Adw.PropertyAnimationTarget (this, "animation-cb")) {
 			easing = Adw.Easing.LINEAR
 		};
 

@@ -244,6 +244,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 					};
 					var in_stream = session.send (new Soup.Message ("GET", this.file_path), cancellable);
 					pixbuf = new Gdk.Pixbuf.from_stream (in_stream, cancellable);
+					in_stream.close ();
 				} else {
 					pixbuf = new Gdk.Pixbuf.from_file (clean_path);
 				}
@@ -304,17 +305,19 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				return;
 			}
 
-			File tmp;
+			File? tmp = null;
 			try {
 				FileIOStream ios;
 				tmp = File.new_tmp (null, out ios);
 				this.texture.save_to_png (tmp.get_path ());
 			} catch {
+				delete_tmp_file (tmp);
 				stop_it (false);
 				return;
 			}
 
 			if (cancellable.is_cancelled ()) {
+				delete_tmp_file (tmp);
 				stop_it (false);
 				return;
 			}
@@ -325,6 +328,17 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			} catch (Error e) {
 				debug ("Couldn't get pixbuf from temp file: %s", e.message);
 				stop_it (false);
+			} finally {
+				delete_tmp_file (tmp);
+			}
+		}
+
+		private inline void delete_tmp_file (File? file) {
+			if (file == null) return;
+			try {
+				file.delete ();
+			} catch (Error e) {
+				warning (@"Couldn't delete temp file: $(e.code) $(e.message)");
 			}
 		}
 
@@ -448,8 +462,12 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		set_accessible_role (Gtk.AccessibleRole.NONE); // it's probably better if it doesn't get announced
 	}
 
-	private void animation_target_cb (double value) {
-		this.queue_draw ();
+	// fix leak
+	// callback animation target seems to leak
+	public double animation_cb {
+		set {
+			this.queue_draw ();
+		}
 	}
 
 	construct {
@@ -457,8 +475,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		this.overflow = Gtk.Overflow.HIDDEN;
 		this.notify["scale-factor"].connect (on_scale_factor_changed);
 
-		var target = new Adw.CallbackAnimationTarget (animation_target_cb);
-		animation = new Adw.TimedAnimation (this, 0.0, 1.0, 5000, target) {
+		animation = new Adw.TimedAnimation (this, 0.0, 1.0, 5000, new Adw.PropertyAnimationTarget (this, "animation-cb")) {
 			easing = Adw.Easing.LINEAR,
 			repeat_count = 0,
 			follow_enable_animations_setting = false // it's slow and opt-in

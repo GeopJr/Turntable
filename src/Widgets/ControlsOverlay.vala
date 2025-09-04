@@ -3,7 +3,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	public Mpris.Entry? last_player { get; set; default = null; }
 
 	~ControlsOverlay () {
-		debug ("[ControlsOverlay] Destroying");
+		debug ("Destroying");
 	}
 
 	private void update_style (Widgets.Cover.Style style, Gtk.Orientation orientation) {
@@ -314,7 +314,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	}
 
 	private void selection_changed () {
-		debug ("[ControlsOverlay] Changed player");
+		debug ("Changed player");
 		bool was_null = this.last_player == null;
 
 		if (client_dropdown.selected == Gtk.INVALID_LIST_POSITION) {

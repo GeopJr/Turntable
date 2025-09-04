@@ -130,7 +130,7 @@ public class Turntable.Utils.Thief : GLib.Object {
 		}
 	}
 
-	private static void make_histogram_and_vbox (Gdk.Pixbuf pixbuf, out int[] histogram, out VBox vbox) {
+	private static inline void make_histogram_and_vbox (Gdk.Pixbuf pixbuf, out int[] histogram, out VBox vbox) {
 		histogram = new int[HISTOGRAM_SIZE];
 
 		uint8 r_min = uint8.MAX;
@@ -253,7 +253,7 @@ public class Turntable.Utils.Thief : GLib.Object {
 		return cut (axis, ref vbox, histogram, partial_sum, look_ahead_sum, total, out vbox1, out vbox2);
 	}
 
-	private static bool cut (ColorChannel axis, ref VBox vbox, int[] histogram, int[] partial_sum, int[] look_ahead_sum, int total, out VBox? vbox1, out VBox? vbox2) {
+	private static inline bool cut (ColorChannel axis, ref VBox vbox, int[] histogram, int[] partial_sum, int[] look_ahead_sum, int total, out VBox? vbox1, out VBox? vbox2) {
 		vbox1 = null;
 		vbox2 = null;
 
