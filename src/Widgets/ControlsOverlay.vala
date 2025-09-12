@@ -17,7 +17,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 				this.css_classes = { "card", "card-like" };
 				break;
 			case TURNTABLE:
-				this.css_classes = { "card", "circular-art", "card-like" };
+				this.css_classes = { "card", "circular-art", "card-like", "clear-view" };
 				break;
 			case SHADOW:
 				this.css_classes = { "fade" };

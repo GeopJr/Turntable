@@ -11,6 +11,10 @@ button.large {
 	margin: 16px;
 }
 
+.card-like.vertical {
+	margin-bottom: 0;
+}
+
 .transparent .fade {
 	border-radius: 0;
 }
