@@ -139,7 +139,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 			new_color.alpha = 0.5f;
 		}
 
-		if (new_color != color) {
+		if (new_color.red != color.red || new_color.green != color.green || new_color.blue != color.blue || new_color.alpha != color.alpha) {
 			color = new_color;
 			if (this.progress != 0) this.queue_draw ();
 		}
