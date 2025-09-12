@@ -37,10 +37,10 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 	}
 	Gtk.IconPaintable fallback_icon;
-	Gdk.Texture? cover = null;
 	Adw.TimedAnimation animation;
 	Gsk.RoundedRect record_center;
 	Graphene.Rect record_center_inner;
+	public Gdk.Texture? cover { get; set; default = null; }
 
 	private void update_record_rects () {
 		int new_size = (int) (this.size * 0.666666666666);
@@ -189,20 +189,21 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		private Cancellable cancellable = new Cancellable ();
 		private Gdk.Texture? texture = null;
 		private Utils.Color.ExtractedColors? extracted_colors = null;
-		public signal void done (Gdk.Texture texture);
-		public signal void done_completely (Utils.Color.ExtractedColors? extracted_colors);
+		public signal void done (owned Gdk.Texture texture);
+		public signal void done_completely (owned Utils.Color.ExtractedColors? extracted_colors);
 
-		private uint done_idle_id = -1;
-		private uint done_completely_idle_id = -1;
+		private uint done_idle_id = 0;
+		private uint done_completely_idle_id = 0;
 		private bool extract = true;
 
 		~CoverLoader () {
 			debug ("[CoverLoader] Destroying");
-			if (done_idle_id != -1) GLib.Source.remove (done_idle_id);
-			if (done_completely_idle_id != -1) GLib.Source.remove (done_completely_idle_id);
-			done_idle_id = done_completely_idle_id = -1;
+			if (done_idle_id > 0) GLib.Source.remove (done_idle_id);
+			if (done_completely_idle_id > 0) GLib.Source.remove (done_completely_idle_id);
+			done_idle_id = done_completely_idle_id = 0;
 
 			this.texture = null;
+			this.extracted_colors = null;
 		}
 
 		public CoverLoader (string file_path) {
@@ -228,28 +229,30 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			//  this.texture = t_texture;
 			//  GLib.Idle.add_once (done_idle);
 
-			Gdk.Pixbuf pixbuf;
+			Gly.Frame frame;
 			try {
+				Gly.Loader loader;
+				GLib.InputStream? in_stream = null;
 				if (clean_path.has_prefix ("data:")) {
 					int comma_pos = clean_path.index_of (",");
 					if (comma_pos == -1) throw new Error.literal (-1, 3, "Invalid base64 encoded image");
 					var base64_data = GLib.Base64.decode (clean_path.substring (comma_pos + 1));
-					var loader = new Gdk.PixbufLoader ();
-					loader.write (base64_data);
-					loader.close ();
-					pixbuf = loader.get_pixbuf ();
+					loader = new Gly.Loader.for_bytes (new GLib.Bytes.take (base64_data));
 				} else if (clean_path.down ().has_prefix ("https://")) {
 					var session = new Soup.Session () {
 						user_agent = @"$(Build.NAME)/$(Build.VERSION) libsoup/$(Soup.get_major_version()).$(Soup.get_minor_version()).$(Soup.get_micro_version()) ($(Soup.MAJOR_VERSION).$(Soup.MINOR_VERSION).$(Soup.MICRO_VERSION))" // vala-lint=line-length
 					};
-					var in_stream = session.send (new Soup.Message ("GET", this.file_path), cancellable);
-					pixbuf = new Gdk.Pixbuf.from_stream (in_stream, cancellable);
-					in_stream.close ();
+					in_stream = session.send (new Soup.Message ("GET", this.file_path), cancellable);
+					loader = new Gly.Loader.for_stream (in_stream);
 				} else {
-					pixbuf = new Gdk.Pixbuf.from_file (clean_path);
+					loader = new Gly.Loader (GLib.File.new_for_path (clean_path));
 				}
+				var img = loader.load ();
+				if (in_stream != null) in_stream.close ();
+				frame = img.next_frame ();
+				this.texture = GlyGtk4.frame_get_texture (frame);
 			} catch (Error e) {
-				debug ("Couldn't get pixbuf %s: %s", clean_path, e.message);
+				debug ("Couldn't get texture %s: %s", clean_path, e.message);
 				stop_it (true);
 				return;
 			}
@@ -259,21 +262,13 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				return;
 			}
 
-			var t_texture = Gdk.Texture.for_pixbuf (pixbuf);
-			if (cancellable.is_cancelled ()) {
-				stop_it (true);
-				return;
-			}
-
-			this.texture = t_texture;
 			done_idle_id = GLib.Idle.add_once (done_idle);
-
 			if (!this.extract) {
 				stop_it (false);
 				return;
 			}
-
-			extract_colors_from_pixbuf (pixbuf);
+			extract_colors_from_frame (frame);
+			frame = null;
 		}
 
 		private inline void stop_it (bool both = false) {
@@ -281,13 +276,13 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 			done_completely_idle_id = GLib.Idle.add_once (done_completely_idle);
 		}
 
-		private void extract_colors_from_pixbuf (Gdk.Pixbuf? pixbuf) {
-			if (pixbuf == null) {
+		private void extract_colors_from_frame (Gly.Frame? frame) {
+			if (frame == null) {
 				stop_it (false);
 				return;
 			}
 
-			Gdk.RGBA avg = Utils.Color.get_prominent_color (pixbuf, cancellable);
+			Gdk.RGBA avg = Utils.Color.get_prominent_color (frame, cancellable);
 			if (cancellable.is_cancelled ()) {
 				stop_it (false);
 				return;
@@ -305,61 +300,32 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				return;
 			}
 
-			File? tmp = null;
 			try {
-				FileIOStream ios;
-				tmp = File.new_tmp (null, out ios);
-				this.texture.save_to_png (tmp.get_path ());
-			} catch {
-				delete_tmp_file (tmp);
-				stop_it (false);
-				return;
-			}
-
-			if (cancellable.is_cancelled ()) {
-				delete_tmp_file (tmp);
-				stop_it (false);
-				return;
-			}
-
-			try {
-				var texture_pixbuf = new Gdk.Pixbuf.from_file (tmp.get_path ());
-				extract_colors_from_pixbuf (texture_pixbuf);
+				var loader = new Gly.Loader.for_bytes (this.texture.save_to_png_bytes ());
+				var img = loader.load ();
+				extract_colors_from_frame (img.next_frame ());
 			} catch (Error e) {
-				debug ("Couldn't get pixbuf from temp file: %s", e.message);
+				debug ("Couldn't get frame from temp file: %s", e.message);
 				stop_it (false);
-			} finally {
-				delete_tmp_file (tmp);
-			}
-		}
-
-		private inline void delete_tmp_file (File? file) {
-			if (file == null) return;
-			try {
-				file.delete ();
-			} catch (Error e) {
-				warning (@"Couldn't delete temp file: $(e.code) $(e.message)");
 			}
 		}
 
 		private void done_idle () {
-			done (this.texture);
-			done_idle_id = -1;
+			done_idle_id = 0;
+			done ((owned) this.texture);
 		}
 
 		private void done_completely_idle () {
+			done_completely_idle_id = 0;
 			this.texture = null;
 			done_completely (this.extracted_colors);
 			// flatpak crashes?
 			//  this.extracted_colors = null;
-			//  done_completely_idle_id = -1;
+			//  done_completely_idle_id = 0;
 		}
 
 		public void cancel () {
 			cancellable.cancel ();
-			if (done_idle_id != -1) GLib.Source.remove (done_idle_id);
-			if (done_completely_idle_id != -1) GLib.Source.remove (done_completely_idle_id);
-			done_idle_id = done_completely_idle_id = -1;
 		}
 	}
 
@@ -404,12 +370,12 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 	}
 
-	private void queue_draw_cb (Gdk.Texture? texture) {
-		cover = texture;
+	private void queue_draw_cb (owned Gdk.Texture? texture) {
+		cover = (owned) texture;
 		this.queue_draw ();
 	}
 
-	private void done_completely_cb (Utils.Color.ExtractedColors? extracted_colors) {
+	private void done_completely_cb (owned Utils.Color.ExtractedColors? extracted_colors) {
 		working_loader = null;
 		this.extracted_colors = extracted_colors;
 	}

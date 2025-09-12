@@ -130,7 +130,7 @@ public class Turntable.Utils.Thief : GLib.Object {
 		}
 	}
 
-	private static inline void make_histogram_and_vbox (Gdk.Pixbuf pixbuf, out int[] histogram, out VBox vbox) {
+	private static inline void make_histogram_and_vbox (Gly.Frame frame, out int[] histogram, out VBox vbox) {
 		histogram = new int[HISTOGRAM_SIZE];
 
 		uint8 r_min = uint8.MAX;
@@ -140,15 +140,15 @@ public class Turntable.Utils.Thief : GLib.Object {
 		uint8 b_min = uint8.MAX;
 		uint8 b_max = uint8.MIN;
 
-		int width = pixbuf.get_width ();
-		int height = pixbuf.get_height ();
-		int rowstride = pixbuf.get_rowstride ();
-		int n_channels = pixbuf.get_n_channels ();
+		uint32 width = frame.get_width ();
+		uint32 height = frame.get_height ();
+		uint32 rowstride = frame.get_stride ();
+		int n_channels = frame.get_memory_format ().has_alpha () ? 4 : 3;
 
-		unowned uint8[] pixels = pixbuf.get_pixels ();
+		unowned uint8[] pixels = frame.get_buf_bytes ().get_data ();
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x += STEP) {
-				int offset = y * rowstride + x * n_channels;
+				uint32 offset = y * rowstride + x * n_channels;
 				uint8 r = pixels[offset];
 				uint8 g = pixels[offset + 1];
 				uint8 b = pixels[offset + 2];
@@ -327,10 +327,10 @@ public class Turntable.Utils.Thief : GLib.Object {
 		return false;
 	}
 
-	public static Gdk.RGBA? quantize (Gdk.Pixbuf pixbuf, int max_colors, GLib.Cancellable cancellable) {
+	public static Gdk.RGBA? quantize (Gly.Frame frame, int max_colors, GLib.Cancellable cancellable) {
 		int[] histogram;
 		VBox vbox;
-		make_histogram_and_vbox (pixbuf, out histogram, out vbox);
+		make_histogram_and_vbox (frame, out histogram, out vbox);
 		if (cancellable.is_cancelled ()) return null;
 
 		var pq = new List<VBox> ();

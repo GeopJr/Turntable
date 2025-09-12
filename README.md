@@ -35,6 +35,7 @@ Package Name | Required
 meson | ✅
 valac | ✅
 libadwaita-1.0-dev | ✅
+glycin-2-dev | ✅
 libsecret-1-dev | ❌
 libjson-glib-dev  | ❌
 libsoup3.0-dev | ❌

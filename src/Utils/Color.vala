@@ -4,22 +4,22 @@ public class Turntable.Utils.Color {
 		public Gdk.RGBA? dark;
 	}
 
-	public static Gdk.RGBA get_prominent_color (Gdk.Pixbuf pixbuf, GLib.Cancellable cancellable) {
-		Gdk.RGBA? prominent_color = Utils.Thief.quantize (pixbuf, 4, cancellable);
+	public static Gdk.RGBA get_prominent_color (Gly.Frame frame, GLib.Cancellable cancellable) {
+		Gdk.RGBA? prominent_color = Utils.Thief.quantize (frame, 4, cancellable);
 		if (prominent_color != null) return prominent_color;
 
-		int width = pixbuf.get_width ();
-		int height = pixbuf.get_height ();
-		int rowstride = pixbuf.get_rowstride ();
-		int n_channels = pixbuf.get_n_channels ();
-		unowned uint8[] pixels = pixbuf.get_pixels ();
+		uint32 width = frame.get_width ();
+		uint32 height = frame.get_height ();
+		uint32 rowstride = frame.get_stride ();
+		int n_channels = frame.get_memory_format ().has_alpha () ? 4 : 3;
+		unowned uint8[] pixels = frame.get_buf_bytes ().get_data ();
 
 		ulong sum_r = 0, sum_g = 0, sum_b = 0;
-		int total_pixels = width * height;
+		uint32 total_pixels = width * height;
 
 		for (int y = 0; y < height; y++) {
 			for (int x = 0; x < width; x++) {
-				int offset = y * rowstride + x * n_channels;
+				uint32 offset = y * rowstride + x * n_channels;
 				sum_r += pixels[offset];
 				sum_g += pixels[offset + 1];
 				sum_b += pixels[offset + 2];

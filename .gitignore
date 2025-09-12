@@ -10,3 +10,5 @@ builddir
 /turntable_windows_portable/
 turntable_windows_portable.zip
 /nsis/
+subprojects/
+!subprojects/glib.wrap

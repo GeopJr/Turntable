@@ -93,6 +93,8 @@ final_deps = [
   dependency('gtk4', version: '>=4.13.4', required: true),
   dependency('libadwaita-1', version: '>=1.5', required: true),
   dependency('gio-unix-2.0', required: true),
+  dependency('glycin-2', required: true),
+  dependency('glycin-gtk4-2', required: true),
   libsoup_dep,
   json_glib_dep,
   libsecret_dep,
