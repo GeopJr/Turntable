@@ -2,7 +2,6 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	Gdk.RGBA color;
 	Gdk.RGBA accent_color;
 	Adw.TimedAnimation animation;
-	uint update_timeout = 0;
 	Gtk.Overlay overlay;
 	Gtk.Image client_icon_widget;
 
@@ -104,9 +103,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		get { return _extracted_colors; }
 		set {
 			_extracted_colors = value;
-
-			if (update_timeout > 0) GLib.Source.remove (update_timeout);
-			update_timeout = GLib.Timeout.add (200, update_color_cb, Priority.LOW);
+			update_color ();
 		}
 	}
 
@@ -130,12 +127,6 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 				update_color ();
 			}
 		}
-	}
-
-	private bool update_color_cb () {
-		update_timeout = 0;
-		update_color ();
-		return GLib.Source.REMOVE;
 	}
 
 	private void update_color () {

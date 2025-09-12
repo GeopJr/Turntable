@@ -48,7 +48,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 
 	public class Pushable : GLib.Object {
 		private Payload payload { get; set; }
-		private uint scrobble_timeout { get; set; default = -1; }
+		private uint scrobble_timeout { get; set; default = 0; }
 		private int scrobble_in_seconds { get; set; }
 		private int total_playtime { get; set; default = 0; }
 		public signal void scrobbled (Payload payload, bool now_playing = false);
@@ -64,12 +64,12 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 			set {
 				if (_playing != value) {
 					_playing = value;
-					if (this.scrobble_timeout != -1) GLib.Source.remove (this.scrobble_timeout);
+					if (this.scrobble_timeout != 0) GLib.Source.remove (this.scrobble_timeout);
 
 					if (value && !cleared) {
 						this.scrobble_timeout = GLib.Timeout.add_seconds (1, on_add_second);
 					} else {
-						this.scrobble_timeout = -1;
+						this.scrobble_timeout = 0;
 					}
 
 					debug ("[Pushable] Changed play status for %s", payload.track);
@@ -114,8 +114,8 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		public void clear () {
 			if (cleared) return;
 
-			if (this.scrobble_timeout != -1) GLib.Source.remove (this.scrobble_timeout);
-			this.scrobble_timeout = -1;
+			if (this.scrobble_timeout != 0) GLib.Source.remove (this.scrobble_timeout);
+			this.scrobble_timeout = 0;
 			this.total_playtime = 0;
 			cleared = true;
 			debug ("[Pushable] Cleared %s", payload.track);

@@ -13,10 +13,10 @@ public class Turntable.Utils.Cache : GLib.Object {
 	}
 
 	public void add (string key, Utils.Color.ExtractedColors? value) {
-		uint match = -1;
+		uint match = 0;
 		if (key_queue.binary_search (key, GLib.strcmp, out match)) {
 			custom_color_cache.set (key, value);
-			if (match > -1 && match < key_queue.length - 1) {
+			if (match < key_queue.length - 1) {
 				key_queue.append_val (key_queue.index (match));
 				key_queue.remove_index (match);
 			}

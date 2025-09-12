@@ -348,7 +348,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		return GLib.Source.REMOVE;
 	}
 
-	Mpris.Entry? player = null;
+	weak Mpris.Entry? player = null;
 	Widgets.Marquee artist_label;
 	Widgets.Marquee title_label;
 	Widgets.Marquee album_label;
@@ -721,6 +721,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		this.player = new_player;
 		foreach (var binding in player_bindings) {
 			binding.unbind ();
+			binding.unref ();
 		}
 		player_bindings = {};
 
