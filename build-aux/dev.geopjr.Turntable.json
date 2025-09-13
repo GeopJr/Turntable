@@ -1,29 +1,29 @@
 {
-    "id" : "dev.geopjr.Turntable",
-    "runtime" : "org.gnome.Platform",
-    "runtime-version" : "48",
-    "sdk" : "org.gnome.Sdk",
-    "sdk-extensions" : [
-        "org.freedesktop.Sdk.Extension.vala",
+	"id": "dev.geopjr.Turntable",
+	"runtime": "org.gnome.Platform",
+	"runtime-version": "48",
+	"sdk": "org.gnome.Sdk",
+	"sdk-extensions": [
+		"org.freedesktop.Sdk.Extension.vala",
 		"org.freedesktop.Sdk.Extension.llvm19"
-    ],
-    "command" : "dev.geopjr.Turntable",
-    "finish-args" : [
-        "--share=network",
-        "--share=ipc",
-        "--socket=fallback-x11",
-        "--device=dri",
-        "--socket=wayland",
-        "--talk-name=org.mpris.MediaPlayer2.*",
-        "--talk-name=org.freedesktop.DBus",
-        "--filesystem=~/.mozilla/firefox/firefox-mpris/:ro",
-        "--filesystem=~/.var/app/org.mozilla.firefox/.mozilla/firefox/firefox-mpris/:ro",
+	],
+	"command": "dev.geopjr.Turntable",
+	"finish-args": [
+		"--share=network",
+		"--share=ipc",
+		"--socket=fallback-x11",
+		"--device=dri",
+		"--socket=wayland",
+		"--talk-name=org.mpris.MediaPlayer2.*",
+		"--talk-name=org.freedesktop.DBus",
+		"--filesystem=~/.mozilla/firefox/firefox-mpris/:ro",
+		"--filesystem=~/.var/app/org.mozilla.firefox/.mozilla/firefox/firefox-mpris/:ro",
 		"--filesystem=~/.librewolf/firefox/firefox-mpris/:ro",
-        "--filesystem=~/.var/app/io.gitlab.librewolf-community/.librewolf/:ro",
-        "--filesystem=~/.floorp/firefox/firefox-mpris/:ro",
+		"--filesystem=~/.var/app/io.gitlab.librewolf-community/.librewolf/:ro",
+		"--filesystem=~/.floorp/firefox/firefox-mpris/:ro",
 		"--filesystem=~/.var/app/app.zen_browser.zen/data/firefox-mpris/:ro",
 		"--filesystem=~/.zen/firefox/firefox-mpris/:ro",
-        "--filesystem=~/.var/app/one.ablaze.floorp/data/firefox-mpris/:ro",
+		"--filesystem=~/.var/app/one.ablaze.floorp/data/firefox-mpris/:ro",
 		"--filesystem=~/.var/app/io.bassi.Amberol/cache/amberol/covers/:ro",
 		"--filesystem=~/.var/app/com.github.neithern.g4music/cache/com.github.neithern.g4music/:ro",
 		"--filesystem=~/.var/app/ca.edestcroix.Recordbox/data/Recordbox/:ro",
@@ -35,49 +35,63 @@
 		"--filesystem=~/.local/share/xdg-desktop-portal:ro",
 		"--filesystem=/var/lib/snapd/:ro",
 		"--filesystem=xdg-data/flatpak:ro"
-    ],
-    "build-options" : {
-        "append-path" : "/usr/lib/sdk/vala/bin",
-        "prepend-ld-library-path" : "/usr/lib/sdk/vala/lib"
-    },
-    "cleanup" : [
-        "/include",
-        "/lib/pkgconfig",
-        "/man",
-        "/share/doc",
-        "/share/gtk-doc",
-        "/share/man",
-        "/share/pkgconfig",
-        "/share/vala",
-        "*.la",
-        "*.a"
-    ],
-    "modules" : [
-        {
-            "name" : "turntable",
-            "builddir" : true,
-            "buildsystem" : "meson",
-            "config-opts": [
-                "-Ddevel=true",
-                "-Dsandboxed=true"
-            ],
-            "build-options": {
-                "arch": {
-                    "aarch64": {
-                        "append-path": "/usr/lib/sdk/llvm19/bin",
-                        "prepend-ld-library-path": "/usr/lib/sdk/llvm19/lib",
-                        "env": {
-                          "CC": "clang"
-                        }
-                    }
-                }
-            },
-            "sources": [
-                {
-                    "type": "dir",
-                    "path": "../"
-                }
-            ]
-        }
-    ]
+	],
+	"build-options": {
+		"append-path": "/usr/lib/sdk/vala/bin",
+		"prepend-ld-library-path": "/usr/lib/sdk/vala/lib"
+	},
+	"cleanup": [
+		"/include",
+		"/lib/pkgconfig",
+		"/man",
+		"/share/doc",
+		"/share/gtk-doc",
+		"/share/man",
+		"/share/pkgconfig",
+		"/share/vala",
+		"*.la",
+		"*.a"
+	],
+	"modules": [
+		{
+			"name": "glycin-loaders",
+			"sources": [
+				{
+					"sha256": "e39c3ca4f5bd6905f19f090456940650c8de1f217d2edb1f46ee17e04e7ae502",
+					"type": "archive",
+					"url": "https://download.gnome.org/sources/glycin/2.0/glycin-2.0.0.tar.xz",
+					"x-checker-data": {
+						"name": "glycin",
+						"type": "gnome"
+					}
+				}
+			]
+		},
+		{
+			"name": "turntable",
+			"builddir": true,
+			"buildsystem": "meson",
+			"config-opts": [
+				"-Ddevel=true",
+				"-Dsandboxed=true"
+			],
+			"build-options": {
+				"arch": {
+					"aarch64": {
+						"append-path": "/usr/lib/sdk/llvm19/bin",
+						"prepend-ld-library-path": "/usr/lib/sdk/llvm19/lib",
+						"env": {
+							"CC": "clang"
+						}
+					}
+				}
+			},
+			"sources": [
+				{
+					"type": "dir",
+					"path": "../"
+				}
+			]
+		}
+	]
 }
