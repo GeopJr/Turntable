@@ -1,6 +1,7 @@
 public class Turntable.Utils.Settings : GLib.Settings {
 	public bool orientation_horizontal { get; set; }
 	public string cover_style { get; set; }
+	public string progressscale_style { get; set; }
 	public bool component_progressbin { get; set; }
 	public bool component_extract_colors { get; set; }
 	public string window_style { get; set; }
@@ -22,6 +23,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	private const string[] KEYS_TO_INIT = {
 		"orientation-horizontal",
 		"cover-style",
+		"progressscale-style",
 		"component-progressbin",
 		"component-extract-colors",
 		"window-style",

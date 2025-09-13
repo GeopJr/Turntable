@@ -213,6 +213,16 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		// translators: menu entry that opens a submenu
 		style_submenu_model.append_submenu (_("Cover"), cover_style_submenu_model);
 
+		var scale_style_submenu_model = new GLib.Menu ();
+		// translators: progressbar style; disable it
+		scale_style_submenu_model.append (_("None"), "win.progressscale-style('none')");
+		// translators: progressbar style; default gtk style, has a big knob / circle as the position marker
+		scale_style_submenu_model.append (_("Knob"), "win.progressscale-style('knob')");
+		// translators: progressbar style; hard to explain, looks like amberol's volume bar
+		scale_style_submenu_model.append (_("Overlay"), "win.progressscale-style('overlay')");
+		// translators: menu entry that opens a submenu
+		style_submenu_model.append_submenu (_("Progress Bar"), scale_style_submenu_model);
+
 		var window_style_submenu_model = new GLib.Menu ();
 		// translators: window style name
 		window_style_submenu_model.append (_("Window"), "win.window-style('window')");

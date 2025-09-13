@@ -28,6 +28,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	public bool can_go_next { get; private set; default = false; }
 	public bool can_go_back { get; private set; default = false; }
 	public bool can_control { get; private set; default = false; }
+	public bool can_seek { get; private set; default = false; }
 	public bool playing { get; private set; default = false; }
 	public bool shuffle { get; private set; default = false; }
 	public string? art { get; private set; default = null; }
@@ -36,6 +37,14 @@ public class Turntable.Mpris.Entry : GLib.Object {
 	public string? album { get; private set; default = null; }
 	public int64 length { get; private set; default = -1; }
 	public int64 position { get; private set; default = -1; }
+
+	public void seek (int64 offset) {
+		try {
+			this.player.seek (offset);
+		} catch (Error e) {
+			debug ("Couldn't Seek %lld: %s", offset, e.message);
+		}
+	}
 
 	public void play_pause () {
 		try {
@@ -190,6 +199,7 @@ public class Turntable.Mpris.Entry : GLib.Object {
 				case "CanPlay":
 				case "CanPause":
 				case "CanControl":
+				case "CanSeek":
 					update_controls ();
 					break;
 				default:
@@ -232,10 +242,12 @@ public class Turntable.Mpris.Entry : GLib.Object {
 		if (!this.player.can_control) {
 			this.can_go_back =
 			this.can_go_next =
+			this.can_seek =
 			this.can_control = false;
 			return;
 		}
 
+		this.can_seek = this.player.can_seek;
 		this.can_go_back = this.player.can_go_previous;
 		this.can_go_next = this.player.can_go_next;
 		this.can_control = true;

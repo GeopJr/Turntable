@@ -10,6 +10,9 @@
 		<key name="cover-style" type="s">
 			<default>'card'</default>
 		</key>
+    <key name="progressscale-style" type="s">
+			<default>'none'</default>
+		</key>
 		<key name="cover-size" type="s">
 			<default>'regular'</default>
 		</key>

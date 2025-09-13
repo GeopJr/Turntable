@@ -4,5 +4,6 @@ sources += files(
     'Marquee.vala',
     'MPRISControls.vala',
     'ProgressBin.vala',
+    'ProgressScale.vala',
     'Tonearm.vala'
 )

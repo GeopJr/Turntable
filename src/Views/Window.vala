@@ -1,6 +1,7 @@
 public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction toggle_orientation_action;
 	GLib.SimpleAction cover_style_action;
+	GLib.SimpleAction progressscale_style_action;
 	GLib.SimpleAction component_progressbin_action;
 	GLib.SimpleAction component_extract_colors_action;
 	GLib.SimpleAction window_style_action;
@@ -228,7 +229,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		get { return _position; }
 		set {
 			if (this.length == 0) {
+				progress_scale.playtime =
 				_position = 0;
+				progress_scale.progress =
 				tonearm.progress =
 				prog.progress = 0;
 			} else {
@@ -237,7 +240,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 						this.length = this.length; // re-trigger it
 					}
 				#endif
+				progress_scale.playtime =
 				_position = value;
+				progress_scale.progress =
 				tonearm.progress =
 				prog.progress = (double)value / (double)this.length;
 			}
@@ -248,8 +253,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public int64 length {
 		get { return _length; }
 		set {
+			progress_scale.length =
 			_length = value;
 
+			progress_scale.progress =
 			tonearm.progress =
 			prog.progress = value == 0 ? 0 : (double)this.position / (double)value;
 			#if SCROBBLING
@@ -319,6 +326,15 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		}
 	}
 
+	public Widgets.ProgressScale.Style progressscale_style {
+		get { return progress_scale.style; }
+		set {
+			if (value != progress_scale.style ) {
+				progress_scale.style = value;
+			}
+		}
+	}
+
 	//  private void update_offset () {
 	//  	switch (this.cover_style) {
 	//  		case Widgets.Cover.Style.SHADOW:
@@ -371,6 +387,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Gtk.Box main_box;
 	Widgets.ControlsOverlay controls_overlay;
 	Widgets.MPRISControls mpris_controls;
+	Widgets.ProgressScale progress_scale;
 	construct {
 		this.uuid = GLib.Uuid.string_random ();
 		this.icon_name = Build.DOMAIN;
@@ -383,7 +400,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
 			valign = CENTER,
 			halign = CENTER,
-			css_classes = {"main-box"}
+			css_classes = {"main-box"},
+			overflow = HIDDEN
 		};
 		art_pic = new Widgets.Cover () {
 			valign = Gtk.Align.START,
@@ -427,6 +445,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			content = main_box
 		};
 
+		progress_scale = new Widgets.ProgressScale ();
+		progress_scale.progress_changed.connect (on_progress_changed);
+		non_art_box.append (progress_scale);
+
 		mpris_controls = new Widgets.MPRISControls () {
 			hexpand = true,
 			vexpand = true,
@@ -461,6 +483,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		cover_style_action = new GLib.SimpleAction.stateful ("cover-style", GLib.VariantType.STRING, this.cover_style.to_string ());
 		cover_style_action.change_state.connect (on_change_cover_style);
 		this.add_action (cover_style_action);
+
+		progressscale_style_action = new GLib.SimpleAction.stateful ("progressscale-style", GLib.VariantType.STRING, this.progressscale_style.to_string ());
+		progressscale_style_action.change_state.connect (on_change_progressscale_style);
+		this.add_action (progressscale_style_action);
 
 		component_extract_colors_action = new GLib.SimpleAction.stateful ("component-extract-colors", null, settings.component_extract_colors);
 		component_extract_colors_action.change_state.connect (on_change_component_extract_colors);
@@ -513,6 +539,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_player (controls_overlay.last_player); // always ensure
 
 		settings.notify["cover-style"].connect (update_cover_from_settings);
+		settings.notify["progressscale-style"].connect (update_progressscale_from_settings);
 		settings.notify["orientation-horizontal"].connect (update_orientation_from_settings);
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
 		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
@@ -553,6 +580,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	private void on_click () {
 		if (controls_overlay.hide_overlay ()) this.focus_widget = null;
+	}
+
+	private void on_progress_changed (double new_progress) {
+		this.player.seek ((int64) ((new_progress * this.length) - this.position));
 	}
 
 	private void mpris_command_received (Widgets.MPRISControls.Command command) {
@@ -610,6 +641,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_from_settings () {
 		update_orientation_from_settings ();
 		update_cover_from_settings ();
+		update_progressscale_from_settings ();
 		update_progressbin_from_settings ();
 		update_extract_colors_from_settings ();
 		update_window_from_settings ();
@@ -644,6 +676,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_cover_from_settings () {
 		this.cover_style = Widgets.Cover.Style.from_string (settings.cover_style);
 		cover_style_action.set_state (this.cover_style.to_string ());
+	}
+
+	private void update_progressscale_from_settings () {
+		this.progressscale_style = Widgets.ProgressScale.Style.from_string (settings.progressscale_style);
+		progressscale_style_action.set_state (this.progressscale_style.to_string ());
 	}
 
 	private void update_window_from_settings () {
@@ -775,6 +812,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		player_bindings += this.player.bind_property ("can-control", mpris_controls, "can-control", GLib.BindingFlags.SYNC_CREATE);
 		player_bindings += this.player.bind_property ("shuffle", mpris_controls, "shuffle", GLib.BindingFlags.SYNC_CREATE);
 		player_bindings += this.player.bind_property ("loop-status", mpris_controls, "loop-status", GLib.BindingFlags.SYNC_CREATE);
+		player_bindings += this.player.bind_property ("can-seek", progress_scale, "sensitive", GLib.BindingFlags.SYNC_CREATE);
 
 		prog.client_icon = this.player.client_info_icon;
 		prog.client_name = this.player.client_info_name;
@@ -830,6 +868,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_cover_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.cover_style = value.get_string ();
+	}
+
+	private void on_change_progressscale_style (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.progressscale_style = value.get_string ();
 	}
 
 	private void on_change_meta_dim (GLib.SimpleAction action, GLib.Variant? value) {
