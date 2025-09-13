@@ -24,12 +24,14 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	public enum Style {
 		WINDOW,
 		OSD,
-		TRANSPARENT;
+		TRANSPARENT,
+		BLUR;
 
 		public string to_string () {
 			switch (this) {
 				case OSD: return "osd";
 				case TRANSPARENT: return "transparent";
+				case BLUR: return "blur";
 				default: return "window";
 			}
 		}
@@ -38,6 +40,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			switch (string_style.down ()) {
 				case "osd": return OSD;
 				case "transparent": return TRANSPARENT;
+				case "blur": return BLUR;
 				default: return WINDOW;
 			}
 		}
@@ -139,7 +142,12 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		get { return _window_style; }
 		set {
 			if (value != _window_style) {
+				// reset to initial state
 				switch (_window_style) {
+					case Style.BLUR:
+						prog.cover = null;
+						main_box.remove_css_class ("osd");
+						break;
 					case Style.WINDOW: break;
 					case Style.TRANSPARENT:
 						this.add_css_class ("csd");
@@ -155,6 +163,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 				string window_style_string = value.to_string ();
 
 				switch (_window_style) {
+					case Style.BLUR:
+						on_cover_changed ();
+						main_box.add_css_class ("osd");
+						return;
 					case Style.WINDOW: return;
 					case Style.TRANSPARENT:
 						this.remove_css_class ("csd");
@@ -370,7 +382,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 		main_box = new Gtk.Box (Gtk.Orientation.HORIZONTAL, 0) {
 			valign = CENTER,
-			halign = CENTER
+			halign = CENTER,
+			css_classes = {"main-box"}
 		};
 		art_pic = new Widgets.Cover () {
 			valign = Gtk.Align.START,
@@ -528,6 +541,14 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		click_gesture.pressed.connect (on_click);
 		prog.add_controller (click_gesture);
+
+		//  art_pic.bind_property ("cover", prog, "cover", SYNC_CREATE);
+		art_pic.notify["cover"].connect (on_cover_changed);
+	}
+
+	private void on_cover_changed () {
+		if (this.window_style != Style.BLUR) return;
+		prog.cover = art_pic.cover;
 	}
 
 	private void on_click () {

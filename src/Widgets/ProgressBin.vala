@@ -160,16 +160,16 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 	}
 
-	private int32 _offset = 0;
-	public int32 offset {
-		get { return _offset; }
-		set {
-			if (_offset != value && value >= 0) {
-				_offset = value;
-				this.queue_draw ();
-			}
-		}
-	}
+	//  private int32 _offset = 0;
+	//  public int32 offset {
+	//  	get { return _offset; }
+	//  	set {
+	//  		if (_offset != value && value >= 0) {
+	//  			_offset = value;
+	//  			this.queue_draw ();
+	//  		}
+	//  	}
+	//  }
 
 	private Gtk.Orientation _orientation = Gtk.Orientation.HORIZONTAL;
 	public Gtk.Orientation orientation {
@@ -222,14 +222,63 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 			halign = Gtk.Align.END,
 			margin_end = 6,
 			margin_bottom = 6,
-			icon_size = Gtk.IconSize.LARGE
+			icon_size = Gtk.IconSize.LARGE,
+			can_target = false
 		};
 
 		overlay.add_overlay (client_icon_widget);
 		this.child = overlay;
 	}
 
+	private weak Gdk.Texture? _cover = null;
+	public weak Gdk.Texture? cover {
+		get { return _cover; }
+		set {
+			if (_cover != value) {
+				_cover = value;
+				this.queue_draw ();
+			}
+		}
+	}
+
 	public override void snapshot (Gtk.Snapshot snapshot) {
+		int height = this.get_height ();
+		int width = this.get_width ();
+
+		if (_cover != null && _cover is Gdk.Texture) {
+			snapshot.push_blur (20);
+			double ratio = _cover.get_intrinsic_aspect_ratio ();
+
+			if (ratio == 0) {
+				_cover.snapshot (snapshot, width, height);
+			} else {
+				double w = 0.0;
+				double h = 0.0;
+				double picture_ratio = (double) width / height;
+
+				if (ratio > picture_ratio) {
+					w = height * ratio;
+					h = height;
+				} else {
+					w = width;
+					h = width / ratio;
+				}
+
+				w = Math.ceil (w);
+				h = Math.ceil (h);
+
+				double x = (width - w) / 2;
+				double y = Math.floor (height - h) / 2;
+
+				snapshot.save ();
+				snapshot.translate (Graphene.Point () { x = (float) x - 20, y = (float) y - 20 });
+				_cover.snapshot (snapshot, w + 40, h + 40);
+				snapshot.restore ();
+			}
+
+			snapshot.pop ();
+		}
+
 		if (this.enabled && this.animation.value > 0) {
 			switch (this.orientation) {
 				case Gtk.Orientation.VERTICAL:
@@ -241,7 +290,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 								y = 0
 							},
 							size = Graphene.Size () {
-								height = (float) ((this.get_height () - this.offset) * this.animation.value) + this.offset,
+								height = (float) (height * this.animation.value),
 								width = this.get_width ()
 							}
 						}
@@ -256,8 +305,8 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 								y = 0
 							},
 							size = Graphene.Size () {
-								height = this.get_height (),
-								width = (float) ((this.get_width () - this.offset) * this.animation.value) + this.offset
+								height = height,
+								width = (float) (width * this.animation.value)
 							}
 						}
 					);

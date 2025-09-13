@@ -221,6 +221,8 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		window_style_submenu_model.append (_("OSD"), "win.window-style('osd')");
 		// translators: window style name
 		window_style_submenu_model.append (_("Transparent"), "win.window-style('transparent')");
+		// translators: window style name
+		window_style_submenu_model.append (_("Blur"), "win.window-style('blur')");
 		// translators: menu entry that opens a submenu
 		style_submenu_model.append_submenu (_("Window"), window_style_submenu_model);
 

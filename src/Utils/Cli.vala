@@ -101,6 +101,7 @@ public class Turntable.Utils.CLI : GLib.Object {
 		scrobbling_manager.clear_queue ("1");
 		foreach (var binding in cli_player_bindings) {
 			binding.unbind ();
+			binding.unref ();
 		}
 		cli_player_bindings = {};
 
