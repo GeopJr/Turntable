@@ -11,7 +11,7 @@
 			<default>'card'</default>
 		</key>
     <key name="progressscale-style" type="s">
-			<default>'none'</default>
+			<default>'overlay'</default>
 		</key>
 		<key name="cover-size" type="s">
 			<default>'regular'</default>

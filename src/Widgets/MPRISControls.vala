@@ -1,4 +1,4 @@
-public class Turntable.Widgets.MPRISControls : Gtk.Box {
+public class Turntable.Widgets.MPRISControls : Gtk.Grid {
 	public enum Command {
 		PREVIOUS,
 		PLAY_PAUSE,
@@ -102,14 +102,62 @@ public class Turntable.Widgets.MPRISControls : Gtk.Box {
 		button_play.grab_focus ();
 	}
 
+	bool _newline = false;
+	public bool newline {
+		get { return _newline; }
+		set {
+			if (_newline == value) return;
+			_newline = value;
+
+			Gtk.GridLayout layout_manager = (Gtk.GridLayout) this.get_layout_manager ();
+			Gtk.GridLayoutChild button_shuffle_layout_child = (Gtk.GridLayoutChild) layout_manager.get_layout_child (button_shuffle);
+			Gtk.GridLayoutChild button_prev_layout_child = (Gtk.GridLayoutChild) layout_manager.get_layout_child (button_prev);
+			Gtk.GridLayoutChild button_play_layout_child = (Gtk.GridLayoutChild) layout_manager.get_layout_child (button_play);
+			Gtk.GridLayoutChild button_next_layout_child = (Gtk.GridLayoutChild) layout_manager.get_layout_child (button_next);
+			Gtk.GridLayoutChild button_loop_layout_child = (Gtk.GridLayoutChild) layout_manager.get_layout_child (button_loop);
+
+			if (value) {
+				button_shuffle_layout_child.column = 0;
+				button_shuffle_layout_child.row = 1;
+
+				button_prev_layout_child.column = 0;
+				button_prev_layout_child.row = 0;
+
+				button_play_layout_child.column = 1;
+				button_play_layout_child.row = 0;
+
+				button_next_layout_child.column = 2;
+				button_next_layout_child.row = 0;
+
+				button_loop_layout_child.column = 2;
+				button_loop_layout_child.row = 1;
+			} else {
+				button_shuffle_layout_child.column = 0;
+				button_shuffle_layout_child.row = 0;
+
+				button_prev_layout_child.column = 1;
+				button_prev_layout_child.row = 0;
+
+				button_play_layout_child.column = 2;
+				button_play_layout_child.row = 0;
+
+				button_next_layout_child.column = 3;
+				button_next_layout_child.row = 0;
+
+				button_loop_layout_child.column = 4;
+				button_loop_layout_child.row = 0;
+			}
+		}
+	}
+
 	Gtk.Button button_play;
 	Gtk.Button button_prev;
 	Gtk.Button button_next;
 	StatefulLoopButton button_loop;
 	Gtk.ToggleButton button_shuffle;
 	construct {
-		this.orientation = HORIZONTAL;
-		this.spacing = 8;
+		this.column_spacing =
+		this.row_spacing = 8;
 
 		button_shuffle = new Gtk.ToggleButton () {
 			icon_name = "playlist-shuffle-symbolic",
@@ -119,7 +167,7 @@ public class Turntable.Widgets.MPRISControls : Gtk.Box {
 			tooltip_text = _("Shuffle")
 		};
 		button_shuffle.add_css_class ("circular");
-		this.append (button_shuffle);
+		this.attach (button_shuffle, 0, 0);
 
 		button_prev = new Gtk.Button.from_icon_name (is_rtl ? "skip-forward-large-symbolic" : "skip-backward-large-symbolic") {
 			css_classes = {"circular"},
@@ -128,7 +176,7 @@ public class Turntable.Widgets.MPRISControls : Gtk.Box {
 			// translators: button tooltip text
 			tooltip_text = _("Previous Song")
 		};
-		this.append (button_prev);
+		this.attach (button_prev, 1, 0);
 
 		button_play = new Gtk.Button.from_icon_name ("play-large-symbolic") {
 			css_classes = {"circular", "large"},
@@ -136,7 +184,7 @@ public class Turntable.Widgets.MPRISControls : Gtk.Box {
 			valign = Gtk.Align.CENTER,
 			tooltip_text = _("Play")
 		};
-		this.append (button_play);
+		this.attach (button_play, 2, 0);
 
 		button_next = new Gtk.Button.from_icon_name (is_rtl ? "skip-backward-large-symbolic" : "skip-forward-large-symbolic") {
 			css_classes = {"circular"},
@@ -145,14 +193,14 @@ public class Turntable.Widgets.MPRISControls : Gtk.Box {
 			// translators: button tooltip text
 			tooltip_text = _("Next Song")
 		};
-		this.append (button_next);
+		this.attach (button_next, 3, 0);
 
 		button_loop = new StatefulLoopButton () {
 			css_classes = {"circular"},
 			halign = Gtk.Align.CENTER,
 			valign = Gtk.Align.CENTER
 		};
-		this.append (button_loop);
+		this.attach (button_loop, 4, 0);
 
 		button_next.clicked.connect (play_next);
 		button_play.clicked.connect (play_pause);

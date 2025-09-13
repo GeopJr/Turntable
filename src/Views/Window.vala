@@ -296,6 +296,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		art_pic.orientation =
 		main_box.orientation =
 		prog.orientation = this.orientation;
+		mpris_controls.newline = this.orientation == VERTICAL;
 
 		update_album_artist_title ();
 	}
@@ -445,7 +446,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			content = main_box
 		};
 
-		progress_scale = new Widgets.ProgressScale ();
+		progress_scale = new Widgets.ProgressScale () {
+			vexpand = true
+		};
 		progress_scale.progress_changed.connect (on_progress_changed);
 		non_art_box.append (progress_scale);
 
