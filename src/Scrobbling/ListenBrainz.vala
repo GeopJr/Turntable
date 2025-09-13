@@ -1,6 +1,7 @@
 public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 	public virtual Manager.Provider SERVICE { get { return Manager.Provider.LISTENBRAINZ; } }
 	public virtual string token { get; set; default = ""; }
+	protected virtual string auth_token_key { get; set; default = "Bearer"; }
 
 	private string _url = "https://api.listenbrainz.org";
 	public virtual string url {
@@ -62,7 +63,7 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		var generator = new Json.Generator ();
 		generator.set_root (builder.get_root ());
 		msg.set_request_body_from_bytes ("application/json", new Bytes.take (generator.to_data (null).data));
-		msg.request_headers.append ("Authorization", @"Bearer $(this.token)");
+		msg.request_headers.append ("Authorization", @"$(auth_token_key) $(this.token)");
 
 		scrobbling_manager.send_scrobble (msg, SERVICE, scrobble_type);
 	}
