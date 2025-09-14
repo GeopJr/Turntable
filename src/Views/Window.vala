@@ -296,7 +296,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		art_pic.orientation =
 		main_box.orientation =
 		prog.orientation = this.orientation;
+
 		mpris_controls.newline = this.orientation == VERTICAL;
+		album_label.force_width =
+		artist_label.force_width =
+		title_label.force_width = this.orientation == HORIZONTAL;
 
 		update_album_artist_title ();
 	}

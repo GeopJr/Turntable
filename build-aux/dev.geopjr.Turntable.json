@@ -1,11 +1,11 @@
 {
 	"id": "dev.geopjr.Turntable",
 	"runtime": "org.gnome.Platform",
-	"runtime-version": "48",
+	"runtime-version": "49",
 	"sdk": "org.gnome.Sdk",
 	"sdk-extensions": [
 		"org.freedesktop.Sdk.Extension.vala",
-		"org.freedesktop.Sdk.Extension.llvm19"
+		"org.freedesktop.Sdk.Extension.llvm20"
 	],
 	"command": "dev.geopjr.Turntable",
 	"finish-args": [
@@ -56,20 +56,6 @@
 	],
 	"modules": [
 		{
-			"name": "glycin-loaders",
-			"sources": [
-				{
-					"sha256": "e39c3ca4f5bd6905f19f090456940650c8de1f217d2edb1f46ee17e04e7ae502",
-					"type": "archive",
-					"url": "https://download.gnome.org/sources/glycin/2.0/glycin-2.0.0.tar.xz",
-					"x-checker-data": {
-						"name": "glycin",
-						"type": "gnome"
-					}
-				}
-			]
-		},
-		{
 			"name": "turntable",
 			"builddir": true,
 			"buildsystem": "meson",
@@ -80,8 +66,8 @@
 			"build-options": {
 				"arch": {
 					"aarch64": {
-						"append-path": "/usr/lib/sdk/llvm19/bin",
-						"prepend-ld-library-path": "/usr/lib/sdk/llvm19/lib",
+						"append-path": "/usr/lib/sdk/llvm20/bin",
+						"prepend-ld-library-path": "/usr/lib/sdk/llvm20/lib",
 						"env": {
 							"CC": "clang"
 						}

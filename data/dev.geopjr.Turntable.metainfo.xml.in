@@ -46,6 +46,29 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.4.0" date="2025-09-14">
+      <description translate="no">
+        <ul>
+          <li>Added the ability to submit now_playing</li>
+          <li>Added offline scrobbling allowing you to publish scrobbles the next time you are online</li>
+          <li>Added player seek bar</li>
+          <li>Added shuffle and loop controls</li>
+          <li>Image decoding now uses glycin for security and format support range</li>
+          <li>Added more flatpak permissions to access more music player covers</li>
+          <li>Enabled window resizing</li>
+          <li>Added cover blur to the window styles</li>
+          <li>Rewrote the maths around the tonearm and turntable mode to better handle unconventional window and art sizes</li>
+          <li>Redesigned the tonearm slightly</li>
+          <li>Redesigned some cover styles to better fit a non-static window size</li>
+          <li>Split scrobbling into services and settings</li>
+          <li>Fixed Maloja not scrobbling</li>
+          <li>Restructured the codebase to improve maintainability</li>
+          <li>Fixed memory leaks and optimized parts of the codebase</li>
+          <li>Other minor fixes and design changes</li>
+          <li>Updated translations</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.3.3" date="2025-05-14">
       <description translate="no">
         <ul>

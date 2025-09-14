@@ -49,6 +49,17 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 		set { label.xalign = value; }
 	}
 
+	private bool _force_width = false;
+	public bool force_width {
+		get { return _force_width; }
+		set {
+			if (_force_width != value) {
+				_force_width = value;
+				this.queue_resize ();
+			}
+		}
+	}
+
 	private float rem_euclid (float value, float mod) {
 		float r = value % mod;
 		return (r < 0.0) ? r + mod : r;
@@ -120,7 +131,7 @@ public class Turntable.Widgets.Marquee : Gtk.Widget {
 
 		if (orientation == Gtk.Orientation.HORIZONTAL) {
 			minimum = 0;
-			natural = int.min (308, natural);
+			natural = this.force_width ? 308 : int.min (308, natural);
 			minimum_baseline = -1;
 			natural_baseline = -1;
 		}

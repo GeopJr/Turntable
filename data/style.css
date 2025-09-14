@@ -15,6 +15,14 @@ button.large {
 	margin-bottom: 0;
 }
 
+.card-like.horizontal:dir(ltr):not(.circular-art) {
+	margin-right: 0;
+}
+
+.card-like.horizontal:dir(rtl):not(.circular-art) {
+	margin-left: 0;
+}
+
 .transparent .fade {
 	border-radius: 0;
 }
