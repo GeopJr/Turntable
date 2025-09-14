@@ -1,40 +1,39 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Mrdaft <mrdaft@noreply.codeberg.org>, 2025.
-# milimarg <milimarg@noreply.codeberg.org>, 2025.
+# danialbehzadi <danialbehzadi@noreply.codeberg.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-29 03:04+0300\n"
-"PO-Revision-Date: 2025-05-29 11:58+0000\n"
-"Last-Translator: milimarg <milimarg@noreply.codeberg.org>\n"
-"Language-Team: French <https://translate.codeberg.org/projects/turntable/"
-"turntable/fr/>\n"
-"Language: fr\n"
+"PO-Revision-Date: 2025-07-26 23:09+0000\n"
+"Last-Translator: danialbehzadi <danialbehzadi@noreply.codeberg.org>\n"
+"Language-Team: Persian <https://translate.codeberg.org/projects/turntable/"
+"turntable/fa/>\n"
+"Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.12.2\n"
 
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
 #: data/dev.geopjr.Turntable.metainfo.xml.in:7
 #: src/Widgets/ControlsOverlay.vala:208
 msgid "Turntable"
-msgstr "Turntable"
+msgstr "ثبت صوت"
 
 #: data/dev.geopjr.Turntable.desktop.in:8
 msgid "music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
 msgstr ""
-"musique;lecteur;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;chanson;audio;"
-""
+"music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;turntable;آهنگ;موسیقی;"
+"ابزارک\"اسکروبل;پخش;ضبط;صدا;"
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:8
 msgid "Scrobble your music"
-msgstr "Scrobblez votre musique"
+msgstr "ثبت آهنگ‌هایتان"
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:10
 msgid ""
@@ -45,14 +44,12 @@ msgid ""
 "allows you to control your music player, allowlist it for scrobbling and "
 "manage your scrobbling accounts. All MPRIS-enabled apps are supported."
 msgstr ""
-"Gardez une trace de vos habitudes d'écoute en les scrobblant sur last.fm, "
-"ListenBrainz, Libre.fm et Maloja en même temps que vous utilisez votre "
-"application de musique préférée, votre application de musique préférée ! "
-"Turntable est doté d'un design élégant et hautement personnalisable qui "
-"affiche des informations sur la chanson en cours de lecture et vous permet "
-"de contrôler votre lecteur de musique, de l'autoriser à scrobbler et de "
-"gérer vos comptes de scrobbling. Toutes les applications compatibles MPRIS "
-"sont prises en charge."
+"نگه داری آمار شنیدن‌هایتان با ثبت‌کردن هم‌زمانشان در لست.اف‌ام، لیسن‌برینز، "
+"لیبره.اف‌ام و مولایا به وسیلهٔ کارهٔ آهنگ محبوبِ کارهٔ آهنگ محبوبتان! ثبت صوت با "
+"طرّاحی به شدّت سفارشی‌پذیر اطّلاعاتی را دربارهٔ آهنگ در حال پخش نشان می‌دهد؛ می‌"
+"گذارد پخش‌کنندهٔ آهنگتان را واپاییده، سیاههٔ مجاز برای ثبت ایجاد کرده و حساب‌های "
+"ثبتتان را مدیریت کنید. همهٔ کاره‌هایی که از MPRIS استفاده می‌کنند پشتیبانی "
+"می‌شوند."
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:11
 msgid ""
@@ -61,38 +58,37 @@ msgid ""
 "background! Try it out using <code>flatpak run dev.geopjr.Turntable --help</"
 "code>."
 msgstr ""
-"Le GUI ne vous intéresse pas, mais vous voulez quand même scrobbler vos "
-"lecteurs MPRIS ? Turntable est livré avec un CLI, vous permettant de "
-"scrobbler en arrière-plan ! Essayez-le en utilisant <code>flatpak run "
-"dev.geopjr.Turntable --help</code>."
+"به میانای گرافیکی علاقه‌ای ندارید؛ ولی می‌خواهید آهنگ‌هایتان را ثبت کنید؟ ثبت "
+"صوت میانای خط فرمانی داشته که می‌گذارد در پس‌زمینه ثبت کنید! با استفاده از "
+"<code>flatpak run dev.geopjr.Turntable --help</code> بیازماییدش."
 
 #: data/ui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "Général"
+msgstr "عمومی"
 
 #: data/ui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr "Afficher les raccourcis"
+msgstr "نمایش میان‌برها"
 
 #: data/ui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr "Quitter"
+msgstr "خروج"
 
 #. translators: Name <email@domain.com> or Name https://website.example
 #: src/Application.vala:193
 msgid "translator-credits"
-msgstr "crédits-traducteur"
+msgstr "دانیال بهزادی <dani.behzi@ubuntu.com>"
 
 #: src/Application.vala:196
 msgid "Donate"
-msgstr "Faire un don"
+msgstr "اعانه"
 
 #: src/Application.vala:197
 msgid "Translate"
-msgstr "Traduire"
+msgstr "ترجمه"
 
 #. translators: Shown in the about dialog as a tip. Leave markup as is (<b>, \n)
 #: src/Application.vala:200
@@ -103,100 +99,99 @@ msgid ""
 "• Tag your music with the proper track, album and artist names\n"
 "• Check, fix and match your scrobbles regularly"
 msgstr ""
-"<b>Bonnes pratiques pour le Scrobbling</b>\n"
-"• Évitez d'inscrire sur la liste d'autorisation des clients MPRIS non "
-"classés, tels que les navigateurs Web et les lecteurs vidéo\n"
-"• Marquez votre musique avec les noms de piste, d'album et d'artiste "
-"appropriés\n"
-"• Vérifiez, corrigez et faites correspondre vos scrobbles régulièrement"
+"<b>پیشنهاداتی برای ثبت بهتر</b>\n"
+"• مجاز نکردن کارخواه‌های MPRIS بدون سرپرستی چون مرورگرهای وب و پخش‌کننده‌های "
+"ویدیو\n"
+"• برچسب زدن به آهنگ‌هایتان با فطعه، آلبوم و نام هنرمند\n"
+"• بررسی، تعمیر و تطابق منظّم ثبت‌هایتان"
 
 #. translators: Application metainfo for the app "Archives". <https://gitlab.gnome.org/GeopJr/Archives/>
 #: src/Application.vala:204
 msgid "Archives"
-msgstr "Archives"
+msgstr "بایگانی‌ها"
 
 #: src/Application.vala:204
 msgid "Create and view web archives"
-msgstr "Créer et consulter des archives web"
+msgstr "ایجاد و نمایش بایگانی‌های وب"
 
 #. translators: Application metainfo for the app "Calligraphy". <https://gitlab.gnome.org/GeopJr/Calligraphy>
 #: src/Application.vala:206
 msgid "Calligraphy"
-msgstr "Calligraphy"
+msgstr "خوشنویسی"
 
 #: src/Application.vala:206
 msgid "Turn text into ASCII banners"
-msgstr "Transformer un texte en bannière ASCII"
+msgstr "تبدیل متن به بیرق‌های اسکی"
 
 #. translators: Application metainfo for the app "Collision". <https://github.com/GeopJr/Collision>
 #: src/Application.vala:208
 msgid "Collision"
-msgstr "Collision"
+msgstr "تصادم"
 
 #: src/Application.vala:208
 msgid "Check hashes for your files"
-msgstr "Vérifier les hachages de vos fichiers"
+msgstr "بررسی درهم ریزی‌های پرونده‌هایتان"
 
 #. translators: Application metainfo for the app "Tuba". <https://github.com/GeopJr/Tuba>
 #: src/Application.vala:210
 msgid "Tuba"
-msgstr "Tuba"
+msgstr "توبا"
 
 #: src/Application.vala:210
 msgid "Browse the Fediverse"
-msgstr "Parcourez le Fediverse"
+msgstr "کاوش وب اجتماعی"
 
 #: src/Scrobbling/Accounts.vala:83 src/Views/ScrobblerSetup.vala:558
 msgid "_Cancel"
-msgstr "_Annuler"
+msgstr "_لغو"
 
 #: src/Scrobbling/Accounts.vala:84
 msgid "_Read More"
-msgstr "_En savoir plus"
+msgstr "_بیش‌تر بخوانید"
 
 #. translators: variable is a scrobbler e.g. ListenBrainz
 #: src/Views/ScrobblerSetup.vala:60
 #, c-format
 msgid "Forget %s Account"
-msgstr "Oublier le compte %s"
+msgstr "فراموش کردن حساب %s"
 
 #. translators: variable is a link
 #: src/Views/ScrobblerSetup.vala:200
 #, c-format
 msgid "You can get your user token from %s."
-msgstr "Vous pouvez obtenir votre jeton d'utilisateur auprès de %s."
+msgstr "می‌توانید ژتون کاربریتان را از %s بگیرید."
 
 #. translators: host as in a web server; entry title
 #: src/Views/ScrobblerSetup.vala:220
 msgid "Host API"
-msgstr "Host API"
+msgstr "میانای برنامه‌نویسی میزبان"
 
 #. translators: can also be translated as Authentication Token
 #: src/Views/ScrobblerSetup.vala:230
 msgid "User Token"
-msgstr "User Token"
+msgstr "ژتون کاربر"
 
 #: src/Views/ScrobblerSetup.vala:282 src/Views/ScrobblerSetup.vala:284
 #: src/Views/ScrobblerSetup.vala:286 src/Views/ScrobblerSetup.vala:287
 msgid "Invalid Token"
-msgstr "Token invalide"
+msgstr "ژتون نامعتبر"
 
 #. translators: the variable is an error message
 #: src/Views/ScrobblerSetup.vala:295 src/Views/ScrobblerSetup.vala:300
 #, c-format
 msgid "Couldn't validate token: %s"
-msgstr "Impossible de valider le token : %s"
+msgstr "نمی‌توان ژتون را تأیید کرد: %s"
 
 #. translators: host as in a web server; entry title
 #: src/Views/ScrobblerSetup.vala:360 src/Views/ScrobblerSetup.vala:431
 msgid "Host"
-msgstr "Hôte"
+msgstr "میزبان"
 
 #. vala-lint=line-length
 #. translators: probably leave it as is unless there's a way to describe it accurately
 #: src/Views/ScrobblerSetup.vala:480
 msgid "Scrobblers"
-msgstr "Scrobblers"
+msgstr "ثبت‌کننده‌ها"
 
 #. translators: warning shown in the scrobbler setup window. Leave MPRIS as is. The variable is the app name (Turntable)
 #: src/Views/ScrobblerSetup.vala:484
@@ -207,15 +202,14 @@ msgid ""
 "minimum listening time. To protect your privacy, %s requires you to opt-in "
 "scrobbling per MPRIS client."
 msgstr ""
-"Suivez votre musique en scrobblingant vos clients MPRIS. En connectant votre "
-"compte, les informations MPRIS seront envoyées à ce service lorsque vous "
-"atteindrez la durée d'écoute minimale. Pour protéger votre vie privée, %s "
-"vous demande d'accepter le scrobbling pour chaque client MPRIS."
+"نگه داشتن آمار آهنک‌هایتان با ثبت‌کردن کارخواه‌های MPRIS. با وصل کردن حسابتان "
+"هنگام رسیدن به کمینهٔ زمان گوش کردن، اطّلاعات MPRIS به آن خدمت فرستاده خواهد "
+"شد. برای محافظت از محرمانگیتان %s نیازمند دادن اجازه به هر کارخواه MPRIS است."
 
 #. translators: switch title; lookup = search, fetch, request
 #: src/Views/ScrobblerSetup.vala:501
 msgid "Lookup Metadata on MusicBrainz before Scrobbling"
-msgstr "Consulter les métadonnées sur MusicBrainz avant le scrobbling"
+msgstr "گشتن به دنبال فراداده روی میوزیک‌برنز پیش از ثبت کردن"
 
 #. translators: switch description; untagged as in music files missing metadata like artist, album etc
 #: src/Views/ScrobblerSetup.vala:503
@@ -224,267 +218,266 @@ msgid ""
 "fix and complete metadata but it will also prevent scrobbling tracks not "
 "found in the MusicBrainz library."
 msgstr ""
-"Recommandé pour les clients non référencés ou les bibliothèques musicales "
-"non étiquetées, car il corrigera et complétera les métadonnées, mais il "
-"empêchera également le scrobbling de pistes non trouvées dans la "
-"bibliothèque MusicBrainz."
+"توصیه شده برای کارخواه‌های سرپرستی نشده یا کتابخانه‌های آهنگ برچسب نخورده؛ چرا "
+"که فراداده‌های را تعمیر و کامل می‌کند. ولی همچنین جلوی ثبت قطعه‌هایی که در "
+"کتابخانهٔ میوزیک‌برینز پیدا نشوند را خواهد گرفت."
 
 #: src/Views/ScrobblerSetup.vala:552
 #, c-format
 msgid "Forget %s Account?"
-msgstr "Compte %s oublié ?"
+msgstr "فراموش کردن حساب %s؟"
 
 #. translators: dialog description
 #: src/Views/ScrobblerSetup.vala:554
 msgid "This won't affect your submitted scrobbles."
-msgstr "Cela n'affectera pas les scrobbles que vous avez soumis."
+msgstr "روی ثبت‌های پیشنیتان تأثیری ندارد."
 
 #: src/Views/ScrobblerSetup.vala:559
 msgid "_Forget"
-msgstr "_Oublier"
+msgstr "_فراموشی"
 
 #. translators: error message when lastfm/librefm token validation fails
 #: src/Views/ScrobblerSetup.vala:648 src/Views/ScrobblerSetup.vala:651
 #: src/Views/ScrobblerSetup.vala:652 src/Views/ScrobblerSetup.vala:655
 msgid "Invalid Session"
-msgstr "Session invalide"
+msgstr "نشست نامعتبر"
 
 #. translators: the variable is an error message
 #: src/Views/ScrobblerSetup.vala:666
 #, c-format
 msgid "Couldn't get session: %s"
-msgstr "Impossible d'obtenir la session : %s"
+msgstr "نتوانست نشست را بگیرد: %s"
 
 #. translators: default string when title is missing
 #: src/Views/Window.vala:172
 msgid "Unknown Title"
-msgstr "Titre inconnu"
+msgstr "عنوان ناشناخته"
 
 #. translators: default string when artist is missing
 #: src/Views/Window.vala:177 src/Views/Window.vala:182
 msgid "Unknown Artist"
-msgstr "Artiste inconnu"
+msgstr "هنرمند ناشناخته"
 
 #. translators: default string when album is missing
 #: src/Views/Window.vala:190 src/Views/Window.vala:195
 msgid "Unknown Album"
-msgstr "Album inconnu"
+msgstr "آلبوم ناشناخته"
 
 #. translators: button tooltip text
 #: src/Views/Window.vala:247
 msgid "Pause"
-msgstr "Pause"
+msgstr "مکث"
 
 #: src/Views/Window.vala:247 src/Views/Window.vala:406
 msgid "Play"
-msgstr "Jouer"
+msgstr "پخش"
 
 #. translators: button tooltip text
 #: src/Views/Window.vala:398
 msgid "Previous Song"
-msgstr "Morceau précédent"
+msgstr "آهنگ پیشین"
 
 #. translators: button tooltip text
 #: src/Views/Window.vala:415
 msgid "Next Song"
-msgstr "Morceau suivant"
+msgstr "آهنگ بعدی"
 
 #. translators: button tooltip text
 #: src/Widgets/ControlsOverlay.vala:53
 msgid "Disable Scrobbling"
-msgstr "Désactive le scrobbling"
+msgstr "از کار انداختن ثبت"
 
 #. translators: button tooltip text
 #: src/Widgets/ControlsOverlay.vala:57 src/Widgets/ControlsOverlay.vala:66
 msgid "Enable Scrobbling"
-msgstr "Active le scrobbling"
+msgstr "به کار انداختن ثبت"
 
 #. translators: dropdown tooltip text
 #: src/Widgets/ControlsOverlay.vala:101
 msgid "Select Player"
-msgstr "Sélectionne le lecteur"
+msgstr "گزینش پخش‌کننده"
 
 #. translators: menu entry
 #: src/Widgets/ControlsOverlay.vala:127
 msgid "New Window"
-msgstr "Nouvelle fenêtre"
+msgstr "پنجرهٔ جدید"
 
 #. translators: menu entry that opens a dialog
 #: src/Widgets/ControlsOverlay.vala:130
 msgid "Scrobbling"
-msgstr "Scrobbler"
+msgstr "ثبت کردن"
 
 #. translators: whether to show the (window) background progress bar
 #: src/Widgets/ControlsOverlay.vala:137
 msgid "Background Progress"
-msgstr "Progrès en arrière-plan"
+msgstr "پیشرفت پس‌زمینه"
 
 #. translators: whether to show center the title, album and artist labels
 #: src/Widgets/ControlsOverlay.vala:139
 msgid "Center Text"
-msgstr "Centrer le texte"
+msgstr "وسط قرار دادن متن"
 
 #. translators: whether to show a client icon in the bottom right; client = music playing app
 #. translators: menu entry that opens a submenu; client = music playing app
 #: src/Widgets/ControlsOverlay.vala:141 src/Widgets/ControlsOverlay.vala:202
 msgid "Client Icon"
-msgstr "Icône du client"
+msgstr "نقشک کارخواه"
 
 #. translators: whether to make the artist and album labels slightly transparent / less prominent
 #: src/Widgets/ControlsOverlay.vala:143
 msgid "Dim Metadata Labels"
-msgstr "Étiquettes de métadonnées discrètes"
+msgstr "تاریک کردن برچسب‌های فراداده"
 
 #. translators: whether to fit the cover art in the cover; this will stretch or crop art that is not square
 #: src/Widgets/ControlsOverlay.vala:145
 msgid "Fit Art on Cover"
-msgstr "Adapter la couverture"
+msgstr "برازش اثر هنری روی جلد"
 
 #. translators: whether to extract the colors of the cover and use them in UI elements (like Amberol or Material You)
 #: src/Widgets/ControlsOverlay.vala:147
 msgid "Extract Cover Colors"
-msgstr "Extraire les couleurs de la couverture"
+msgstr "استخراج رنگ‌های طرح جلد"
 
 #. translators: whether to show a turntable tonearm in turntable styled cover art; tonearm is the 'arm' part of the turntable,
 #. you may translate it as 'arm' (mechanical part)
 #: src/Widgets/ControlsOverlay.vala:150
 msgid "Tonearm"
-msgstr "Bras de lecture"
+msgstr "سوزن"
 
 #. translators: menu entry that opens a submenu; components = toggleable parts of the UI
 #: src/Widgets/ControlsOverlay.vala:152
 msgid "Components"
-msgstr "Composants"
+msgstr "اجزا"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:156
 msgid "Linear"
-msgstr "Linéaire"
+msgstr "خطی"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:158
 msgid "Nearest"
-msgstr "Au plus proche"
+msgstr "نزدیک‌ترین"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:160
 msgid "Trilinear"
-msgstr "Trilinéaire"
+msgstr "سه‌خطی"
 
 #. translators: menu entry that opens a submenu; cover scaling = algorithm used for down/upscaling cover art
 #: src/Widgets/ControlsOverlay.vala:162
 msgid "Cover Scaling"
-msgstr "Mise à l'échelle"
+msgstr "مقیاس کردن طرح جلد"
 
 #. translators: orientation name
 #: src/Widgets/ControlsOverlay.vala:166
 msgid "Horizontal"
-msgstr "Horizontale"
+msgstr "افقی"
 
 #. translators: orientation name
 #: src/Widgets/ControlsOverlay.vala:168
 msgid "Vertical"
-msgstr "Verticale"
+msgstr "عمودی"
 
 #. translators: menu entry that opens a submenu; as in whether it's horizontal or vertical
 #: src/Widgets/ControlsOverlay.vala:170
 msgid "Orientation"
-msgstr "Orientation"
+msgstr "جهت"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:175 src/Widgets/ControlsOverlay.vala:187
 msgid "Small"
-msgstr "Petit"
+msgstr "کوچک"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:177 src/Widgets/ControlsOverlay.vala:189
 msgid "Regular"
-msgstr "Normal"
+msgstr "معمولی"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:179 src/Widgets/ControlsOverlay.vala:191
 msgid "Big"
-msgstr "Grand"
+msgstr "بزرگ"
 
 #. translators: menu entry that opens a submenu; cover = the song cover art
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:181 src/Widgets/ControlsOverlay.vala:212
 msgid "Cover"
-msgstr "Couverture"
+msgstr "طرح جلد"
 
 #. https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:183
 msgid "Size"
-msgstr "Taille"
+msgstr "اندازه"
 
 #. translators: menu entry that opens a submenu; text = all the app text, may be translated to fonts
 #: src/Widgets/ControlsOverlay.vala:193
 msgid "Text"
-msgstr "Texte"
+msgstr "متن"
 
 #. translators: cover icon style; symbolic = the monochrome simplified version
 #: src/Widgets/ControlsOverlay.vala:198
 msgid "Symbolic"
-msgstr "Symbolique"
+msgstr "نمادین"
 
 #. translators: cover icon style
 #: src/Widgets/ControlsOverlay.vala:200
 msgid "Full Color"
-msgstr "Coloré"
+msgstr "تمام رنگی"
 
 #. translators: cover image style; it's a square with rounded corners
 #: src/Widgets/ControlsOverlay.vala:206
 msgid "Card"
-msgstr "Carte"
+msgstr "کارت"
 
 #. translators: cover image style; it's a fading out effect; may be translated to 'Fade'
 #: src/Widgets/ControlsOverlay.vala:210
 msgid "Shadow"
-msgstr "Ombré"
+msgstr "سایه"
 
 #. translators: window style name
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:216 src/Widgets/ControlsOverlay.vala:223
 msgid "Window"
-msgstr "Fenêtré"
+msgstr "پنجره‌"
 
 #. translators: window style name, probably leave it as is; OSD = on screen display,
 #. it's the dark semi-trasparent background and white text style
 #: src/Widgets/ControlsOverlay.vala:219
 msgid "OSD"
-msgstr "OSD"
+msgstr "نمایش روی صفحه"
 
 #. translators: window style name
 #: src/Widgets/ControlsOverlay.vala:221
 msgid "Transparent"
-msgstr "Transparent"
+msgstr "شفّاف"
 
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:226
 msgid "Style"
-msgstr "Style"
+msgstr "سبک"
 
 #. misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
 #. translators: menu entry, variable is the app name (Turntable)
 #: src/Widgets/ControlsOverlay.vala:234
 #, c-format
 msgid "About %s"
-msgstr "À propos de %s"
+msgstr "دربارهٔ %s"
 
 #. translators: menu entry
 #: src/Widgets/ControlsOverlay.vala:236
 msgid "Quit"
-msgstr "Quitter"
+msgstr "خروج"
 
 #: src/Widgets/ControlsOverlay.vala:257
 msgid "Menu"
-msgstr "Menu"
+msgstr "فهرست"
 
 #. translators: default string when MPRIS Client (aka Music playing app) doesn't have a name
 #: src/Widgets/ProgressBin.vala:99 src/Widgets/ProgressBin.vala:233
 msgid "Unknown Client"
-msgstr "Client inconnu"
+msgstr "کارخواه ناشناخته"

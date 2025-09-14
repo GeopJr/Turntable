@@ -2,13 +2,14 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Sergio Varela <ingrownmink4@noreply.codeberg.org>, 2025.
+# jeheda <jeheda@noreply.codeberg.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-04-29 03:04+0300\n"
-"PO-Revision-Date: 2025-05-01 02:26+0000\n"
-"Last-Translator: Sergio Varela <ingrownmink4@noreply.codeberg.org>\n"
+"PO-Revision-Date: 2025-06-25 16:58+0000\n"
+"Last-Translator: jeheda <jeheda@noreply.codeberg.org>\n"
 "Language-Team: Spanish <https://translate.codeberg.org/projects/turntable/"
 "turntable/es/>\n"
 "Language: es\n"
@@ -16,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.2\n"
+"X-Generator: Weblate 5.11.4\n"
 
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
@@ -158,39 +159,39 @@ msgstr "_Más información"
 #: src/Views/ScrobblerSetup.vala:60
 #, c-format
 msgid "Forget %s Account"
-msgstr ""
+msgstr "Olvidar Cuenta %s"
 
 #. translators: variable is a link
 #: src/Views/ScrobblerSetup.vala:200
 #, c-format
 msgid "You can get your user token from %s."
-msgstr ""
+msgstr "Puedes obtener tu token de usuario desde %s."
 
 #. translators: host as in a web server; entry title
 #: src/Views/ScrobblerSetup.vala:220
 msgid "Host API"
-msgstr ""
+msgstr "Servidor API"
 
 #. translators: can also be translated as Authentication Token
 #: src/Views/ScrobblerSetup.vala:230
 msgid "User Token"
-msgstr ""
+msgstr "Token de Usuario"
 
 #: src/Views/ScrobblerSetup.vala:282 src/Views/ScrobblerSetup.vala:284
 #: src/Views/ScrobblerSetup.vala:286 src/Views/ScrobblerSetup.vala:287
 msgid "Invalid Token"
-msgstr ""
+msgstr "Token Invalido"
 
 #. translators: the variable is an error message
 #: src/Views/ScrobblerSetup.vala:295 src/Views/ScrobblerSetup.vala:300
 #, c-format
 msgid "Couldn't validate token: %s"
-msgstr ""
+msgstr "No se pudo validar el token: %s"
 
 #. translators: host as in a web server; entry title
 #: src/Views/ScrobblerSetup.vala:360 src/Views/ScrobblerSetup.vala:431
 msgid "Host"
-msgstr ""
+msgstr "Servidor"
 
 #. vala-lint=line-length
 #. translators: probably leave it as is unless there's a way to describe it accurately
@@ -224,7 +225,7 @@ msgstr ""
 #: src/Views/ScrobblerSetup.vala:552
 #, c-format
 msgid "Forget %s Account?"
-msgstr ""
+msgstr "¿Olvidar Cuenta %s?"
 
 #. translators: dialog description
 #: src/Views/ScrobblerSetup.vala:554
@@ -239,103 +240,103 @@ msgstr ""
 #: src/Views/ScrobblerSetup.vala:648 src/Views/ScrobblerSetup.vala:651
 #: src/Views/ScrobblerSetup.vala:652 src/Views/ScrobblerSetup.vala:655
 msgid "Invalid Session"
-msgstr ""
+msgstr "Sesión Invalida"
 
 #. translators: the variable is an error message
 #: src/Views/ScrobblerSetup.vala:666
 #, c-format
 msgid "Couldn't get session: %s"
-msgstr ""
+msgstr "No se pudo obtener la sesión: %s"
 
 #. translators: default string when title is missing
 #: src/Views/Window.vala:172
 msgid "Unknown Title"
-msgstr ""
+msgstr "Título Desconocido"
 
 #. translators: default string when artist is missing
 #: src/Views/Window.vala:177 src/Views/Window.vala:182
 msgid "Unknown Artist"
-msgstr ""
+msgstr "Artista Desconocido"
 
 #. translators: default string when album is missing
 #: src/Views/Window.vala:190 src/Views/Window.vala:195
 msgid "Unknown Album"
-msgstr ""
+msgstr "Álbum Desconocido"
 
 #. translators: button tooltip text
 #: src/Views/Window.vala:247
 msgid "Pause"
-msgstr ""
+msgstr "Pausar"
 
 #: src/Views/Window.vala:247 src/Views/Window.vala:406
 msgid "Play"
-msgstr ""
+msgstr "Reproducir"
 
 #. translators: button tooltip text
 #: src/Views/Window.vala:398
 msgid "Previous Song"
-msgstr ""
+msgstr "Canción Anterior"
 
 #. translators: button tooltip text
 #: src/Views/Window.vala:415
 msgid "Next Song"
-msgstr ""
+msgstr "Canción Siguiente"
 
 #. translators: button tooltip text
 #: src/Widgets/ControlsOverlay.vala:53
 msgid "Disable Scrobbling"
-msgstr ""
+msgstr "Desactivar Scrobbling"
 
 #. translators: button tooltip text
 #: src/Widgets/ControlsOverlay.vala:57 src/Widgets/ControlsOverlay.vala:66
 msgid "Enable Scrobbling"
-msgstr ""
+msgstr "Activar Scrobbling"
 
 #. translators: dropdown tooltip text
 #: src/Widgets/ControlsOverlay.vala:101
 msgid "Select Player"
-msgstr ""
+msgstr "Seleccionar Reproductor"
 
 #. translators: menu entry
 #: src/Widgets/ControlsOverlay.vala:127
 msgid "New Window"
-msgstr ""
+msgstr "Nueva Ventana"
 
 #. translators: menu entry that opens a dialog
 #: src/Widgets/ControlsOverlay.vala:130
 msgid "Scrobbling"
-msgstr ""
+msgstr "Scrobbling"
 
 #. translators: whether to show the (window) background progress bar
 #: src/Widgets/ControlsOverlay.vala:137
 msgid "Background Progress"
-msgstr ""
+msgstr "Proceso en Segundo Plano"
 
 #. translators: whether to show center the title, album and artist labels
 #: src/Widgets/ControlsOverlay.vala:139
 msgid "Center Text"
-msgstr ""
+msgstr "Centrar Texto"
 
 #. translators: whether to show a client icon in the bottom right; client = music playing app
 #. translators: menu entry that opens a submenu; client = music playing app
 #: src/Widgets/ControlsOverlay.vala:141 src/Widgets/ControlsOverlay.vala:202
 msgid "Client Icon"
-msgstr ""
+msgstr "Ícono del Cliente"
 
 #. translators: whether to make the artist and album labels slightly transparent / less prominent
 #: src/Widgets/ControlsOverlay.vala:143
 msgid "Dim Metadata Labels"
-msgstr ""
+msgstr "Atenuar Texto de Metadatos"
 
 #. translators: whether to fit the cover art in the cover; this will stretch or crop art that is not square
 #: src/Widgets/ControlsOverlay.vala:145
 msgid "Fit Art on Cover"
-msgstr ""
+msgstr "Ajustar Imagen a la Cubierta"
 
 #. translators: whether to extract the colors of the cover and use them in UI elements (like Amberol or Material You)
 #: src/Widgets/ControlsOverlay.vala:147
 msgid "Extract Cover Colors"
-msgstr ""
+msgstr "Extraer Colores de la Cubierta"
 
 #. translators: whether to show a turntable tonearm in turntable styled cover art; tonearm is the 'arm' part of the turntable,
 #. you may translate it as 'arm' (mechanical part)
@@ -346,103 +347,103 @@ msgstr ""
 #. translators: menu entry that opens a submenu; components = toggleable parts of the UI
 #: src/Widgets/ControlsOverlay.vala:152
 msgid "Components"
-msgstr ""
+msgstr "Elementos"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:156
 msgid "Linear"
-msgstr ""
+msgstr "Lineal"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:158
 msgid "Nearest"
-msgstr ""
+msgstr "Más cercano"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:160
 msgid "Trilinear"
-msgstr ""
+msgstr "Trilineal"
 
 #. translators: menu entry that opens a submenu; cover scaling = algorithm used for down/upscaling cover art
 #: src/Widgets/ControlsOverlay.vala:162
 msgid "Cover Scaling"
-msgstr ""
+msgstr "Escalado de la Cubierta"
 
 #. translators: orientation name
 #: src/Widgets/ControlsOverlay.vala:166
 msgid "Horizontal"
-msgstr ""
+msgstr "Horizontal"
 
 #. translators: orientation name
 #: src/Widgets/ControlsOverlay.vala:168
 msgid "Vertical"
-msgstr ""
+msgstr "Vertical"
 
 #. translators: menu entry that opens a submenu; as in whether it's horizontal or vertical
 #: src/Widgets/ControlsOverlay.vala:170
 msgid "Orientation"
-msgstr ""
+msgstr "Orientación"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:175 src/Widgets/ControlsOverlay.vala:187
 msgid "Small"
-msgstr ""
+msgstr "Pequeño"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:177 src/Widgets/ControlsOverlay.vala:189
 msgid "Regular"
-msgstr ""
+msgstr "Normal"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:179 src/Widgets/ControlsOverlay.vala:191
 msgid "Big"
-msgstr ""
+msgstr "Grande"
 
 #. translators: menu entry that opens a submenu; cover = the song cover art
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:181 src/Widgets/ControlsOverlay.vala:212
 msgid "Cover"
-msgstr ""
+msgstr "Cubierta"
 
 #. https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:183
 msgid "Size"
-msgstr ""
+msgstr "Tamaño"
 
 #. translators: menu entry that opens a submenu; text = all the app text, may be translated to fonts
 #: src/Widgets/ControlsOverlay.vala:193
 msgid "Text"
-msgstr ""
+msgstr "Texto"
 
 #. translators: cover icon style; symbolic = the monochrome simplified version
 #: src/Widgets/ControlsOverlay.vala:198
 msgid "Symbolic"
-msgstr ""
+msgstr "Simplificado"
 
 #. translators: cover icon style
 #: src/Widgets/ControlsOverlay.vala:200
 msgid "Full Color"
-msgstr ""
+msgstr "A Color"
 
 #. translators: cover image style; it's a square with rounded corners
 #: src/Widgets/ControlsOverlay.vala:206
 msgid "Card"
-msgstr ""
+msgstr "Tarjeta"
 
 #. translators: cover image style; it's a fading out effect; may be translated to 'Fade'
 #: src/Widgets/ControlsOverlay.vala:210
 msgid "Shadow"
-msgstr ""
+msgstr "Sombreada"
 
 #. translators: window style name
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:216 src/Widgets/ControlsOverlay.vala:223
 msgid "Window"
-msgstr ""
+msgstr "Ventana"
 
 #. translators: window style name, probably leave it as is; OSD = on screen display,
 #. it's the dark semi-trasparent background and white text style
@@ -453,30 +454,30 @@ msgstr ""
 #. translators: window style name
 #: src/Widgets/ControlsOverlay.vala:221
 msgid "Transparent"
-msgstr ""
+msgstr "Transparente"
 
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:226
 msgid "Style"
-msgstr ""
+msgstr "Estilo"
 
 #. misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
 #. translators: menu entry, variable is the app name (Turntable)
 #: src/Widgets/ControlsOverlay.vala:234
 #, c-format
 msgid "About %s"
-msgstr ""
+msgstr "Acerca de %s"
 
 #. translators: menu entry
 #: src/Widgets/ControlsOverlay.vala:236
 msgid "Quit"
-msgstr ""
+msgstr "Salir"
 
 #: src/Widgets/ControlsOverlay.vala:257
 msgid "Menu"
-msgstr ""
+msgstr "Menú"
 
 #. translators: default string when MPRIS Client (aka Music playing app) doesn't have a name
 #: src/Widgets/ProgressBin.vala:99 src/Widgets/ProgressBin.vala:233
 msgid "Unknown Client"
-msgstr ""
+msgstr "Cliente Desconocido"
