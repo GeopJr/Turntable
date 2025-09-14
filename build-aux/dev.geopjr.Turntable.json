@@ -32,6 +32,7 @@
 		"--filesystem=~/.var/app/org.gnome.Lollypop/cache/lollypop/:ro",
 		"--filesystem=~/.var/app/io.github.nokse22.high-tide/cache/images:ro",
 		"--filesystem=~/.cache/:ro",
+		"--filesystem=/tmp",
 		"--filesystem=xdg-data/applications",
 		"--filesystem=~/.local/share/xdg-desktop-portal:ro",
 		"--filesystem=/var/lib/snapd/:ro",
