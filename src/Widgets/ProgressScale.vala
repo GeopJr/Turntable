@@ -130,6 +130,7 @@ public class Turntable.Widgets.ProgressScale : Adw.BreakpointBin {
 	Gtk.Label length_label;
 	Gtk.Scale scale;
 	construct {
+		this.visible = false;
 		this.width_request = 156;
 		this.height_request = 51;
 		grid = new Gtk.Grid () {
