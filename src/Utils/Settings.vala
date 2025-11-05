@@ -5,8 +5,6 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public bool component_progressbin { get; set; }
 	public bool component_extract_colors { get; set; }
 	public string window_style { get; set; }
-	public bool client_icon_style_symbolic { get; set; }
-	public bool component_client_icon { get; set; }
 	public bool component_cover_fit { get; set; }
 	public bool component_tonearm { get; set; }
 	public bool component_center_text { get; set; }
@@ -18,6 +16,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public string cover_size { get; set; }
 	public string text_size { get; set; }
 	public string cover_scaling { get; set; }
+	public string client_icon_style { get; set; }
 	public string[] scrobbler_allowlist { get; set; default = {}; }
 
 	private const string[] KEYS_TO_INIT = {
@@ -27,8 +26,6 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"component-progressbin",
 		"component-extract-colors",
 		"window-style",
-		"client-icon-style-symbolic",
-		"component-client-icon",
 		"component-cover-fit",
 		"scrobbler-allowlist",
 		"meta-dim",
@@ -40,6 +37,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"component-center-text",
 		"now-playing",
 		"component-more-controls",
+		"client-icon-style",
 		"offline-scrobbling"
 	};
 

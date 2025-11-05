@@ -37,11 +37,16 @@
 		<key name="cover-scaling" type="s">
 			<default>'linear'</default>
 		</key>
+    <!-- Deprecated: use client-icon-style -->
 		<key name="client-icon-style-symbolic" type="b">
 			<default>true</default>
 		</key>
+    <!-- Deprecated: use client-icon-style -->
 		<key name="component-client-icon" type="b">
 			<default>true</default>
+		</key>
+    <key name="client-icon-style" type="s">
+			<default>'unset'</default>
 		</key>
 		<key name="component-cover-fit" type="b">
 			<default>true</default>

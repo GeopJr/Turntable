@@ -10,11 +10,13 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	}
 
 	public enum ClientIconStyle {
+		NONE,
 		SYMBOLIC,
 		FULL_COLOR;
 
 		public string to_string () {
 			switch (this) {
+				case NONE: return "none";
 				case FULL_COLOR: return "full-color";
 				default: return "symbolic";
 			}
@@ -22,15 +24,10 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 
 		public static ClientIconStyle from_string (string string_style) {
 			switch (string_style) {
+				case "none": return NONE;
 				case "full-color": return FULL_COLOR;
 				default: return SYMBOLIC;
 			}
-		}
-	}
-
-	public bool client_icon_enabled {
-		set {
-			client_icon_widget.visible = value;
 		}
 	}
 
@@ -38,13 +35,19 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		string name = this.client_icon;
 
 		switch (this.client_icon_style) {
+			case NONE:
+				client_icon_widget.visible = false;
+				break;
 			case FULL_COLOR:
+				client_icon_widget.visible = true;
 				if (name.down ().has_suffix ("-symbolic")) {
 					name = name.substring (0, name.length - 9);
 				}
 				if (client_icon_widget.has_css_class ("dim-label")) client_icon_widget.remove_css_class ("dim-label");
 				break;
 			case SYMBOLIC:
+				client_icon_widget.visible = true;
+
 				if (!name.down ().has_suffix ("-symbolic")) {
 					name = @"$name-symbolic";
 				}

@@ -137,8 +137,6 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		component_submenu_model.append (_("Background Progress"), "win.component-progressbin");
 		// translators: whether to show center the title, album and artist labels
 		component_submenu_model.append (_("Center Text"), "win.component-center-text");
-		// translators: whether to show a client icon in the bottom right; client = music playing app
-		component_submenu_model.append (_("Client Icon"), "win.component-client-icon");
 		// translators: whether to make the artist and album labels slightly transparent / less prominent
 		component_submenu_model.append (_("Dim Metadata Labels"), "win.meta-dim");
 		// translators: whether to fit the cover art in the cover; this will stretch or crop art that is not square
@@ -196,10 +194,11 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 		var style_submenu_model = new GLib.Menu ();
 		var client_style_submenu_model = new GLib.Menu ();
+		client_style_submenu_model.append (_("None"), "win.client-icon-style('none')");
 		// translators: cover icon style; symbolic = the monochrome simplified version
-		client_style_submenu_model.append (_("Symbolic"), "win.client-icon-style-symbolic(true)");
+		client_style_submenu_model.append (_("Symbolic"), "win.client-icon-style('symbolic')");
 		// translators: cover icon style
-		client_style_submenu_model.append (_("Full Color"), "win.client-icon-style-symbolic(false)");
+		client_style_submenu_model.append (_("Full Color"), "win.client-icon-style('full-color')");
 		// translators: menu entry that opens a submenu; client = music playing app
 		style_submenu_model.append_submenu (_("Client Icon"), client_style_submenu_model);
 

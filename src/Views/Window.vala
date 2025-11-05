@@ -5,8 +5,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction component_progressbin_action;
 	GLib.SimpleAction component_extract_colors_action;
 	GLib.SimpleAction window_style_action;
-	GLib.SimpleAction client_icon_style_symbolic_action;
-	GLib.SimpleAction component_client_icon_action;
+	GLib.SimpleAction client_icon_style_action;
 	GLib.SimpleAction component_cover_fit_action;
 	GLib.SimpleAction meta_dim_action;
 	GLib.SimpleAction text_size_action;
@@ -511,13 +510,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		window_style_action.change_state.connect (on_change_window_style);
 		this.add_action (window_style_action);
 
-		client_icon_style_symbolic_action = new GLib.SimpleAction.stateful ("client-icon-style-symbolic", GLib.VariantType.BOOLEAN, settings.client_icon_style_symbolic);
-		client_icon_style_symbolic_action.change_state.connect (on_change_client_icon_style);
-		this.add_action (client_icon_style_symbolic_action);
-
-		component_client_icon_action = new GLib.SimpleAction.stateful ("component-client-icon", null, settings.component_client_icon);
-		component_client_icon_action.change_state.connect (on_change_component_client_icon);
-		this.add_action (component_client_icon_action);
+		client_icon_style_action = new GLib.SimpleAction.stateful ("client-icon-style", GLib.VariantType.STRING, settings.client_icon_style);
+		client_icon_style_action.change_state.connect (on_change_client_icon_style);
+		this.add_action (client_icon_style_action);
 
 		component_tonearm_action = new GLib.SimpleAction.stateful ("component-tonearm", null, settings.component_tonearm);
 		component_tonearm_action.change_state.connect (on_change_component_tonearm);
@@ -551,8 +546,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
 		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
 		settings.notify["window-style"].connect (update_window_from_settings);
-		settings.notify["client-icon-style-symbolic"].connect (update_client_icon_from_settings);
-		settings.notify["component-client-icon"].connect (update_component_client_icon_from_settings);
+		settings.notify["client-icon-style"].connect (update_client_icon_style_from_settings);
 		settings.notify["component-tonearm"].connect (update_component_tonearm_from_settings);
 		settings.notify["component-center-text"].connect (update_component_center_text_from_settings);
 		settings.notify["component-more-controls"].connect (update_component_more_controls_from_settings);
@@ -652,8 +646,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_progressbin_from_settings ();
 		update_extract_colors_from_settings ();
 		update_window_from_settings ();
-		update_client_icon_from_settings ();
-		update_component_client_icon_from_settings ();
+		update_client_icon_style_from_settings ();
 		update_component_tonearm_from_settings ();
 		update_component_cover_fit_from_settings ();
 		update_meta_dim_from_settings ();
@@ -695,11 +688,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		window_style_action.set_state (this.window_style.to_string ());
 	}
 
-	private void update_client_icon_from_settings () {
-		this.prog.client_icon_style = settings.client_icon_style_symbolic ? Widgets.ProgressBin.ClientIconStyle.SYMBOLIC : Widgets.ProgressBin.ClientIconStyle.FULL_COLOR;
-		client_icon_style_symbolic_action.set_state (settings.client_icon_style_symbolic);
-	}
-
 	private void update_meta_dim_from_settings () {
 		if (settings.meta_dim) {
 			if (!artist_label.has_css_class ("dim-label")) artist_label.add_css_class ("dim-label");
@@ -727,9 +715,23 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		toggle_orientation_action.set_state (settings.orientation_horizontal);
 	}
 
-	private void update_component_client_icon_from_settings () {
-		this.prog.client_icon_enabled = settings.component_client_icon;
-		component_client_icon_action.set_state (settings.component_client_icon);
+	private void update_client_icon_style_from_settings () {
+		// TODO: deprecated, remove in next major
+		Widgets.ProgressBin.ClientIconStyle cis;
+		if (settings.client_icon_style == "unset") {
+			if (settings.get_boolean ("component-client-icon")) {
+				cis = settings.get_boolean ("client-icon-style-symbolic") ? Widgets.ProgressBin.ClientIconStyle.SYMBOLIC : Widgets.ProgressBin.ClientIconStyle.FULL_COLOR;
+			} else {
+				cis = NONE;
+			}
+
+			settings.client_icon_style = cis.to_string ();
+		} else {
+			cis = Widgets.ProgressBin.ClientIconStyle.from_string (settings.client_icon_style);
+		}
+
+		this.prog.client_icon_style = cis;
+		client_icon_style_action.set_state (cis.to_string ());
 	}
 
 	private void update_component_tonearm_from_settings () {
@@ -904,13 +906,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 	private void on_change_client_icon_style (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
-		settings.client_icon_style_symbolic = value.get_boolean ();
-		settings.component_client_icon = true;
-	}
-
-	private void on_change_component_client_icon (GLib.SimpleAction action, GLib.Variant? value) {
-		if (value == null) return;
-		settings.component_client_icon = value.get_boolean ();
+		settings.client_icon_style = value.get_string ();
 	}
 
 	private void on_change_component_tonearm (GLib.SimpleAction action, GLib.Variant? value) {
