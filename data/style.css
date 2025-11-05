@@ -11,15 +11,15 @@ button.large {
 	margin: 16px;
 }
 
-.card-like.vertical {
+.card-like.vertical:not(.collapsed) {
 	margin-bottom: 0;
 }
 
-.card-like.horizontal:dir(ltr):not(.circular-art) {
+.card-like.horizontal:dir(ltr):not(.circular-art):not(.collapsed) {
 	margin-right: 0;
 }
 
-.card-like.horizontal:dir(rtl):not(.circular-art) {
+.card-like.horizontal:dir(rtl):not(.circular-art):not(.collapsed) {
 	margin-left: 0;
 }
 

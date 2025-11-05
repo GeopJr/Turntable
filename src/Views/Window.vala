@@ -16,6 +16,23 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction component_more_controls_action;
 	public string uuid { get; private set; }
 
+	private bool _collapsed = false;
+	public bool collapsed {
+		get { return _collapsed; }
+		set {
+			if (_collapsed != value) {
+				settings.collapsed_controls =
+				_collapsed = value;
+				non_art_revealer.reveal_child = !value;
+				if (value) {
+					controls_overlay.add_css_class ("collapsed");
+				} else {
+					controls_overlay.remove_css_class ("collapsed");
+				}
+			}
+		}
+	}
+
 	~Window () {
 		update_player (null);
 		debug ("Destroying: %s", uuid);
@@ -301,6 +318,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		artist_label.force_width =
 		title_label.force_width = this.orientation == HORIZONTAL;
 
+		non_art_revealer.transition_type = this.orientation == HORIZONTAL
+			? (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL ? Gtk.RevealerTransitionType.SLIDE_LEFT : Gtk.RevealerTransitionType.SLIDE_RIGHT)
+			: Gtk.RevealerTransitionType.SLIDE_DOWN;
+		controls_overlay.update_toggle_controls_icon ();
 		update_album_artist_title ();
 	}
 
@@ -386,7 +407,8 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Widgets.Marquee album_label;
 	Widgets.Cover art_pic;
 	Widgets.Tonearm tonearm;
-	Gtk.Box non_art_box;
+	//  Gtk.Box non_art_box;
+	Gtk.Revealer non_art_revealer;
 	Widgets.ProgressBin prog;
 	Gtk.Box main_box;
 	Widgets.ControlsOverlay controls_overlay;
@@ -413,6 +435,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		art_pic.notify["extracted-colors"].connect (update_extracted_colors);
 		controls_overlay = new Widgets.ControlsOverlay (art_pic);
+		controls_overlay.toggle_controls.connect (toggle_controls);
 
 		tonearm = new Widgets.Tonearm () {
 			halign = CENTER,
@@ -420,15 +443,18 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		};
 		main_box.append (tonearm);
 
-		non_art_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
+		Gtk.Box non_art_box = new Gtk.Box (Gtk.Orientation.VERTICAL, 0) {
 			hexpand = true,
 			margin_top = 16,
 			margin_bottom = 16,
 			margin_end = 16,
 			margin_start = 16
 		};
-		main_box.append (non_art_box);
-
+		non_art_revealer = new Gtk.Revealer () {
+			child = non_art_box,
+			reveal_child = !settings.collapsed_controls
+		};
+		main_box.append (non_art_revealer);
 
 		title_label = new Widgets.Marquee () {
 			css_classes = {"title-2"},
@@ -655,6 +681,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_cover_scaling_from_settings ();
 		update_component_center_text_from_settings ();
 		update_component_more_controls_from_settings ();
+		this.collapsed = settings.collapsed_controls;
 	}
 
 	private void update_cover_scaling_from_settings () {
@@ -927,5 +954,9 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_component_cover_fit (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.component_cover_fit = value.get_boolean ();
+	}
+
+	private void toggle_controls () {
+		this.collapsed = !this.collapsed;
 	}
 }

@@ -1,4 +1,5 @@
 public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
+	public signal void toggle_controls ();
 	public signal void player_changed (Mpris.Entry? new_player);
 	public Mpris.Entry? last_player { get; set; default = null; }
 
@@ -73,6 +74,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 	GLib.ListStore players_store;
 	Gtk.DropDown client_dropdown;
 	Gtk.MenuButton menu_button;
+	Gtk.Button toggle_controls_button;
 	#if SCROBBLING
 		ScrobbleButton scrobble_button;
 	#endif
@@ -262,6 +264,15 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			on_accounts_changed ();
 		#endif
 
+		toggle_controls_button = new Gtk.Button () {
+			css_classes = {"circular", "osd", "min34px"},
+			icon_name = "dock-right-symbolic",
+			// translators: tooltip for button that hides/shows all the media controls and labels
+			tooltip_text = _("Toggle Controls")
+		};
+		toggle_controls_button.clicked.connect (on_toggle_controls_button);
+		sub_box.append (toggle_controls_button);
+
 		menu_button = new Gtk.MenuButton () {
 			icon_name = "menu-large-symbolic",
 			primary = true,
@@ -289,6 +300,12 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		update_style (cover.style, cover.orientation);
 	}
 
+	public void update_toggle_controls_icon () {
+		toggle_controls_button.icon_name = settings.orientation_horizontal
+			? (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL ? "dock-left-symbolic" : "dock-right-symbolic")
+			: "dock-bottom-symbolic";
+	}
+
 	private void on_state_flags_changed () {
 		bool should_reveal_child = (
 			this.get_state_flags ()
@@ -310,6 +327,10 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		if (!revealer.reveal_child || menu_button.active || ((Gtk.ToggleButton) client_dropdown.get_first_child ()).active) return false;
 		revealer.reveal_child = false;
 		return true;
+	}
+
+	private void on_toggle_controls_button () {
+		toggle_controls ();
 	}
 
 	private void update_store () {
