@@ -318,4 +318,17 @@ public class Turntable.Mpris.Entry : GLib.Object {
 			this.notify_property ("length");
 		}
 	}
+
+	public async bool is_active () {
+		try {
+			DesktopBus.Mpris.MediaPlayer2Player bus = yield Bus.get_proxy (
+				BusType.SESSION,
+				this.bus_namespace,
+				"/org/mpris/MediaPlayer2"
+			);
+			return bus.playback_status == "Playing";
+		} catch {
+			return false;
+		}
+	}
 }

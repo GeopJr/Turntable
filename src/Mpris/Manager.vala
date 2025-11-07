@@ -60,4 +60,15 @@ public class Turntable.Mpris.Manager : GLib.Object {
 			remove_player (name);
 		}
 	}
+
+	public async Entry? active_player () {
+		for (int i = 0; i < entries.length ; i++) {
+			var entry = entries.index (i);
+			if (yield entry.is_active ()) {
+				return entry;
+			}
+		}
+
+		return null;
+	}
 }

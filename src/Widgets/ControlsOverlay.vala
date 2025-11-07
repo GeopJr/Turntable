@@ -333,11 +333,27 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		toggle_controls ();
 	}
 
+	private bool done_initial_active_check = false;
 	private void update_store () {
 		players_store.splice (0, players_store.n_items, mpris_manager.get_players ());
 		players_store.sort ((GLib.CompareDataFunc<Mpris.Entry>) compare_players);
-
 		client_dropdown.enable_search = players_store.n_items > 10;
+
+		if (!done_initial_active_check) {
+			done_initial_active_check = true;
+			if (players_store.n_items > 1) {
+				mpris_manager.active_player.begin ((obj, res) => {
+					Mpris.Entry? active_player = mpris_manager.active_player.end (res);
+					if (active_player != null) {
+						uint pos;
+						if (players_store.find (active_player, out pos)) {
+							client_dropdown.selected = pos;
+						}
+					}
+				});
+			}
+		}
+
 		if (this.last_player == null) selection_changed (); // if always ensure player
 	}
 
