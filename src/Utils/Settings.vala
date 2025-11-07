@@ -14,6 +14,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public bool now_playing { get; set; }
 	public bool offline_scrobbling { get; set; }
 	public bool collapsed_controls { get; set; }
+	public bool hide_client_icon_collapsed { get; set; }
 	public string cover_size { get; set; }
 	public string text_size { get; set; }
 	public string cover_scaling { get; set; }
@@ -37,6 +38,7 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"component-tonearm",
 		"component-center-text",
 		"now-playing",
+		"hide-client-icon-collapsed",
 		"component-more-controls",
 		"offline-scrobbling",
 		"collapsed-controls",

@@ -60,6 +60,9 @@
 		<key name="now-playing" type="b">
 			<default>false</default>
 		</key>
+		<key name="hide-client-icon-collapsed" type="b">
+			<default>true</default>
+		</key>
 		<key name="component-more-controls" type="b">
 			<default>false</default>
 		</key>

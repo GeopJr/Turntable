@@ -4,6 +4,7 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 	Adw.TimedAnimation animation;
 	Gtk.Overlay overlay;
 	Gtk.Image client_icon_widget;
+	Adw.TimedAnimation client_icon_animation;
 
 	~ProgressBin () {
 		debug ("Destroying");
@@ -56,6 +57,19 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 		}
 
 		_client_icon = client_icon_widget.icon_name = name;
+	}
+
+	private bool _client_icon_revealed = true;
+	public bool client_icon_revealed {
+		get { return _client_icon_revealed; }
+		set {
+			if (value != _client_icon_revealed) {
+				_client_icon_revealed = value;
+				client_icon_animation.value_from = client_icon_animation.value;
+				client_icon_animation.value_to = value ? 1 : 0;
+				client_icon_animation.play ();
+			}
+		}
 	}
 
 	public Gtk.Widget content {
@@ -227,6 +241,10 @@ public class Turntable.Widgets.ProgressBin : Adw.Bin {
 			margin_bottom = 6,
 			icon_size = Gtk.IconSize.LARGE,
 			can_target = false
+		};
+
+		client_icon_animation = new Adw.TimedAnimation (this, 0.0, 1.0, 250, new Adw.PropertyAnimationTarget (client_icon_widget, "opacity")) {
+			easing = Adw.Easing.LINEAR
 		};
 
 		overlay.add_overlay (client_icon_widget);

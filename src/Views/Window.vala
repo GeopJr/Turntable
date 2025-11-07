@@ -4,6 +4,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	GLib.SimpleAction progressscale_style_action;
 	GLib.SimpleAction component_progressbin_action;
 	GLib.SimpleAction component_extract_colors_action;
+	GLib.SimpleAction hide_client_icon_collapsed_action;
 	GLib.SimpleAction window_style_action;
 	GLib.SimpleAction client_icon_style_action;
 	GLib.SimpleAction component_cover_fit_action;
@@ -29,8 +30,13 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 				} else {
 					controls_overlay.remove_css_class ("collapsed");
 				}
+				update_client_icon_revealed ();
 			}
 		}
+	}
+
+	private void update_client_icon_revealed () {
+		this.prog.client_icon_revealed = !settings.hide_client_icon_collapsed || !this.collapsed;
 	}
 
 	~Window () {
@@ -419,6 +425,12 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		this.icon_name = Build.DOMAIN;
 		this.title = Build.NAME;
 
+		#if GTK_4_20
+			// Somehow this worked for a bit but then
+			// vala realized this is not in the vapi?
+			//  this.gravity = Gtk.WindowGravity.CENTER;
+			this.set_property ("gravity", 4);
+		#endif
 		setup_window_size ();
 		this.height_request = -1;
 		this.width_request = -1;
@@ -524,6 +536,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		component_extract_colors_action.change_state.connect (on_change_component_extract_colors);
 		this.add_action (component_extract_colors_action);
 
+		hide_client_icon_collapsed_action = new GLib.SimpleAction.stateful ("hide-client-icon-collapsed", null, settings.hide_client_icon_collapsed);
+		hide_client_icon_collapsed_action.change_state.connect (on_change_hide_client_icon_collapsed);
+		this.add_action (hide_client_icon_collapsed_action);
+
 		meta_dim_action = new GLib.SimpleAction.stateful ("meta-dim", null, settings.meta_dim);
 		meta_dim_action.change_state.connect (on_change_meta_dim);
 		this.add_action (meta_dim_action);
@@ -571,6 +587,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		settings.notify["orientation-horizontal"].connect (update_orientation_from_settings);
 		settings.notify["component-progressbin"].connect (update_progressbin_from_settings);
 		settings.notify["component-extract-colors"].connect (update_extract_colors_from_settings);
+		settings.notify["hide-client-icon-collapsed"].connect (update_hide_client_icon_collapsed_from_settings);
 		settings.notify["window-style"].connect (update_window_from_settings);
 		settings.notify["client-icon-style"].connect (update_client_icon_style_from_settings);
 		settings.notify["component-tonearm"].connect (update_component_tonearm_from_settings);
@@ -671,6 +688,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		update_progressscale_from_settings ();
 		update_progressbin_from_settings ();
 		update_extract_colors_from_settings ();
+		update_hide_client_icon_collapsed_from_settings ();
 		update_window_from_settings ();
 		update_client_icon_style_from_settings ();
 		update_component_tonearm_from_settings ();
@@ -735,6 +753,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_extract_colors_from_settings () {
 		this.prog.extract_colors_enabled = settings.component_extract_colors;
 		component_extract_colors_action.set_state (this.prog.extract_colors_enabled);
+	}
+
+	private void update_hide_client_icon_collapsed_from_settings () {
+		update_client_icon_revealed ();
+		hide_client_icon_collapsed_action.set_state (settings.hide_client_icon_collapsed);
 	}
 
 	private void update_orientation_from_settings () {
@@ -924,6 +947,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void on_change_component_extract_colors (GLib.SimpleAction action, GLib.Variant? value) {
 		if (value == null) return;
 		settings.component_extract_colors = value.get_boolean ();
+	}
+
+	private void on_change_hide_client_icon_collapsed (GLib.SimpleAction action, GLib.Variant? value) {
+		if (value == null) return;
+		settings.hide_client_icon_collapsed = value.get_boolean ();
 	}
 
 	private void on_change_window_style (GLib.SimpleAction action, GLib.Variant? value) {
