@@ -20,6 +20,9 @@ public class Turntable.Utils.Settings : GLib.Settings {
 	public string cover_scaling { get; set; }
 	public string client_icon_style { get; set; }
 	public string[] scrobbler_allowlist { get; set; default = {}; }
+	public bool autostart { get; set; }
+	public bool run_in_background { get; set; }
+	public bool start_hidden { get; set; }
 
 	private const string[] KEYS_TO_INIT = {
 		"orientation-horizontal",
@@ -42,7 +45,10 @@ public class Turntable.Utils.Settings : GLib.Settings {
 		"component-more-controls",
 		"offline-scrobbling",
 		"collapsed-controls",
-		"client-icon-style"
+		"client-icon-style",
+		"autostart",
+		"run-in-background",
+		"start-hidden"
 	};
 
 	public Settings () {

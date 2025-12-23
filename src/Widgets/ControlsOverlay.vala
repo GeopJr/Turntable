@@ -247,6 +247,7 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		misc_section_model = new GLib.Menu ();
 		//  misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
 
+		misc_section_model.append (_("Preferences"), "app.preferences");
 		// translators: menu entry, variable is the app name (Turntable)
 		misc_section_model.append (_("About %s").printf (Build.NAME), "app.about");
 		// translators: menu entry

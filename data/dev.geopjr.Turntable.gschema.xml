@@ -73,6 +73,15 @@
 			<default>[]</default>
 		</key>
 
+    <key name="autostart" type="b">
+			<default>false</default>
+		</key>
+    <key name="run-in-background" type="b">
+			<default>false</default>
+		</key>
+    <key name="start-hidden" type="b">
+			<default>false</default>
+		</key>
 		<key name="collapsed-controls" type="b">
 			<default>false</default>
 		</key>

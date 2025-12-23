@@ -86,14 +86,27 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 			if (cleared) return GLib.Source.REMOVE;
 
 			total_playtime += 1;
-			if (total_playtime == 3 && settings.now_playing) on_started_playing ();
+			if (total_playtime == 3) on_started_playing ();
 			else if (total_playtime >= scrobble_in_seconds) on_scrobble ();
 			return GLib.Source.CONTINUE;
 		}
 
+		private inline string to_background_portal_message (Payload payload) {
+			string res = payload.track;
+			if (payload.artist != null) {
+				res += @" - $(payload.artist)";
+			}
+
+			return res;
+		}
+
 		bool now_played = false;
 		private void on_started_playing () {
-			if (now_played) return;
+			// translators: background portal subtitle when scrobbling,
+			//				the variable is a song name
+			application.background_portal_message.begin (_("Scrobbling %s").printf (to_background_portal_message (payload)));
+
+			if (!settings.now_playing || now_played) return;
 			now_played = true;
 
 			debug ("[Pushable] Now Playing %s", payload.track);
@@ -105,6 +118,9 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 			if (lock_scrobbled) return;
 			lock_scrobbled = true;
 
+			// translators: background portal subtitle when publishing a scrobble,
+			//				the variable is a song name
+			application.background_portal_message.begin (_("Scrobbled %s").printf (to_background_portal_message (payload)));
 			debug ("[Pushable] Scrobbling %s", payload.track);
 			scrobbled (payload);
 
@@ -208,6 +224,7 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		debug ("Clearing %s", win_id);
 
 		if (queue_squared.contains (win_id)) {
+			application.background_portal_message.begin (null);
 			queue_squared.get (win_id).clear ();
 			queue_squared.remove (win_id);
 		}

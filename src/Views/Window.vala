@@ -424,6 +424,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 		this.uuid = GLib.Uuid.string_random ();
 		this.icon_name = Build.DOMAIN;
 		this.title = Build.NAME;
+		this.close_request.connect (on_window_closed);
 
 		#if GTK_4_20
 			// Somehow this worked for a bit but then
@@ -615,6 +616,11 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 		//  art_pic.bind_property ("cover", prog, "cover", SYNC_CREATE);
 		art_pic.notify["cover"].connect (on_cover_changed);
+	}
+
+	private bool on_window_closed () {
+		this.hide_on_close = settings.run_in_background && application.get_windows ().length () == 1;
+		return false;
 	}
 
 	private void on_cover_changed () {

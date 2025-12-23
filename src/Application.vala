@@ -10,6 +10,7 @@ namespace Turntable {
 
 	//  public static Utils.Cache custom_color_cache;
 	public static Utils.Settings settings;
+	public static bool headless = false;
 	#if SCROBBLING
 		public static Scrobbling.Manager scrobbling_manager;
 		public static Scrobbling.AccountManager account_manager;
@@ -27,6 +28,7 @@ namespace Turntable {
 			public const GLib.OptionEntry[] APP_OPTIONS = {
 				{ "list-clients", 'l', 0, GLib.OptionArg.NONE, ref cli_list_clients, "List all currently available MPRIS clients (ID - Name)", null },
 				{ "client", 'c', 0, GLib.OptionArg.STRING, ref cli_client_id_scrobble, "MPRIS client ID to scrobble", "CLIENT-ID" },
+				{ "headless", 0, 0, GLib.OptionArg.NONE, ref headless, "Do not show main window on start", null },
 				{ null }
 			};
 		#endif
@@ -34,6 +36,7 @@ namespace Turntable {
 		private const GLib.ActionEntry[] APP_ENTRIES = {
 			{ "about", on_about_action },
 			{ "new-window", on_new_window },
+			{ "preferences", on_preferences },
 			{ "quit", quit }
 		};
 
@@ -88,6 +91,7 @@ namespace Turntable {
 			#endif
 
 			this.add_action_entries (APP_ENTRIES, this);
+			this.set_accels_for_action ("app.preferences", {"<primary>comma"});
 			this.set_accels_for_action ("app.quit", {"<primary>q"});
 			this.set_accels_for_action ("app.new-window", {"<primary>n"});
 
@@ -170,7 +174,7 @@ namespace Turntable {
 			base.activate ();
 
 			var win = this.active_window ?? new Turntable.Views.Window (this);
-			win.present ();
+			if (!headless || (headless && activated)) win.present ();
 			#if SCROBBLING
 				if (!activated) account_manager.load ();
 			#endif
@@ -226,6 +230,45 @@ namespace Turntable {
 		private void on_new_window () {
 			debug ("New Window");
 			(new Turntable.Views.Window (this)).present ();
+		}
+
+		private void on_preferences () {
+			if (this.active_window == null) return;
+
+			this.active_window.resizable = false;
+			var perfs = new Turntable.Views.Preferences ();
+			perfs.present (this.active_window);
+			perfs.closed.connect (((Views.Window) this.active_window).make_resizable);
+		}
+
+		private Xdp.Portal? portal = null;
+		public async bool request_autostart (bool autostart, bool hidden) throws GLib.Error {
+			if (cli_mode || this.active_window == null) return false;
+			GLib.GenericArray<weak string> cmd = new GLib.GenericArray<weak string> ();
+			cmd.add (Build.DOMAIN);
+			if (autostart && hidden) cmd.add ("--headless");
+
+			if (portal == null) portal = new Xdp.Portal ();
+			return yield portal.request_background (
+				Xdp.parent_new_gtk (this.active_window),
+				// translators: message shown when requesting autostart or run in the background permissions
+				//				the variable is the app name (Turntable)
+				(autostart ? _("Allow %s to start when you log in") : _("Allow %s to run in the background")).printf (Build.NAME),
+				cmd,
+				autostart ? Xdp.BackgroundFlags.AUTOSTART : Xdp.BackgroundFlags.NONE,
+				null
+			);
+		}
+
+		public async void background_portal_message (string? message) {
+			if (cli_mode || !Xdp.Portal.running_under_sandbox ()) return;
+
+			if (portal == null) portal = new Xdp.Portal ();
+			try {
+				yield portal.set_background_status (message, null);
+			} catch (GLib.Error e) {
+				warning (@"Couldn't change the background portal message: $(e.message) $(e.code)");
+			}
 		}
 
 		public override void open (File[] files, string hint) {

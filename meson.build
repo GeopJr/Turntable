@@ -100,6 +100,8 @@ final_deps = [
   dependency('gio-unix-2.0', required: true),
   dependency('glycin-2', required: true),
   dependency('glycin-gtk4-2', required: true),
+  dependency('libportal', required: true),
+  dependency('libportal-gtk4', required: true),
   libsoup_dep,
   json_glib_dep,
   libsecret_dep,
