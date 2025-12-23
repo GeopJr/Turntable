@@ -13,5 +13,5 @@ steps:
     depends_on: [lint]
     image: alpine:edge
     commands:
-      - apk add --no-cache meson vala glib-dev gtk4.0-dev json-glib-dev libadwaita-dev libsoup3-dev desktop-file-utils gettext-dev make clang git libsecret-dev glycin-loaders-dev
+      - apk add --no-cache meson vala glib-dev gtk4.0-dev json-glib-dev libadwaita-dev libsoup3-dev desktop-file-utils gettext-dev make clang git libsecret-dev glycin-loaders-dev libportal-dev libportal-gtk4
       - CC=clang make build
