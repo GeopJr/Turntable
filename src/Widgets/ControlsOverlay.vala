@@ -69,8 +69,10 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		}
 	#endif
 
+	Adw.TimedAnimation animation;
+	Gtk.EventControllerMotion pointer_controller;
+	Gtk.EventControllerFocus focus_controller;
 	Gtk.Overlay overlay;
-	Gtk.Revealer revealer;
 	GLib.ListStore players_store;
 	Gtk.DropDown client_dropdown;
 	Gtk.MenuButton menu_button;
@@ -85,11 +87,6 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 
 		overlay = new Gtk.Overlay () {
 			focusable = true
-		};
-		revealer = new Gtk.Revealer () {
-			reveal_child = false,
-			transition_duration = 250,
-			transition_type = Gtk.RevealerTransitionType.CROSSFADE
 		};
 
 		players_store = new GLib.ListStore (typeof (Mpris.Entry));
@@ -285,16 +282,53 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		};
 		sub_box.append (menu_button);
 		main_box.append (sub_box);
-		revealer.child = new Adw.Bin () {
+		var main_bin = new Adw.Bin () {
 			css_classes = {"osd"},
-			child = main_box
+			child = main_box,
+			opacity = 0
+		};
+		animation = new Adw.TimedAnimation (this, 0.0, 1.0, 250, new Adw.PropertyAnimationTarget (main_bin, "opacity")) {
+			easing = Adw.Easing.EASE_IN_OUT
 		};
 
-		overlay.add_overlay (revealer);
+		overlay.add_overlay (main_bin);
 		this.child = overlay;
 
-		this.state_flags_changed.connect (on_state_flags_changed);
 		update_store ();
+
+		focus_controller = new Gtk.EventControllerFocus ();
+		focus_controller.enter.connect (on_main_bin_enter);
+		focus_controller.leave.connect (on_main_bin_leave_focus);
+		main_bin.add_controller (focus_controller);
+
+		pointer_controller = new Gtk.EventControllerMotion ();
+		pointer_controller.enter.connect (on_main_bin_enter);
+		pointer_controller.leave.connect (on_main_bin_leave_pointer);
+		main_bin.add_controller (pointer_controller);
+	}
+
+	private void on_main_bin_enter () {
+		animation.value_from = animation.value;
+		animation.value_to = 1;
+		animation.play ();
+	}
+
+	// properties updated AFTER the signals
+	// so we have to assume here without using them
+	private void on_main_bin_leave_focus () {
+		if (pointer_controller.is_pointer || pointer_controller.contains_pointer) return;
+		hide_main_bin_overlay ();
+	}
+
+	private void on_main_bin_leave_pointer () {
+		if (focus_controller.is_focus || focus_controller.contains_focus) return;
+		hide_main_bin_overlay ();
+	}
+
+	private void hide_main_bin_overlay () {
+		animation.value_from = animation.value;
+		animation.value_to = 0;
+		animation.play ();
 	}
 
 	public ControlsOverlay (Widgets.Cover cover) {
@@ -309,26 +343,15 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			: "dock-bottom-symbolic";
 	}
 
-	private void on_state_flags_changed () {
-		bool should_reveal_child = (
-			this.get_state_flags ()
-			& (
-				Gtk.StateFlags.PRELIGHT
-				| Gtk.StateFlags.ACTIVE
-				| Gtk.StateFlags.SELECTED
-				| Gtk.StateFlags.FOCUSED
-				| Gtk.StateFlags.FOCUS_VISIBLE
-				| Gtk.StateFlags.FOCUS_WITHIN
-			)
-		) != 0;
-
-		if (revealer.reveal_child != should_reveal_child)
-			revealer.reveal_child = should_reveal_child;
-	}
-
-	public bool hide_overlay () {
-		if (!revealer.reveal_child || menu_button.active || ((Gtk.ToggleButton) client_dropdown.get_first_child ()).active) return false;
-		revealer.reveal_child = false;
+	public bool hide_overlay (bool force = false) {
+		if (
+			!force
+			&& (pointer_controller.is_pointer
+			|| pointer_controller.contains_pointer
+			|| menu_button.active
+			|| ((Gtk.ToggleButton) client_dropdown.get_first_child ()).active)
+		) return false;
+		hide_main_bin_overlay ();
 		return true;
 	}
 

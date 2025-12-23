@@ -30,6 +30,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 				} else {
 					controls_overlay.remove_css_class ("collapsed");
 				}
+				controls_overlay.hide_overlay (true);
 				update_client_icon_revealed ();
 			}
 		}
@@ -604,8 +605,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 			settings.notify["scrobbler-allowlist"].connect (update_scrobble_status);
 			account_manager.accounts_changed.connect (update_scrobble_status);
 		#endif
-
-		non_art_box.state_flags_changed.connect (on_state_flags_changed);
 		art_pic.map.connect (on_mapped);
 
 		Gtk.GestureClick click_gesture = new Gtk.GestureClick () {
@@ -810,12 +809,6 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	private void update_component_cover_fit_from_settings () {
 		this.art_pic.fit_cover = settings.component_cover_fit;
 		component_cover_fit_action.set_state (settings.component_cover_fit);
-	}
-
-	private void on_state_flags_changed (Gtk.Widget box, Gtk.StateFlags old_flags) {
-		if (!(Gtk.StateFlags.PRELIGHT in old_flags) && (Gtk.StateFlags.PRELIGHT in box.get_state_flags ())) {
-			if (controls_overlay.hide_overlay ()) this.focus_widget = null;
-		}
 	}
 
 	#if SCROBBLING
