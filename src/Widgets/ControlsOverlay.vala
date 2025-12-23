@@ -7,6 +7,19 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 		debug ("Destroying");
 	}
 
+	private bool _collapsed = false;
+	public bool collapsed {
+		get { return _collapsed; }
+		set {
+			_collapsed = value;
+			if (value) {
+				this.add_css_class ("collapsed");
+			} else {
+				this.remove_css_class ("collapsed");
+			}
+		}
+	}
+
 	private void update_style (Widgets.Cover.Style style, Gtk.Orientation orientation) {
 		this.overlay.child.valign =
 		this.overlay.child.halign =
@@ -39,6 +52,8 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 				this.add_css_class ("vertical");
 				break;
 		}
+
+		if (this.collapsed) this.add_css_class ("collapsed");
 	}
 
 	#if SCROBBLING
@@ -343,13 +358,12 @@ public class Turntable.Widgets.ControlsOverlay : Adw.Bin {
 			: "dock-bottom-symbolic";
 	}
 
-	public bool hide_overlay (bool force = false) {
+	public bool hide_overlay () {
 		if (
-			!force
-			&& (pointer_controller.is_pointer
+			pointer_controller.is_pointer
 			|| pointer_controller.contains_pointer
 			|| menu_button.active
-			|| ((Gtk.ToggleButton) client_dropdown.get_first_child ()).active)
+			|| ((Gtk.ToggleButton) client_dropdown.get_first_child ()).active
 		) return false;
 		hide_main_bin_overlay ();
 		return true;

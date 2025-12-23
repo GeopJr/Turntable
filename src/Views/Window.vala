@@ -25,14 +25,43 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 				settings.collapsed_controls =
 				_collapsed = value;
 				non_art_revealer.reveal_child = !value;
-				if (value) {
-					controls_overlay.add_css_class ("collapsed");
-				} else {
-					controls_overlay.remove_css_class ("collapsed");
+
+				// only shrink the window when its slightly over
+				// the main content size but not too much as to
+				// not disturb users who set their windows to
+				// specific sizes
+				if (
+					value
+					&& this.default_width - main_box.get_width () < 100
+					&& this.default_height - main_box.get_height () < 100
+				) {
+					window_animation.play ();
 				}
-				controls_overlay.hide_overlay (true);
+
+				controls_overlay.collapsed = value;
+				this.focus_widget = null;
+				controls_overlay.hide_overlay ();
 				update_client_icon_revealed ();
 			}
+		}
+	}
+
+	// dummy property for the animation
+	// target to avoid memory leaks
+	public double shrink_window_size {
+		get { return window_animation.value; }
+		set {
+			switch (this.orientation) {
+				case HORIZONTAL:
+					int w = main_box.get_width ();
+					if (w != this.default_width) this.default_width = w;
+					break;
+				default:
+					int h = main_box.get_height ();
+					if (h != this.default_height) this.default_height = h;
+					break;
+			}
+
 		}
 	}
 
@@ -421,6 +450,7 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 	Widgets.ControlsOverlay controls_overlay;
 	Widgets.MPRISControls mpris_controls;
 	Widgets.ProgressScale progress_scale;
+	Adw.TimedAnimation window_animation;
 	construct {
 		this.uuid = GLib.Uuid.string_random ();
 		this.icon_name = Build.DOMAIN;
@@ -615,6 +645,10 @@ public class Turntable.Views.Window : Adw.ApplicationWindow {
 
 		//  art_pic.bind_property ("cover", prog, "cover", SYNC_CREATE);
 		art_pic.notify["cover"].connect (on_cover_changed);
+
+		window_animation = new Adw.TimedAnimation (this, 0.0, 1.0, 500, new Adw.PropertyAnimationTarget (this, "shrink-window-size")) {
+			easing = Adw.Easing.EASE_IN_OUT
+		};
 	}
 
 	private bool on_window_closed () {
