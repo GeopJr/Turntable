@@ -30,6 +30,10 @@
     <file preprocess="xml-stripblanks" alias="dock-bottom-symbolic.svg">icons/hicolor/symbolic/actions/dock-bottom-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="settings-symbolic.svg">icons/hicolor/symbolic/actions/settings-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="network-server-symbolic.svg">icons/hicolor/symbolic/actions/network-server-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="funnel-symbolic.svg">icons/hicolor/symbolic/actions/funnel-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="view-wrapped-symbolic.svg">icons/hicolor/symbolic/actions/view-wrapped-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="sad-computer-symbolic.svg">icons/hicolor/symbolic/actions/sad-computer-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="folder-download-symbolic.svg">icons/hicolor/symbolic/actions/folder-download-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="listenbrainz.svg">icons/hicolor/scalable/actions/listenbrainz.svg</file>
     <file preprocess="xml-stripblanks" alias="maloja.svg">icons/hicolor/scalable/actions/maloja.svg</file>
     <file preprocess="xml-stripblanks" alias="librefm.svg">icons/hicolor/scalable/actions/librefm.svg</file>

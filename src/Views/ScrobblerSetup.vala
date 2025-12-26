@@ -177,6 +177,30 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 		application.token_received[win_id].connect (on_token_received);
 		account_manager.accounts_changed.connect (update_row_states);
 		update_row_states ();
+
+		var experiments_page = new Adw.PreferencesPage () {
+			icon_name = "funnel-symbolic",
+			// translators: as in experimental features, page title
+			title = _("Experiments")
+		};
+		var experiments_group = new Adw.PreferencesGroup ();
+		var wrapped_row = new Adw.ActionRow () {
+			// translators: as in Spotify Wrapped, leave it as is if possible as it's more recognizable
+			title = _("Wrapped"),
+			// translators: Wrapped feature, row subtitle explaining what it does briefly
+			subtitle = _("Your scrobbling year-in-review"),
+			activatable = true
+		};
+		wrapped_row.add_prefix (new Gtk.Image.from_icon_name ("view-wrapped-symbolic") {icon_size = Gtk.IconSize.LARGE});
+		wrapped_row.add_suffix (new Gtk.Image.from_icon_name (Gtk.Widget.get_default_direction () == Gtk.TextDirection.RTL ? "left-large-symbolic" : "right-large-symbolic"));
+		wrapped_row.activated.connect (open_wrapped);
+		experiments_group.add (wrapped_row);
+		experiments_page.add (experiments_group);
+		this.add (experiments_page);
+	}
+
+	private void open_wrapped () {
+		this.push_subpage (new Views.Wrapped ());
 	}
 
 	private void open_offline_scrobbling_page () {
@@ -320,7 +344,7 @@ public class Turntable.Views.ScrobblerSetup : Adw.PreferencesDialog {
 			var in_stream = yield session.send_async (msg, 0, null);
 
 			var parser = new Json.Parser ();
-			parser.load_from_stream (in_stream);
+			yield parser.load_from_stream_async (in_stream);
 			var root = parser.get_root ();
 			// translators: error message when lastfm/librefm token validation fails
 			if (root == null) return _("Invalid Session");

@@ -164,7 +164,7 @@ public class Turntable.Views.ListenBrainzPage : Views.ProviderPage {
 			switch (msg.status_code) {
 				case Soup.Status.OK:
 				var parser = new Json.Parser ();
-				parser.load_from_stream (in_stream);
+				yield parser.load_from_stream_async (in_stream);
 
 				var root = parser.get_root ();
 				if (root == null) return _("Invalid Token");

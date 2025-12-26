@@ -84,6 +84,25 @@ button.large {
 	font-size: small;
 }
 
+.style-window .pagebox {
+	background-color: var(--window-bg-color);
+}
+
+.style-accent .pagebox {
+	background-color: var(--accent-bg-color);
+	color: var(--accent-fg-color);
+}
+
+.style-pride .pagebox {
+	background-image: linear-gradient(135deg, rgba(228,3,3,0.3) 0%, rgba(255,140,0,0.3) 20%, rgba(255,237,0,0.3) 40%, rgba(0,128,38,0.3) 60%, rgba(0,77,255,0.3) 80%, rgba(117,7,135,0.3) 100%);
+	background-color: var(--window-bg-color);
+}
+
+.style-trans .pagebox {
+	background-image: linear-gradient(135deg, rgba(92,206,250,0.5) 0%, rgba(246,168,183,0.5) 25%, rgba(255,255,255,0.5) 50%, rgba(246,168,183,0.5) 75%, rgba(92,206,250,0.5) 100%);
+	background-color: var(--window-bg-color);
+}
+
 /* Ported from Amberol https://gitlab.gnome.org/World/amberol/-/blob/5d1d9bec9c0817759e154f2df7e17692d748f495/src/gtk/style.css */
 .progressscale.overlay {
 	--accent-bg-color: color-mix(in srgb, rgb(0 0 0 / 75%), currentColor);

@@ -6,7 +6,8 @@ if scrobbling
     'OfflineScrobbling.vala',
     'Preferences.vala',
     'ProviderPage.vala',
-    'ScrobblerSetup.vala'
+    'ScrobblerSetup.vala',
+    'Wrapped.vala'
   )
 endif
 

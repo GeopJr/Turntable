@@ -184,7 +184,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 		}
 	}
 
-	private class CoverLoader : GLib.Object {
+	public class CoverLoader : GLib.Object {
 		private string file_path;
 		private Cancellable cancellable = new Cancellable ();
 		private Gdk.Texture? texture = null;
@@ -242,7 +242,9 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 					var session = new Soup.Session () {
 						user_agent = @"$(Build.NAME)/$(Build.VERSION) libsoup/$(Soup.get_major_version()).$(Soup.get_minor_version()).$(Soup.get_micro_version()) ($(Soup.MAJOR_VERSION).$(Soup.MINOR_VERSION).$(Soup.MICRO_VERSION))" // vala-lint=line-length
 					};
-					in_stream = session.send (new Soup.Message ("GET", this.file_path), cancellable);
+					var msg = new Soup.Message ("GET", this.file_path);
+					in_stream = session.send (msg, cancellable);
+					if (msg.response_headers.get_content_type (null) == "text/html") throw new Error.literal (-1, 1, "text/html");
 					loader = new Gly.Loader.for_stream (in_stream);
 				} else {
 					loader = new Gly.Loader (GLib.File.new_for_path (clean_path));

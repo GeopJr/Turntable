@@ -1,6 +1,7 @@
 public class Turntable.Scrobbling.Maloja : ListenBrainz, Scrobbler {
 	public override Manager.Provider SERVICE { get { return Manager.Provider.MALOJA; } }
 	public override string token { get; set; default = ""; }
+	public override Experiments experiments { get { return NONE; } }
 
 	// https://github.com/krateng/maloja/blob/9e44cc3ce6d4259c32026ba50ee934e024b43a7a/maloja/apis/listenbrainz.py#L103-L108
 	protected override string auth_token_key { get; set; default = "Token"; }

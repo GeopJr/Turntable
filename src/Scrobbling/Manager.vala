@@ -416,21 +416,21 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		var msg = new Soup.Message ("GET", mb_url);
 		try {
 			var in_stream = yield session.send_async (msg, 0, null);
-			if (msg.status_code != Soup.Status.OK) new Error.literal (-1, 2, @"Server returned $(msg.status_code)");
+			if (msg.status_code != Soup.Status.OK) throw new Error.literal (-1, 2, @"Server returned $(msg.status_code)");
 
 			var parser = new Json.Parser ();
-			parser.load_from_stream (in_stream);
+			yield parser.load_from_stream_async (in_stream);
 
 			var root = parser.get_root ();
-			if (root == null) new Error.literal (-1, 3, "Malformed JSON");
+			if (root == null) throw new Error.literal (-1, 3, "Malformed JSON");
 			var obj = root.get_object ();
-			if (obj == null) new Error.literal (-1, 3, "Malformed JSON");
+			if (obj == null) throw new Error.literal (-1, 3, "Malformed JSON");
 
-			if (!obj.has_member ("count") || obj.get_int_member_with_default ("count", 0) == 0) new Error.literal (-1, 2, "Count doesn't exist or 0");
-			if (!obj.has_member ("recordings")) new Error.literal (-1, 2, "Recordings is missing");
+			if (!obj.has_member ("count") || obj.get_int_member_with_default ("count", 0) == 0) throw new Error.literal (-1, 2, "Count doesn't exist or 0");
+			if (!obj.has_member ("recordings")) throw new Error.literal (-1, 2, "Recordings is missing");
 
 			var recordings = obj.get_array_member ("recordings");
-			if (recordings.get_length () == 0) new Error.literal (-1, 2, "Recordings is empty");
+			if (recordings.get_length () == 0) throw new Error.literal (-1, 2, "Recordings is empty");
 
 			var recording = recordings.get_object_element (0);
 			if (recording.has_member ("title")) {
@@ -468,6 +468,28 @@ public class Turntable.Scrobbling.Manager : GLib.Object {
 		}
 
 		mb_cached = {mb_url, null};
+		return null;
+	}
+
+	public Provider[] get_providers_with_experiment (Scrobbler.Experiments experiment) {
+		Provider[] res = {};
+
+		foreach (var serv in services) {
+			if (experiment in serv.experiments && serv.token != "") {
+				res += serv.SERVICE;
+			}
+		}
+
+		return res;
+	}
+
+	public async Scrobbler.Wrapped? wrapped (Provider provider, string username, int max = 5) throws Error {
+		foreach (var serv in services) {
+			if (serv.SERVICE == provider) {
+				return yield serv.wrapped (username, max);
+			}
+		}
+
 		return null;
 	}
 }

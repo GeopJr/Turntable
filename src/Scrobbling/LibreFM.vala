@@ -31,4 +31,12 @@ public class Turntable.Scrobbling.LibreFM : LastFM, Scrobbler {
 			}
 		}
 	}
+
+	protected override async Wrapped? wrapped_actual (Soup.Session session, string username, int max = 5) throws GLib.Error {
+		return {
+			yield get_stats_entities (session, username, max, "gettopartists", "topartists", "artist"),
+			yield get_stats_entities (session, username, max, "gettoptracks", "toptracks", "track"),
+			{} // no albums
+		};
+	}
 }
