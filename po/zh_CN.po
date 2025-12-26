@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-29 03:04+0300\n"
-"PO-Revision-Date: 2025-05-06 07:53+0000\n"
+"POT-Creation-Date: 2025-09-14 08:34+0300\n"
+"PO-Revision-Date: 2025-09-15 20:09+0000\n"
 "Last-Translator: Outbreak2096 <outbreak2096@noreply.codeberg.org>\n"
 "Language-Team: Chinese (Simplified Han script) <https://"
 "translate.codeberg.org/projects/turntable/turntable/zh_Hans/>\n"
@@ -16,22 +16,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.10.2\n"
+"X-Generator: Weblate 5.13.2\n"
 
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
 #: data/dev.geopjr.Turntable.metainfo.xml.in:7
-#: src/Widgets/ControlsOverlay.vala:208
+#: src/Widgets/ControlsOverlay.vala:210
 msgid "Turntable"
-msgstr "唱盘"
+msgstr "Turntable"
 
 #: data/dev.geopjr.Turntable.desktop.in:8
-msgid ""
-"music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;"
-"maloja;song;audio;"
+msgid "music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
 msgstr ""
-"music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;"
-"maloja;song;audio;音乐;播放器;组件;歌曲;音频;"
+"music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
+"音乐;播放器;组件;歌曲;音频;"
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:8
 msgid "Scrobble your music"
@@ -78,20 +76,20 @@ msgid "Quit"
 msgstr "退出"
 
 #. translators: Name <email@domain.com> or Name https://website.example
-#: src/Application.vala:193
+#: src/Application.vala:196
 msgid "translator-credits"
 msgstr "Outbreak2096 https://translate.codeberg.org/user/Outbreak2096/"
 
-#: src/Application.vala:196
+#: src/Application.vala:199
 msgid "Donate"
 msgstr "捐赠"
 
-#: src/Application.vala:197
+#: src/Application.vala:200
 msgid "Translate"
 msgstr "翻译"
 
 #. translators: Shown in the about dialog as a tip. Leave markup as is (<b>, \n)
-#: src/Application.vala:200
+#: src/Application.vala:203
 msgid ""
 "<b>Best Practices for Scrobbling</b>\n"
 "• Avoid allowlisting non-curated MPRIS clients like Web Browsers and Video "
@@ -101,46 +99,46 @@ msgid ""
 msgstr ""
 "<b>记录音乐最佳实践</b>\n"
 "• 避免将未分类的 MPRIS 客户端列入允许名单，例如 Web 浏览器和视频播放器\n"
-"• 用正确的曲目、专辑和艺术家名称标记您的音乐\n"
+"• 用正确的曲目、专辑和音乐人名称标记您的音乐\n"
 "• 定期检查、修复和匹配您的音乐记录"
 
 #. translators: Application metainfo for the app "Archives". <https://gitlab.gnome.org/GeopJr/Archives/>
-#: src/Application.vala:204
+#: src/Application.vala:207
 msgid "Archives"
 msgstr "Archives"
 
-#: src/Application.vala:204
+#: src/Application.vala:207
 msgid "Create and view web archives"
 msgstr "创建和查看 Web 归档"
 
 #. translators: Application metainfo for the app "Calligraphy". <https://gitlab.gnome.org/GeopJr/Calligraphy>
-#: src/Application.vala:206
+#: src/Application.vala:209
 msgid "Calligraphy"
 msgstr "Calligraphy"
 
-#: src/Application.vala:206
+#: src/Application.vala:209
 msgid "Turn text into ASCII banners"
 msgstr "将文本转换为 ASCII 横幅"
 
 #. translators: Application metainfo for the app "Collision". <https://github.com/GeopJr/Collision>
-#: src/Application.vala:208
+#: src/Application.vala:211
 msgid "Collision"
 msgstr "Collision"
 
-#: src/Application.vala:208
+#: src/Application.vala:211
 msgid "Check hashes for your files"
 msgstr "检查文件的散列值"
 
 #. translators: Application metainfo for the app "Tuba". <https://github.com/GeopJr/Tuba>
-#: src/Application.vala:210
+#: src/Application.vala:213
 msgid "Tuba"
 msgstr "Tuba"
 
-#: src/Application.vala:210
+#: src/Application.vala:213
 msgid "Browse the Fediverse"
 msgstr "浏览联邦宇宙"
 
-#: src/Scrobbling/Accounts.vala:83 src/Views/ScrobblerSetup.vala:558
+#: src/Scrobbling/Accounts.vala:83 src/Views/ScrobblerSetup.vala:236
 msgid "_Cancel"
 msgstr "取消(_C)"
 
@@ -148,52 +146,73 @@ msgstr "取消(_C)"
 msgid "_Read More"
 msgstr "阅读更多(_R)"
 
+#. translators: host as in a web server; entry title
+#: src/Views/LibreFMPage.vala:66 src/Views/MalojaPage.vala:52
+msgid "Host"
+msgstr "主机"
+
+#. translators: variable is a link
+#: src/Views/ListenBrainzPage.vala:88
+#, c-format
+msgid "You can get your user token from %s."
+msgstr "您可以从 %s 获取用户令牌。"
+
+#. translators: host as in a web server; entry title
+#: src/Views/ListenBrainzPage.vala:108
+msgid "Host API"
+msgstr "主机 API"
+
+#. translators: can also be translated as Authentication Token
+#: src/Views/ListenBrainzPage.vala:118
+msgid "User Token"
+msgstr "用户令牌"
+
+#: src/Views/ListenBrainzPage.vala:170 src/Views/ListenBrainzPage.vala:172
+#: src/Views/ListenBrainzPage.vala:174 src/Views/ListenBrainzPage.vala:175
+msgid "Invalid Token"
+msgstr "令牌无效"
+
+#. translators: the variable is an error message
+#: src/Views/ListenBrainzPage.vala:183 src/Views/ListenBrainzPage.vala:188
+#, c-format
+msgid "Couldn't validate token: %s"
+msgstr "无法验证令牌：%s"
+
+#. translators: tooltip on offline scrobbles row button
+#: src/Views/OfflineScrobbling.vala:43
+msgid "Remove Scrobble"
+msgstr "移除听歌记录"
+
+#. translators: row title
+#: src/Views/OfflineScrobbling.vala:71 src/Views/ScrobblerSetup.vala:138
+msgid "Offline Scrobbling"
+msgstr "离线听歌记录"
+
+#. translators: shown when there's 0 offline scrobbles in the queue
+#: src/Views/OfflineScrobbling.vala:124
+msgid "No Offline Scrobbles"
+msgstr "无离线听歌记录"
+
 #. translators: variable is a scrobbler e.g. ListenBrainz
 #: src/Views/ScrobblerSetup.vala:60
 #, c-format
 msgid "Forget %s Account"
 msgstr "忘记 %s 账号"
 
-#. translators: variable is a link
-#: src/Views/ScrobblerSetup.vala:200
-#, c-format
-msgid "You can get your user token from %s."
-msgstr "您可以从 %s 获取用户令牌。"
-
-#. translators: host as in a web server; entry title
-#: src/Views/ScrobblerSetup.vala:220
-msgid "Host API"
-msgstr "主机 API"
-
-#. translators: can also be translated as Authentication Token
-#: src/Views/ScrobblerSetup.vala:230
-msgid "User Token"
-msgstr "用户令牌"
-
-#: src/Views/ScrobblerSetup.vala:282 src/Views/ScrobblerSetup.vala:284
-#: src/Views/ScrobblerSetup.vala:286 src/Views/ScrobblerSetup.vala:287
-msgid "Invalid Token"
-msgstr "令牌无效"
-
-#. translators: the variable is an error message
-#: src/Views/ScrobblerSetup.vala:295 src/Views/ScrobblerSetup.vala:300
-#, c-format
-msgid "Couldn't validate token: %s"
-msgstr "无法验证令牌：%s"
-
-#. translators: host as in a web server; entry title
-#: src/Views/ScrobblerSetup.vala:360 src/Views/ScrobblerSetup.vala:431
-msgid "Host"
-msgstr "主机"
-
 #. vala-lint=line-length
 #. translators: probably leave it as is unless there's a way to describe it accurately
-#: src/Views/ScrobblerSetup.vala:480
+#: src/Views/ScrobblerSetup.vala:108
 msgid "Scrobblers"
 msgstr "Scrobblers"
 
+#. translators: scrobbling dialog tab title of the page that allows you to setup your accounts
+#. services as in "Scrobbling Services", if it's easier, translate it into "Platforms" or "Providers"
+#: src/Views/ScrobblerSetup.vala:114
+msgid "Services"
+msgstr "服务"
+
 #. translators: warning shown in the scrobbler setup window. Leave MPRIS as is. The variable is the app name (Turntable)
-#: src/Views/ScrobblerSetup.vala:484
+#: src/Views/ScrobblerSetup.vala:116
 #, c-format
 msgid ""
 "Track your music by scrobbling your MPRIS clients. By connecting your "
@@ -205,13 +224,34 @@ msgstr ""
 "时，MPRIS 信息将会发送到该服务。为了保护您的隐私，%s 要求您为每个 MPRIS 客户"
 "端选择加入音乐记录功能。"
 
+#: src/Views/ScrobblerSetup.vala:132
+msgid "Settings"
+msgstr "设置"
+
+#. translators: row description
+#: src/Views/ScrobblerSetup.vala:140
+msgid ""
+"Scrobble even when you are offline and submit them automatically when you "
+"get online."
+msgstr "即使离线也能记录听歌，并在您上线时自动提交。"
+
+#. translators: as explained later, "Now Playing" means the currently playing song even if it hasn't hit the scrobbling mark, please make sure they are not confused with each other, this doesn't mean scrobbling.
+#: src/Views/ScrobblerSetup.vala:157
+msgid "Submit Now Playing"
+msgstr "提交当前播放"
+
+#. translators: switch description
+#: src/Views/ScrobblerSetup.vala:159
+msgid "Indicate that you started listening to a track."
+msgstr "指示您已开始收听曲目。"
+
 #. translators: switch title; lookup = search, fetch, request
-#: src/Views/ScrobblerSetup.vala:501
+#: src/Views/ScrobblerSetup.vala:167
 msgid "Lookup Metadata on MusicBrainz before Scrobbling"
 msgstr "在记录音乐之前在 MusicBrainz 上查找元数据"
 
 #. translators: switch description; untagged as in music files missing metadata like artist, album etc
-#: src/Views/ScrobblerSetup.vala:503
+#: src/Views/ScrobblerSetup.vala:169
 msgid ""
 "Recommended for non-curated clients or untagged music libraries as it will "
 "fix and complete metadata but it will also prevent scrobbling tracks not "
@@ -220,65 +260,46 @@ msgstr ""
 "推荐用于未分类的客户端或未标记的音乐库，因为它将修复和完成元数据，但它也会阻"
 "止在 MusicBrainz 库中未收录曲目的音乐记录。"
 
-#: src/Views/ScrobblerSetup.vala:552
+#: src/Views/ScrobblerSetup.vala:230
 #, c-format
 msgid "Forget %s Account?"
 msgstr "忘记 %s 账号？"
 
 #. translators: dialog description
-#: src/Views/ScrobblerSetup.vala:554
+#: src/Views/ScrobblerSetup.vala:232
 msgid "This won't affect your submitted scrobbles."
-msgstr "这不会影响您已提交的音乐记录。"
+msgstr "这不会影响您已提交的听歌记录。"
 
-#: src/Views/ScrobblerSetup.vala:559
+#: src/Views/ScrobblerSetup.vala:237
 msgid "_Forget"
 msgstr "忘记(_F)"
 
 #. translators: error message when lastfm/librefm token validation fails
-#: src/Views/ScrobblerSetup.vala:648 src/Views/ScrobblerSetup.vala:651
-#: src/Views/ScrobblerSetup.vala:652 src/Views/ScrobblerSetup.vala:655
+#: src/Views/ScrobblerSetup.vala:326 src/Views/ScrobblerSetup.vala:329
+#: src/Views/ScrobblerSetup.vala:330 src/Views/ScrobblerSetup.vala:333
 msgid "Invalid Session"
 msgstr "会话无效"
 
 #. translators: the variable is an error message
-#: src/Views/ScrobblerSetup.vala:666
+#: src/Views/ScrobblerSetup.vala:344
 #, c-format
 msgid "Couldn't get session: %s"
 msgstr "无法获取会话：%s"
 
 #. translators: default string when title is missing
-#: src/Views/Window.vala:172
+#: src/Views/Window.vala:187
 msgid "Unknown Title"
 msgstr "未知标题"
 
 #. translators: default string when artist is missing
-#: src/Views/Window.vala:177 src/Views/Window.vala:182
+#: src/Views/Window.vala:192 src/Views/Window.vala:197
 msgid "Unknown Artist"
-msgstr "未知艺术家"
+msgstr "未知音乐人"
 
 #. translators: default string when album is missing
-#: src/Views/Window.vala:190 src/Views/Window.vala:195
+#: src/Views/Window.vala:205 src/Views/Window.vala:210
 msgid "Unknown Album"
 msgstr "未知专辑"
-
-#. translators: button tooltip text
-#: src/Views/Window.vala:247
-msgid "Pause"
-msgstr "暂停"
-
-#: src/Views/Window.vala:247 src/Views/Window.vala:406
-msgid "Play"
-msgstr "播放"
-
-#. translators: button tooltip text
-#: src/Views/Window.vala:398
-msgid "Previous Song"
-msgstr "上一首歌"
-
-#. translators: button tooltip text
-#: src/Views/Window.vala:415
-msgid "Next Song"
-msgstr "下一首歌"
 
 #. translators: button tooltip text
 #: src/Widgets/ControlsOverlay.vala:53
@@ -317,7 +338,7 @@ msgstr "居中文本"
 
 #. translators: whether to show a client icon in the bottom right; client = music playing app
 #. translators: menu entry that opens a submenu; client = music playing app
-#: src/Widgets/ControlsOverlay.vala:141 src/Widgets/ControlsOverlay.vala:202
+#: src/Widgets/ControlsOverlay.vala:141 src/Widgets/ControlsOverlay.vala:204
 msgid "Client Icon"
 msgstr "客户端图标"
 
@@ -336,146 +357,215 @@ msgstr "封面图片适配"
 msgid "Extract Cover Colors"
 msgstr "提取封面颜色"
 
+#. translators: whether to show the shuffle and loop buttons
+#: src/Widgets/ControlsOverlay.vala:149
+msgid "More Player Controls"
+msgstr "更多播放器控件"
+
 #. translators: whether to show a turntable tonearm in turntable styled cover art; tonearm is the 'arm' part of the turntable,
 #. you may translate it as 'arm' (mechanical part)
-#: src/Widgets/ControlsOverlay.vala:150
+#: src/Widgets/ControlsOverlay.vala:152
 msgid "Tonearm"
 msgstr "唱臂"
 
 #. translators: menu entry that opens a submenu; components = toggleable parts of the UI
-#: src/Widgets/ControlsOverlay.vala:152
+#: src/Widgets/ControlsOverlay.vala:154
 msgid "Components"
 msgstr "组件"
 
 #. translators: cover scaling algorithm name, probably leave as is
-#: src/Widgets/ControlsOverlay.vala:156
+#: src/Widgets/ControlsOverlay.vala:158
 msgid "Linear"
 msgstr "线性"
 
 #. translators: cover scaling algorithm name, probably leave as is
-#: src/Widgets/ControlsOverlay.vala:158
+#: src/Widgets/ControlsOverlay.vala:160
 msgid "Nearest"
 msgstr "邻近"
 
 #. translators: cover scaling algorithm name, probably leave as is
-#: src/Widgets/ControlsOverlay.vala:160
+#: src/Widgets/ControlsOverlay.vala:162
 msgid "Trilinear"
 msgstr "三线性"
 
 #. translators: menu entry that opens a submenu; cover scaling = algorithm used for down/upscaling cover art
-#: src/Widgets/ControlsOverlay.vala:162
+#: src/Widgets/ControlsOverlay.vala:164
 msgid "Cover Scaling"
 msgstr "封面缩放"
 
 #. translators: orientation name
-#: src/Widgets/ControlsOverlay.vala:166
+#: src/Widgets/ControlsOverlay.vala:168
 msgid "Horizontal"
 msgstr "水平"
 
 #. translators: orientation name
-#: src/Widgets/ControlsOverlay.vala:168
+#: src/Widgets/ControlsOverlay.vala:170
 msgid "Vertical"
 msgstr "垂直"
 
 #. translators: menu entry that opens a submenu; as in whether it's horizontal or vertical
-#: src/Widgets/ControlsOverlay.vala:170
+#: src/Widgets/ControlsOverlay.vala:172
 msgid "Orientation"
 msgstr "方向"
 
 #. translators: cover size
 #. translators: text style (size)
-#: src/Widgets/ControlsOverlay.vala:175 src/Widgets/ControlsOverlay.vala:187
+#: src/Widgets/ControlsOverlay.vala:177 src/Widgets/ControlsOverlay.vala:189
 msgid "Small"
 msgstr "小"
 
 #. translators: cover size
 #. translators: text style (size)
-#: src/Widgets/ControlsOverlay.vala:177 src/Widgets/ControlsOverlay.vala:189
+#: src/Widgets/ControlsOverlay.vala:179 src/Widgets/ControlsOverlay.vala:191
 msgid "Regular"
 msgstr "常规"
 
 #. translators: cover size
 #. translators: text style (size)
-#: src/Widgets/ControlsOverlay.vala:179 src/Widgets/ControlsOverlay.vala:191
+#: src/Widgets/ControlsOverlay.vala:181 src/Widgets/ControlsOverlay.vala:193
 msgid "Big"
 msgstr "大"
 
 #. translators: menu entry that opens a submenu; cover = the song cover art
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:181 src/Widgets/ControlsOverlay.vala:212
+#: src/Widgets/ControlsOverlay.vala:183 src/Widgets/ControlsOverlay.vala:214
 msgid "Cover"
 msgstr "封面"
 
 #. https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:183
+#: src/Widgets/ControlsOverlay.vala:185
 msgid "Size"
 msgstr "大小"
 
 #. translators: menu entry that opens a submenu; text = all the app text, may be translated to fonts
-#: src/Widgets/ControlsOverlay.vala:193
+#: src/Widgets/ControlsOverlay.vala:195
 msgid "Text"
 msgstr "文本"
 
 #. translators: cover icon style; symbolic = the monochrome simplified version
-#: src/Widgets/ControlsOverlay.vala:198
+#: src/Widgets/ControlsOverlay.vala:200
 msgid "Symbolic"
 msgstr "符号"
 
 #. translators: cover icon style
-#: src/Widgets/ControlsOverlay.vala:200
+#: src/Widgets/ControlsOverlay.vala:202
 msgid "Full Color"
 msgstr "全彩"
 
 #. translators: cover image style; it's a square with rounded corners
-#: src/Widgets/ControlsOverlay.vala:206
+#: src/Widgets/ControlsOverlay.vala:208
 msgid "Card"
 msgstr "卡片"
 
 #. translators: cover image style; it's a fading out effect; may be translated to 'Fade'
-#: src/Widgets/ControlsOverlay.vala:210
+#: src/Widgets/ControlsOverlay.vala:212
 msgid "Shadow"
 msgstr "阴影"
 
+#. translators: progressbar style; disable it
+#: src/Widgets/ControlsOverlay.vala:218
+msgid "None"
+msgstr "无"
+
+#. translators: progressbar style; default gtk style, has a big knob / circle as the position marker
+#: src/Widgets/ControlsOverlay.vala:220
+msgid "Knob"
+msgstr "旋钮"
+
+#. translators: progressbar style; hard to explain, looks like amberol's volume bar
+#: src/Widgets/ControlsOverlay.vala:222
+msgid "Overlay"
+msgstr "叠加"
+
+#. translators: menu entry that opens a submenu
+#: src/Widgets/ControlsOverlay.vala:224
+msgid "Progress Bar"
+msgstr "进度条"
+
 #. translators: window style name
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:216 src/Widgets/ControlsOverlay.vala:223
+#: src/Widgets/ControlsOverlay.vala:228 src/Widgets/ControlsOverlay.vala:237
 msgid "Window"
 msgstr "窗口"
 
 #. translators: window style name, probably leave it as is; OSD = on screen display,
 #. it's the dark semi-trasparent background and white text style
-#: src/Widgets/ControlsOverlay.vala:219
+#: src/Widgets/ControlsOverlay.vala:231
 msgid "OSD"
 msgstr "OSD"
 
 #. translators: window style name
-#: src/Widgets/ControlsOverlay.vala:221
+#: src/Widgets/ControlsOverlay.vala:233
 msgid "Transparent"
 msgstr "透明"
 
+#. translators: window style name
+#: src/Widgets/ControlsOverlay.vala:235
+msgid "Blur"
+msgstr "模糊"
+
 #. translators: menu entry that opens a submenu
-#: src/Widgets/ControlsOverlay.vala:226
+#: src/Widgets/ControlsOverlay.vala:240
 msgid "Style"
 msgstr "样式"
 
 #. misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
 #. translators: menu entry, variable is the app name (Turntable)
-#: src/Widgets/ControlsOverlay.vala:234
+#: src/Widgets/ControlsOverlay.vala:248
 #, c-format
 msgid "About %s"
 msgstr "关于 %s"
 
 #. translators: menu entry
-#: src/Widgets/ControlsOverlay.vala:236
+#: src/Widgets/ControlsOverlay.vala:250
 msgid "Quit"
 msgstr "退出"
 
-#: src/Widgets/ControlsOverlay.vala:257
+#: src/Widgets/ControlsOverlay.vala:271
 msgid "Menu"
 msgstr "菜单"
 
+#. translators: repeat = loop, tooltip text
+#: src/Widgets/MPRISControls.vala:22
+msgid "No Repeat"
+msgstr "不重复播放"
+
+#. translators: repeat = loop, tooltip text
+#: src/Widgets/MPRISControls.vala:28
+msgid "Repeat Playlist"
+msgstr "重复播放列表"
+
+#. translators: repeat = loop, track = song, tooltip text
+#: src/Widgets/MPRISControls.vala:34
+msgid "Repeat Track"
+msgstr "重复播放曲目"
+
+#. translators: button tooltip text
+#: src/Widgets/MPRISControls.vala:53
+msgid "Pause"
+msgstr "暂停"
+
+#: src/Widgets/MPRISControls.vala:53 src/Widgets/MPRISControls.vala:185
+msgid "Play"
+msgstr "播放"
+
+#. translators: button tooltip text
+#: src/Widgets/MPRISControls.vala:167
+msgid "Shuffle"
+msgstr "随机播放"
+
+#. translators: button tooltip text
+#: src/Widgets/MPRISControls.vala:177
+msgid "Previous Song"
+msgstr "上一首歌"
+
+#. translators: button tooltip text
+#: src/Widgets/MPRISControls.vala:194
+msgid "Next Song"
+msgstr "下一首歌"
+
 #. translators: default string when MPRIS Client (aka Music playing app) doesn't have a name
-#: src/Widgets/ProgressBin.vala:99 src/Widgets/ProgressBin.vala:233
+#: src/Widgets/ProgressBin.vala:97 src/Widgets/ProgressBin.vala:220
 msgid "Unknown Client"
 msgstr "未知客户端"

@@ -1,38 +1,39 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Sergio Varela <ingrownmink4@noreply.codeberg.org>, 2025.
-# jeheda <jeheda@noreply.codeberg.org>, 2025.
+# legacychimera247 <legacychimera247@noreply.codeberg.org>, 2025.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-09-14 08:34+0300\n"
-"PO-Revision-Date: 2025-06-25 16:58+0000\n"
-"Last-Translator: jeheda <jeheda@noreply.codeberg.org>\n"
-"Language-Team: Spanish <https://translate.codeberg.org/projects/turntable/"
-"turntable/es/>\n"
-"Language: es\n"
+"PO-Revision-Date: 2025-10-03 14:09+0000\n"
+"Last-Translator: legacychimera247 <legacychimera247@noreply.codeberg.org>\n"
+"Language-Team: Italian <https://translate.codeberg.org/projects/turntable/"
+"turntable/it/>\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.11.4\n"
+"X-Generator: Weblate 5.13.2\n"
 
 #. translators: cover image style; it's a rotating record like on a turntable
 #: data/dev.geopjr.Turntable.desktop.in:3
 #: data/dev.geopjr.Turntable.metainfo.xml.in:7
 #: src/Widgets/ControlsOverlay.vala:210
 msgid "Turntable"
-msgstr "Giradiscos"
+msgstr "Turntable"
 
 #: data/dev.geopjr.Turntable.desktop.in:8
 msgid "music;player;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;song;audio;"
-msgstr "música;reproductor;widget;mpris;scrobble;lastfm;librefm;listenbrainz;musicbrainz;maloja;canción;audio;"
+msgstr ""
+"musica;lettore;widget;mpris;invio;lastfm;librefm;listenbrainz;musicbrainz;maloja;traccia;audio;"
+""
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:8
 msgid "Scrobble your music"
-msgstr "Haz «scroblling» de tu música"
+msgstr "Crea statistiche della tua musica"
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:10
 msgid ""
@@ -43,13 +44,13 @@ msgid ""
 "allows you to control your music player, allowlist it for scrobbling and "
 "manage your scrobbling accounts. All MPRIS-enabled apps are supported."
 msgstr ""
-"Mantén un registro de tus hábitos de escucha haciendo scrobbling en last.fm, "
-"ListenBrainz, Libre.fm y Maloja al mismo tiempo utilizando tus aplicaciones "
-"de música favoritas. Giradiscos viene con un diseño elegante y altamente "
-"personalizable que muestra información sobre la canción que se está "
-"reproduciendo en ese momento y te permite controlar tu reproductor de "
-"música, permitirle hacer scrobbling y gestionar tus cuentas de scrobbling. "
-"Todas las aplicaciones compatibles con MPRIS son compatibles."
+"Tieni traccia delle tue abitudini musicali, inviandole a last.fm, "
+"ListenBrainz, Libre.fm e Maloja contemporaneamente usando il tuo lettore "
+"musicale preferito! Turntable viene fornito di un design pulito e "
+"personalizzabile che mostra le informazioni sulla traccia corrente e ti "
+"permette di controllare il lettore musicale, consentendoti l'invio delle "
+"statistiche dei brani ai vari servizi. Ogni lettore con funzionalità MPRIS è "
+"supportato."
 
 #: data/dev.geopjr.Turntable.metainfo.xml.in:11
 msgid ""
@@ -58,39 +59,37 @@ msgid ""
 "background! Try it out using <code>flatpak run dev.geopjr.Turntable --help</"
 "code>."
 msgstr ""
-"¿No te interesa la interfaz gráfica de usuario, pero quieres hacer "
-"«scrobbling» con tus reproductores compatibles con MPRIS? Giradiscos trae "
-"consigo una interfaz de línea de comandos, ¡permitiéndote hacer scrobbling "
-"en segundo plano! Pruébalo usando <code>flatpak run dev.geopjr.Turntable --"
-"help</code>."
+"Non sei interessato alla GUI ma vuoi comunque inviare le tue statistiche? "
+"Turnable ha anche la funzione da riga di comando per inviare dati in "
+"background! Provalo con <code>flatpak run dev.geopjr.Turntable --help</code>."
 
 #: data/ui/gtk/help-overlay.ui:11
 msgctxt "shortcut window"
 msgid "General"
-msgstr "General"
+msgstr "Generale"
 
 #: data/ui/gtk/help-overlay.ui:14
 msgctxt "shortcut window"
 msgid "Show Shortcuts"
-msgstr "Mostrar atajos"
+msgstr "Mostra Scorciatoie"
 
 #: data/ui/gtk/help-overlay.ui:20
 msgctxt "shortcut window"
 msgid "Quit"
-msgstr "Salir"
+msgstr "Esci"
 
 #. translators: Name <email@domain.com> or Name https://website.example
 #: src/Application.vala:196
 msgid "translator-credits"
-msgstr "Sergio Varela https://ingrownmink4.codeberg.page/"
+msgstr "crediti-traduttori"
 
 #: src/Application.vala:199
 msgid "Donate"
-msgstr "Donar"
+msgstr "Dona"
 
 #: src/Application.vala:200
 msgid "Translate"
-msgstr "Traducir"
+msgstr "Traduci"
 
 #. translators: Shown in the about dialog as a tip. Leave markup as is (<b>, \n)
 #: src/Application.vala:203
@@ -101,11 +100,10 @@ msgid ""
 "• Tag your music with the proper track, album and artist names\n"
 "• Check, fix and match your scrobbles regularly"
 msgstr ""
-"<b>Buenas prácticas para el «scrobbling»</b>\n"
-"• Evitar la inclusión en la lista de clientes MPRIS no seleccionados, como "
-"navegadores web y reproductores de vídeo\n"
-"• Etiqueta tu música con los nombres adecuados de pista, álbum y artista\n"
-"• Comprueba, arregla y empareja tus scrobbles con regularidad"
+"<b>Suggerimenti per l'invio</b>\n"
+"• Evita di usare lettori non specifici quali Browser e lettori Video\n"
+"• Compila i metadati con i dati corretti di artista, album e traccia\n"
+"• Controlla e sistema i tuoi invii regolarmente"
 
 #. translators: Application metainfo for the app "Archives". <https://gitlab.gnome.org/GeopJr/Archives/>
 #: src/Application.vala:207
@@ -114,7 +112,7 @@ msgstr "Archives"
 
 #: src/Application.vala:207
 msgid "Create and view web archives"
-msgstr "Crea y visualiza archivos web"
+msgstr "Crea e vedi archivi web"
 
 #. translators: Application metainfo for the app "Calligraphy". <https://gitlab.gnome.org/GeopJr/Calligraphy>
 #: src/Application.vala:209
@@ -123,7 +121,7 @@ msgstr "Calligraphy"
 
 #: src/Application.vala:209
 msgid "Turn text into ASCII banners"
-msgstr "Convierte texto en banners ASCII"
+msgstr "Converti testo in banner ASCII"
 
 #. translators: Application metainfo for the app "Collision". <https://github.com/GeopJr/Collision>
 #: src/Application.vala:211
@@ -132,7 +130,7 @@ msgstr "Collision"
 
 #: src/Application.vala:211
 msgid "Check hashes for your files"
-msgstr "Comprueba los hashes de tus archivos"
+msgstr "Controlla gli hash dei tuoi file"
 
 #. translators: Application metainfo for the app "Tuba". <https://github.com/GeopJr/Tuba>
 #: src/Application.vala:213
@@ -141,80 +139,80 @@ msgstr "Tuba"
 
 #: src/Application.vala:213
 msgid "Browse the Fediverse"
-msgstr "Navega por el Fediverso"
+msgstr "Naviga nel Fediverso"
 
 #: src/Scrobbling/Accounts.vala:83 src/Views/ScrobblerSetup.vala:236
 msgid "_Cancel"
-msgstr "_Cancelar"
+msgstr "_Cancella"
 
 #: src/Scrobbling/Accounts.vala:84
 msgid "_Read More"
-msgstr "_Más información"
+msgstr "_Leggi di più"
 
 #. translators: host as in a web server; entry title
 #: src/Views/LibreFMPage.vala:66 src/Views/MalojaPage.vala:52
 msgid "Host"
-msgstr "Servidor"
+msgstr "Host"
 
 #. translators: variable is a link
 #: src/Views/ListenBrainzPage.vala:88
 #, c-format
 msgid "You can get your user token from %s."
-msgstr "Puedes obtener tu token de usuario desde %s."
+msgstr "Puoi prendere il tuo token utente da %s."
 
 #. translators: host as in a web server; entry title
 #: src/Views/ListenBrainzPage.vala:108
 msgid "Host API"
-msgstr "Servidor API"
+msgstr "API host"
 
 #. translators: can also be translated as Authentication Token
 #: src/Views/ListenBrainzPage.vala:118
 msgid "User Token"
-msgstr "Token de Usuario"
+msgstr "Token utente"
 
 #: src/Views/ListenBrainzPage.vala:170 src/Views/ListenBrainzPage.vala:172
 #: src/Views/ListenBrainzPage.vala:174 src/Views/ListenBrainzPage.vala:175
 msgid "Invalid Token"
-msgstr "Token Invalido"
+msgstr "Token non valido"
 
 #. translators: the variable is an error message
 #: src/Views/ListenBrainzPage.vala:183 src/Views/ListenBrainzPage.vala:188
 #, c-format
 msgid "Couldn't validate token: %s"
-msgstr "No se pudo validar el token: %s"
+msgstr "Non ho potuto validare il token: %s"
 
 #. translators: tooltip on offline scrobbles row button
 #: src/Views/OfflineScrobbling.vala:43
 msgid "Remove Scrobble"
-msgstr ""
+msgstr "Rimuovi invio"
 
 #. translators: row title
 #: src/Views/OfflineScrobbling.vala:71 src/Views/ScrobblerSetup.vala:138
 msgid "Offline Scrobbling"
-msgstr ""
+msgstr "Invio non in linea"
 
 #. translators: shown when there's 0 offline scrobbles in the queue
 #: src/Views/OfflineScrobbling.vala:124
 msgid "No Offline Scrobbles"
-msgstr ""
+msgstr "Nessun invio non in linea"
 
 #. translators: variable is a scrobbler e.g. ListenBrainz
 #: src/Views/ScrobblerSetup.vala:60
 #, c-format
 msgid "Forget %s Account"
-msgstr "Olvidar Cuenta %s"
+msgstr "Elimina Account %s"
 
 #. vala-lint=line-length
 #. translators: probably leave it as is unless there's a way to describe it accurately
 #: src/Views/ScrobblerSetup.vala:108
 msgid "Scrobblers"
-msgstr ""
+msgstr "Servizi invii"
 
 #. translators: scrobbling dialog tab title of the page that allows you to setup your accounts
 #. services as in "Scrobbling Services", if it's easier, translate it into "Platforms" or "Providers"
 #: src/Views/ScrobblerSetup.vala:114
 msgid "Services"
-msgstr ""
+msgstr "Servizi"
 
 #. translators: warning shown in the scrobbler setup window. Leave MPRIS as is. The variable is the app name (Turntable)
 #: src/Views/ScrobblerSetup.vala:116
@@ -225,10 +223,15 @@ msgid ""
 "minimum listening time. To protect your privacy, %s requires you to opt-in "
 "scrobbling per MPRIS client."
 msgstr ""
+"Tieni traccia della tua musica inviando statistiche dal lettore MPRIS. "
+"Connettendo il tuo account, le informazioni MPRIS saranno inviate al "
+"servizio scelto quando raggiungerai il tempo minimo richiesto d'ascolto. Per "
+"proteggere la tua privacy, %s richiede l'attivazione separata di ogni "
+"servizio per client MPRIS."
 
 #: src/Views/ScrobblerSetup.vala:132
 msgid "Settings"
-msgstr ""
+msgstr "Impostazioni"
 
 #. translators: row description
 #: src/Views/ScrobblerSetup.vala:140
@@ -236,21 +239,23 @@ msgid ""
 "Scrobble even when you are offline and submit them automatically when you "
 "get online."
 msgstr ""
+"Salva i tuoi ascolti quando non sei in linea e inviali automaticamente "
+"quando torni online."
 
 #. translators: as explained later, "Now Playing" means the currently playing song even if it hasn't hit the scrobbling mark, please make sure they are not confused with each other, this doesn't mean scrobbling.
 #: src/Views/ScrobblerSetup.vala:157
 msgid "Submit Now Playing"
-msgstr ""
+msgstr "Invia traccia In ascolto ora"
 
 #. translators: switch description
 #: src/Views/ScrobblerSetup.vala:159
 msgid "Indicate that you started listening to a track."
-msgstr ""
+msgstr "Indica che hai iniziato l'ascolto di una traccia."
 
 #. translators: switch title; lookup = search, fetch, request
 #: src/Views/ScrobblerSetup.vala:167
 msgid "Lookup Metadata on MusicBrainz before Scrobbling"
-msgstr ""
+msgstr "Controlla i Metadati su MusicBrainz prima di inviarli"
 
 #. translators: switch description; untagged as in music files missing metadata like artist, album etc
 #: src/Views/ScrobblerSetup.vala:169
@@ -259,166 +264,169 @@ msgid ""
 "fix and complete metadata but it will also prevent scrobbling tracks not "
 "found in the MusicBrainz library."
 msgstr ""
+"Raccomandato per lettori non specifici o musica senza informazioni dato che "
+"sistemerà i metadati ma eviterà anche l'invio di tracce non trovate nella "
+"libreria di MusicBrainz."
 
 #: src/Views/ScrobblerSetup.vala:230
 #, c-format
 msgid "Forget %s Account?"
-msgstr "¿Olvidar Cuenta %s?"
+msgstr "Elimina Account %s?"
 
 #. translators: dialog description
 #: src/Views/ScrobblerSetup.vala:232
 msgid "This won't affect your submitted scrobbles."
-msgstr ""
+msgstr "Qusto non riguarderà le tue statistiche già inviate."
 
 #: src/Views/ScrobblerSetup.vala:237
 msgid "_Forget"
-msgstr ""
+msgstr "_Elimina"
 
 #. translators: error message when lastfm/librefm token validation fails
 #: src/Views/ScrobblerSetup.vala:326 src/Views/ScrobblerSetup.vala:329
 #: src/Views/ScrobblerSetup.vala:330 src/Views/ScrobblerSetup.vala:333
 msgid "Invalid Session"
-msgstr "Sesión Invalida"
+msgstr "Sessione non valida"
 
 #. translators: the variable is an error message
 #: src/Views/ScrobblerSetup.vala:344
 #, c-format
 msgid "Couldn't get session: %s"
-msgstr "No se pudo obtener la sesión: %s"
+msgstr "Non posso ritrovare la sessione: %s"
 
 #. translators: default string when title is missing
 #: src/Views/Window.vala:187
 msgid "Unknown Title"
-msgstr "Título Desconocido"
+msgstr "Titolo sconosciuto"
 
 #. translators: default string when artist is missing
 #: src/Views/Window.vala:192 src/Views/Window.vala:197
 msgid "Unknown Artist"
-msgstr "Artista Desconocido"
+msgstr "Artista sconosciuto"
 
 #. translators: default string when album is missing
 #: src/Views/Window.vala:205 src/Views/Window.vala:210
 msgid "Unknown Album"
-msgstr "Álbum Desconocido"
+msgstr "Album sconosciuto"
 
 #. translators: button tooltip text
 #: src/Widgets/ControlsOverlay.vala:53
 msgid "Disable Scrobbling"
-msgstr "Desactivar Scrobbling"
+msgstr "Invio statistiche disabilitato"
 
 #. translators: button tooltip text
 #: src/Widgets/ControlsOverlay.vala:57 src/Widgets/ControlsOverlay.vala:66
 msgid "Enable Scrobbling"
-msgstr "Activar Scrobbling"
+msgstr "Invio statistiche abilitato"
 
 #. translators: dropdown tooltip text
 #: src/Widgets/ControlsOverlay.vala:101
 msgid "Select Player"
-msgstr "Seleccionar Reproductor"
+msgstr "Scegli lettore"
 
 #. translators: menu entry
 #: src/Widgets/ControlsOverlay.vala:127
 msgid "New Window"
-msgstr "Nueva Ventana"
+msgstr "Nuova finestra"
 
 #. translators: menu entry that opens a dialog
 #: src/Widgets/ControlsOverlay.vala:130
 msgid "Scrobbling"
-msgstr "Scrobbling"
+msgstr "Invio statistiche"
 
 #. translators: whether to show the (window) background progress bar
 #: src/Widgets/ControlsOverlay.vala:137
 msgid "Background Progress"
-msgstr "Proceso en Segundo Plano"
+msgstr "Progresso in background"
 
 #. translators: whether to show center the title, album and artist labels
 #: src/Widgets/ControlsOverlay.vala:139
 msgid "Center Text"
-msgstr "Centrar Texto"
+msgstr "Centra Testo"
 
 #. translators: whether to show a client icon in the bottom right; client = music playing app
 #. translators: menu entry that opens a submenu; client = music playing app
 #: src/Widgets/ControlsOverlay.vala:141 src/Widgets/ControlsOverlay.vala:204
 msgid "Client Icon"
-msgstr "Ícono del Cliente"
+msgstr "Icona applicazione"
 
 #. translators: whether to make the artist and album labels slightly transparent / less prominent
 #: src/Widgets/ControlsOverlay.vala:143
 msgid "Dim Metadata Labels"
-msgstr "Atenuar Texto de Metadatos"
+msgstr "Sfoca Etichette Metadati"
 
 #. translators: whether to fit the cover art in the cover; this will stretch or crop art that is not square
 #: src/Widgets/ControlsOverlay.vala:145
 msgid "Fit Art on Cover"
-msgstr "Ajustar Imagen a la Cubierta"
+msgstr "Ridimensiona Copertina sulla cover"
 
 #. translators: whether to extract the colors of the cover and use them in UI elements (like Amberol or Material You)
 #: src/Widgets/ControlsOverlay.vala:147
 msgid "Extract Cover Colors"
-msgstr "Extraer Colores de la Cubierta"
+msgstr "Estrai Colori Copertina"
 
 #. translators: whether to show the shuffle and loop buttons
 #: src/Widgets/ControlsOverlay.vala:149
 msgid "More Player Controls"
-msgstr ""
+msgstr "Più controlli del lettore"
 
 #. translators: whether to show a turntable tonearm in turntable styled cover art; tonearm is the 'arm' part of the turntable,
 #. you may translate it as 'arm' (mechanical part)
 #: src/Widgets/ControlsOverlay.vala:152
 msgid "Tonearm"
-msgstr ""
+msgstr "Braccio"
 
 #. translators: menu entry that opens a submenu; components = toggleable parts of the UI
 #: src/Widgets/ControlsOverlay.vala:154
 msgid "Components"
-msgstr "Elementos"
+msgstr "Componenti"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:158
 msgid "Linear"
-msgstr "Lineal"
+msgstr "Lineare"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:160
 msgid "Nearest"
-msgstr "Más cercano"
+msgstr "Più vicino"
 
 #. translators: cover scaling algorithm name, probably leave as is
 #: src/Widgets/ControlsOverlay.vala:162
 msgid "Trilinear"
-msgstr "Trilineal"
+msgstr "Trilineare"
 
 #. translators: menu entry that opens a submenu; cover scaling = algorithm used for down/upscaling cover art
 #: src/Widgets/ControlsOverlay.vala:164
 msgid "Cover Scaling"
-msgstr "Escalado de la Cubierta"
+msgstr "Scala copertina"
 
 #. translators: orientation name
 #: src/Widgets/ControlsOverlay.vala:168
 msgid "Horizontal"
-msgstr "Horizontal"
+msgstr "Orizzontale"
 
 #. translators: orientation name
 #: src/Widgets/ControlsOverlay.vala:170
 msgid "Vertical"
-msgstr "Vertical"
+msgstr "Verticale"
 
 #. translators: menu entry that opens a submenu; as in whether it's horizontal or vertical
 #: src/Widgets/ControlsOverlay.vala:172
 msgid "Orientation"
-msgstr "Orientación"
+msgstr "Orientamento"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:177 src/Widgets/ControlsOverlay.vala:189
 msgid "Small"
-msgstr "Pequeño"
+msgstr "Piccolo"
 
 #. translators: cover size
 #. translators: text style (size)
 #: src/Widgets/ControlsOverlay.vala:179 src/Widgets/ControlsOverlay.vala:191
 msgid "Regular"
-msgstr "Normal"
+msgstr "Medio"
 
 #. translators: cover size
 #. translators: text style (size)
@@ -430,142 +438,142 @@ msgstr "Grande"
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:183 src/Widgets/ControlsOverlay.vala:214
 msgid "Cover"
-msgstr "Cubierta"
+msgstr "Copertina"
 
 #. https://gitlab.gnome.org/GNOME/gtk/-/issues/7064
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:185
 msgid "Size"
-msgstr "Tamaño"
+msgstr "Dimensione"
 
 #. translators: menu entry that opens a submenu; text = all the app text, may be translated to fonts
 #: src/Widgets/ControlsOverlay.vala:195
 msgid "Text"
-msgstr "Texto"
+msgstr "Testo"
 
 #. translators: cover icon style; symbolic = the monochrome simplified version
 #: src/Widgets/ControlsOverlay.vala:200
 msgid "Symbolic"
-msgstr "Simplificado"
+msgstr "Simbolico"
 
 #. translators: cover icon style
 #: src/Widgets/ControlsOverlay.vala:202
 msgid "Full Color"
-msgstr "A Color"
+msgstr "Normale"
 
 #. translators: cover image style; it's a square with rounded corners
 #: src/Widgets/ControlsOverlay.vala:208
 msgid "Card"
-msgstr "Tarjeta"
+msgstr "Scheda"
 
 #. translators: cover image style; it's a fading out effect; may be translated to 'Fade'
 #: src/Widgets/ControlsOverlay.vala:212
 msgid "Shadow"
-msgstr "Sombreada"
+msgstr "Ombra"
 
 #. translators: progressbar style; disable it
 #: src/Widgets/ControlsOverlay.vala:218
 msgid "None"
-msgstr ""
+msgstr "Nessuno"
 
 #. translators: progressbar style; default gtk style, has a big knob / circle as the position marker
 #: src/Widgets/ControlsOverlay.vala:220
 msgid "Knob"
-msgstr ""
+msgstr "Manopola"
 
 #. translators: progressbar style; hard to explain, looks like amberol's volume bar
 #: src/Widgets/ControlsOverlay.vala:222
 msgid "Overlay"
-msgstr ""
+msgstr "Overlay"
 
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:224
 msgid "Progress Bar"
-msgstr ""
+msgstr "Barra del progresso"
 
 #. translators: window style name
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:228 src/Widgets/ControlsOverlay.vala:237
 msgid "Window"
-msgstr "Ventana"
+msgstr "Finestra"
 
 #. translators: window style name, probably leave it as is; OSD = on screen display,
 #. it's the dark semi-trasparent background and white text style
 #: src/Widgets/ControlsOverlay.vala:231
 msgid "OSD"
-msgstr ""
+msgstr "OSD"
 
 #. translators: window style name
 #: src/Widgets/ControlsOverlay.vala:233
 msgid "Transparent"
-msgstr "Transparente"
+msgstr "Trasparente"
 
 #. translators: window style name
 #: src/Widgets/ControlsOverlay.vala:235
 msgid "Blur"
-msgstr ""
+msgstr "Sfocatura"
 
 #. translators: menu entry that opens a submenu
 #: src/Widgets/ControlsOverlay.vala:240
 msgid "Style"
-msgstr "Estilo"
+msgstr "Stile"
 
 #. misc_section_model.append (_("Keyboard Shortcuts"), "win.show-help-overlay");
 #. translators: menu entry, variable is the app name (Turntable)
 #: src/Widgets/ControlsOverlay.vala:248
 #, c-format
 msgid "About %s"
-msgstr "Acerca de %s"
+msgstr "Info su %s"
 
 #. translators: menu entry
 #: src/Widgets/ControlsOverlay.vala:250
 msgid "Quit"
-msgstr "Salir"
+msgstr "Esci"
 
 #: src/Widgets/ControlsOverlay.vala:271
 msgid "Menu"
-msgstr "Menú"
+msgstr "Menu"
 
 #. translators: repeat = loop, tooltip text
 #: src/Widgets/MPRISControls.vala:22
 msgid "No Repeat"
-msgstr ""
+msgstr "Disattiva Ripeti"
 
 #. translators: repeat = loop, tooltip text
 #: src/Widgets/MPRISControls.vala:28
 msgid "Repeat Playlist"
-msgstr ""
+msgstr "Ripeti Scaletta"
 
 #. translators: repeat = loop, track = song, tooltip text
 #: src/Widgets/MPRISControls.vala:34
 msgid "Repeat Track"
-msgstr ""
+msgstr "Ripeti Traccia"
 
 #. translators: button tooltip text
 #: src/Widgets/MPRISControls.vala:53
 msgid "Pause"
-msgstr "Pausar"
+msgstr "Pausa"
 
 #: src/Widgets/MPRISControls.vala:53 src/Widgets/MPRISControls.vala:185
 msgid "Play"
-msgstr "Reproducir"
+msgstr "Play"
 
 #. translators: button tooltip text
 #: src/Widgets/MPRISControls.vala:167
 msgid "Shuffle"
-msgstr ""
+msgstr "Mischia"
 
 #. translators: button tooltip text
 #: src/Widgets/MPRISControls.vala:177
 msgid "Previous Song"
-msgstr "Canción Anterior"
+msgstr "Traccia precedente"
 
 #. translators: button tooltip text
 #: src/Widgets/MPRISControls.vala:194
 msgid "Next Song"
-msgstr "Canción Siguiente"
+msgstr "Traccia successiva"
 
 #. translators: default string when MPRIS Client (aka Music playing app) doesn't have a name
 #: src/Widgets/ProgressBin.vala:97 src/Widgets/ProgressBin.vala:220
 msgid "Unknown Client"
-msgstr "Cliente Desconocido"
+msgstr "Applicazione sconosciuta"
