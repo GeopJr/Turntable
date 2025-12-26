@@ -46,6 +46,21 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="0.5.0" date="2025-12-26">
+      <description translate="no">
+        <ul>
+          <li>Added the ability to collapse the controls</li>
+          <li>Added background portal support and automatically starting on boot</li>
+          <li>Added a Wrapped year-in-review experiment</li>
+          <li>Added automatically picking the client that's actively playing on startup</li>
+          <li>Fixed progress bar being enabled by default even if set to disabled</li>
+          <li>Fixed bugs with the cover overlay when animations are disabled by replacing it with a more robust solution</li>
+          <li>Moved some options around to better organize them</li>
+          <li>Other minor fixes and design changes</li>
+          <li>Updated translations</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.4.0" date="2025-09-14">
       <description translate="no">
         <ul>

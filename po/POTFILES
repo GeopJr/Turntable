@@ -6,12 +6,15 @@
 
 ./src/Application.vala
 ./src/Scrobbling/Accounts.vala
+./src/Scrobbling/Manager.vala
 ./src/Views/LibreFMPage.vala
 ./src/Views/ListenBrainzPage.vala
 ./src/Views/MalojaPage.vala
 ./src/Views/OfflineScrobbling.vala
+./src/Views/Preferences.vala
 ./src/Views/ScrobblerSetup.vala
 ./src/Views/Window.vala
+./src/Views/Wrapped.vala
 ./src/Widgets/ControlsOverlay.vala
 ./src/Widgets/MPRISControls.vala
 ./src/Widgets/ProgressBin.vala
