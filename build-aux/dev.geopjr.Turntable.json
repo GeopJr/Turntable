@@ -31,6 +31,7 @@
 		"--filesystem=~/.var/app/org.gnome.Rhythmbox3/cache/rhythmbox/album-art/:ro",
 		"--filesystem=~/.var/app/org.gnome.Lollypop/cache/lollypop/:ro",
 		"--filesystem=~/.var/app/io.github.nokse22.high-tide/cache/images:ro",
+		"--filesystem=~/.var/app/io.m51.Gelly/cache/io.m51.Gelly/album-art/:ro",
 		"--filesystem=~/.cache/:ro",
 		"--filesystem=/tmp",
 		"--filesystem=xdg-data/applications",
