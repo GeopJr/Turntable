@@ -249,12 +249,12 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 				} else {
 					GLib.File cover_file = GLib.File.new_for_path (clean_path);
 					int total_reads = 0;
-					while(true) {
+					while (true) {
 						bool no_results = true;
 						string directory = GLib.Path.get_dirname (clean_path);
 						warning (@"Attempt $(total_reads + 1): ls $directory");
 						warning (@"Cover Exists? $(cover_file.query_exists (null))");
-						warning (@"Parent Exists? $(GLib.File.new_for_path(directory).query_exists (null))");
+						warning (@"Parent Exists? $(GLib.File.new_for_path (directory).query_exists (null))");
 
 						try {
 							Dir dir = Dir.open (directory, 0);
