@@ -273,7 +273,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 							break;
 						} else if (no_results) {
 							GLib.Thread.usleep (5 * 1000000);
-							warning ("Sleeping for 5 seconds...");
+							warning ("Sleeping for 5 seconds…");
 						} else {
 							break;
 						}
