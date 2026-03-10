@@ -247,7 +247,39 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 					if (msg.response_headers.get_content_type (null) == "text/html") throw new Error.literal (-1, 1, "text/html");
 					loader = new Gly.Loader.for_stream (in_stream);
 				} else {
-					loader = new Gly.Loader (GLib.File.new_for_path (clean_path));
+					GLib.File cover_file = GLib.File.new_for_path (clean_path);
+					int total_reads = 0;
+					while(true) {
+						bool no_results = true;
+						string directory = GLib.Path.get_dirname (clean_path);
+						warning (@"Attempt $(total_reads + 1): ls $directory");
+						warning (@"Cover Exists? $(cover_file.query_exists (null))");
+						warning (@"Parent Exists? $(GLib.File.new_for_path(directory).query_exists (null))");
+
+						try {
+							Dir dir = Dir.open (directory, 0);
+							string? name = null;
+							while ((name = dir.read_name ()) != null) {
+								warning (Path.build_filename (directory, name));
+								no_results = false;
+							}
+						} catch (FileError err) {
+						   critical (err.message);
+						}
+
+						total_reads += 1;
+						if (total_reads == 5) {
+							warning ("Took too long to check");
+							break;
+						} else if (no_results) {
+							GLib.Thread.usleep (5 * 1000000);
+							warning ("Sleeping for 5 seconds...");
+						} else {
+							break;
+						}
+					}
+
+					loader = new Gly.Loader (cover_file);
 				}
 				var img = loader.load ();
 				if (in_stream != null) in_stream.close ();
