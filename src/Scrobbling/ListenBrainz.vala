@@ -1,7 +1,6 @@
 public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 	public virtual Manager.Provider SERVICE { get { return Manager.Provider.LISTENBRAINZ; } }
 	public virtual string token { get; set; default = ""; }
-	protected virtual string auth_token_key { get; set; default = "Bearer"; }
 	public override Experiments experiments { get { return WRAPPED; } }
 
 	private string _url = "https://api.listenbrainz.org";
@@ -64,7 +63,7 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		var generator = new Json.Generator ();
 		generator.set_root (builder.get_root ());
 		msg.set_request_body_from_bytes ("application/json", new Bytes.take (generator.to_data (null).data));
-		msg.request_headers.append ("Authorization", @"$(auth_token_key) $(this.token)");
+		msg.request_headers.append ("Authorization", @"Token $(this.token)");
 
 		scrobbling_manager.send_scrobble (msg, SERVICE, scrobble_type);
 	}
@@ -89,7 +88,7 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 	private inline async Json.Array get_stats_entities (Soup.Session session, string username, int max, string stat, bool has_year, out bool has_year_res) throws Error {
 		has_year_res = has_year;
 		var msg = new Soup.Message ("GET", listenbrainz_stats_url (stat, username, max, !has_year_res));
-		msg.request_headers.append ("Authorization", @"$(auth_token_key) $(this.token)");
+		msg.request_headers.append ("Authorization", @"Token $(this.token)");
 		GLib.InputStream in_stream = yield session.send_async (msg, GLib.Priority.HIGH, null);
 		if (msg.status_code < 200 || msg.status_code >= 300) throw new Error.literal (-1, 2, @"Server returned $(msg.status_code)");
 
@@ -100,7 +99,7 @@ public class Turntable.Scrobbling.ListenBrainz : GLib.Object, Scrobbler {
 		if (has_year_res && root == null) {
 			has_year_res = false;
 			msg = new Soup.Message ("GET", listenbrainz_stats_url (stat, username, max, !has_year_res));
-			msg.request_headers.append ("Authorization", @"$(auth_token_key) $(this.token)");
+			msg.request_headers.append ("Authorization", @"Token $(this.token)");
 			in_stream = yield session.send_async (msg, GLib.Priority.HIGH, null);
 			if (msg.status_code < 200 || msg.status_code >= 300) throw new Error.literal (-1, 2, @"Server returned $(msg.status_code)");
 
