@@ -220,7 +220,7 @@ public class Turntable.Widgets.Cover : Gtk.Widget {
 
 			string clean_path = file_path;
 			if (clean_path.has_prefix ("file://")) {
-				clean_path = this.file_path.splice (0, 7);
+				clean_path = GLib.Uri.unescape_string (this.file_path.splice (0, 7));
 			}
 
 			//  var t_texture = Gdk.Texture.from_filename (clean_path);
